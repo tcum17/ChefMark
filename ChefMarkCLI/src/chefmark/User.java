@@ -12,6 +12,12 @@ public class User {
     private Pantry pantry;
     private WeeklyPlan weeklyPlan;
 
+    public User(String username, String password, String email) {
+        this.username = username;
+        this.password = password;
+        this.email = email;
+    }
+
     public String getUsername() {
         return username;
     }
@@ -38,5 +44,9 @@ public class User {
 
     public WeeklyPlan getWeeklyPlan() {
         return weeklyPlan;
+    }
+
+    public setPassword(String password) {
+        this.password = password;
     }
 }
