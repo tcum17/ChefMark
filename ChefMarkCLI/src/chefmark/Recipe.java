@@ -27,5 +27,43 @@ public class Recipe {
         this.nutritionalFacts = nutritionalFacts;
     }
 
-    
+    public String getUri(){
+        return uri;
+    }
+
+    public String getName(){
+        return name;
+    }
+
+    public String getSource(){
+        return source;
+    }
+
+    public String getURL(){
+        return url;
+    }
+
+    public ArrayList<Ingredient> getIngredients(){
+        return ingredients;
+    }
+
+    public int getTotalWeight(){
+        return totalWeight;
+    }
+
+    public RecipeDescriptors getRecipeDescritpors(){
+        return recipeDescriptors;
+    }
+
+    public Rating getRating(){
+        return rating;
+    }
+
+    public Instructions getInstructions(){
+        return instructions;
+    }
+
+    public NutritionalFacts getNutritionalFacts(){
+        return nutritionalFacts;
+    }
 }
