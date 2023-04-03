@@ -3,18 +3,18 @@ package chefmark;
 import java.util.ArrayList;
 
 public class Recipe {
-    string uri;
-    string name;
-    string source;
-    string url;
-    Ingredient[] ingredients;
+    String uri;
+    String name;
+    String source;
+    String url;
+    ArrayList<Ingredient> ingredients;
     int totalWeight;
     RecipeDescriptors recipeDescriptors;
     Rating rating;
     Instructions instructions;
     NutritionalFacts nutritionalFacts;
 
-    public recipe(string uri, string name, string source, string url, Ingredient[] ingredients, int totalWeight, RecipeDescriptors recipeDescriptors, Rating rating, Instructions instructions, NutritionalFacts nutritionalFacts){
+    public recipe(String uri, String name, String source, String url, ArrayList<Ingredient> ingredients, int totalWeight, RecipeDescriptors recipeDescriptors, Rating rating, Instructions instructions, NutritionalFacts nutritionalFacts){
         this.uri = uri;
         this.name = name;
         this.source = source;
