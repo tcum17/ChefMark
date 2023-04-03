@@ -9,6 +9,8 @@ public class User {
     private String email;
     private ArrayList<Recipe> favoriteRecipes;
     private HashMap<String, Recipe> recipeHistory;
+    private Pantry pantry;
+    private WeeklyPlan weeklyPlan;
 
     public String getUsername() {
         return username;
@@ -30,7 +32,11 @@ public class User {
         return recipeHistory;
     }
 
+    public Pantry getPantry() {
+        return pantry;
+    }
 
-
-
+    public WeeklyPlan getWeeklyPlan() {
+        return weeklyPlan;
+    }
 }
