@@ -23,7 +23,7 @@ public class NutritionalFacts {
     }
 
     public int getCalories() {
-        returns cals;
+        return calories;
     }
 
     public void setGlycemicIndex(int glycemicIndex) {

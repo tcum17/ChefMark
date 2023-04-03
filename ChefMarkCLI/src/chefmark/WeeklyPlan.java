@@ -9,12 +9,6 @@ public class WeeklyPlan {
     private String name;
     private HashMap<String, ArrayList<Recipe>> weeklyPlan;
 
-    public WeeklyPlan(String name)
-    {
-        this.name = name;
-        weeklyPlan = new HashMap<String, ArrayList<Recipe>>();
-    }
-
     public void setName(String name)
     {
         this.name = name;
