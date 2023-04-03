@@ -8,6 +8,17 @@ public class RecipeDescriptors {
     private ArrayList<String> mealType;
     private ArrayList<String> cuisineType;
 
+    public RecipeDescriptors() {
+    }
+
+    public RecipeDescriptors(ArrayList<String> tags, ArrayList<String> dishType, ArrayList<String> mealType,
+            ArrayList<String> cuisineType) {
+        this.tags = tags;
+        this.dishType = dishType;
+        this.mealType = mealType;
+        this.cuisineType = cuisineType;
+    }
+
     public ArrayList<String> getTags() {
         return this.tags;
     }
