@@ -2,32 +2,32 @@ package chefmark;
 public class RecipeController {
     
 
-    public Recipe createRecipe(Recipe recipe)
-    {
+    // public Recipe createRecipe(Recipe recipe)
+    // {
 
-    }
+    // }
 
-    public boolean updateRecipe(Recipe recipe)
-    {
+    // public boolean updateRecipe(Recipe recipe)
+    // {
 
-    }
-    public boolean deleteRecipe(String recipeName)
-    {
+    // }
+    // public boolean deleteRecipe(String recipeName)
+    // {
 
-    }
+    // }
 
-    public boolean shareRecipe(Recipe recipe)
-    {
+    // public boolean shareRecipe(Recipe recipe)
+    // {
 
-    }
+    // }
 
-    public ArrayList<Recipe> viewRecipeHistory()
-    {
+    // public ArrayList<Recipe> viewRecipeHistory()
+    // {
 
-    }
+    // }
 
-    public Recipe generateRandomRecipe()
-    {
+    // public Recipe generateRandomRecipe()
+    // {
         
-    }
+    // }
 }

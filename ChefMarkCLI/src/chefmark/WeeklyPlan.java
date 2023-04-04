@@ -31,12 +31,12 @@ public class WeeklyPlan {
 
     public boolean addRecipeToWeeklyPlan(Recipe recipe)
     {
-
+        return false;
     }
 
     public boolean removeRecipeFromWeeklyPlan(Recipe recipe)
     {
-
+        return false;
     }
 
 

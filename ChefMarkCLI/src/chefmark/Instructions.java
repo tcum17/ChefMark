@@ -6,7 +6,7 @@ public class Instructions {
 
     public void setInstructions(String instructions)
     {
-        this.instruction = instructions;
+        this.instructions = instructions;
     }
 
     public void setCautions(String cautions)

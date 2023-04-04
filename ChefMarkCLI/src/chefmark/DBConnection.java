@@ -1,5 +1,7 @@
 package chefmark;
 
+import java.sql.Connection;
+
 public class DBConnection {
     
     private Connection connection;
