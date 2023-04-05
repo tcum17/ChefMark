@@ -14,7 +14,9 @@ public class Recipe {
     Instructions instructions;
     NutritionalFacts nutritionalFacts;
 
-    public recipe(String uri, String name, String source, String url, ArrayList<Ingredient> ingredients, int totalWeight, RecipeDescriptors recipeDescriptors, Rating rating, Instructions instructions, NutritionalFacts nutritionalFacts){
+    public Recipe(String uri, String name, String source, String url, ArrayList<Ingredient> ingredients,
+            int totalWeight, RecipeDescriptors recipeDescriptors, Rating rating, Instructions instructions,
+            NutritionalFacts nutritionalFacts) {
         this.uri = uri;
         this.name = name;
         this.source = source;
@@ -27,43 +29,43 @@ public class Recipe {
         this.nutritionalFacts = nutritionalFacts;
     }
 
-    public String getUri(){
+    public String getUri() {
         return uri;
     }
 
-    public String getName(){
+    public String getName() {
         return name;
     }
 
-    public String getSource(){
+    public String getSource() {
         return source;
     }
 
-    public String getURL(){
+    public String getURL() {
         return url;
     }
 
-    public ArrayList<Ingredient> getIngredients(){
+    public ArrayList<Ingredient> getIngredients() {
         return ingredients;
     }
 
-    public int getTotalWeight(){
+    public int getTotalWeight() {
         return totalWeight;
     }
 
-    public RecipeDescriptors getRecipeDescritpors(){
+    public RecipeDescriptors getRecipeDescritpors() {
         return recipeDescriptors;
     }
 
-    public Rating getRating(){
+    public Rating getRating() {
         return rating;
     }
 
-    public Instructions getInstructions(){
+    public Instructions getInstructions() {
         return instructions;
     }
 
-    public NutritionalFacts getNutritionalFacts(){
+    public NutritionalFacts getNutritionalFacts() {
         return nutritionalFacts;
     }
 }
