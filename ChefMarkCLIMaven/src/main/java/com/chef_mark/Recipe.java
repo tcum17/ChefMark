@@ -1,4 +1,4 @@
-package chefmark;
+package com.chef_mark;
 
 import java.util.ArrayList;
 
