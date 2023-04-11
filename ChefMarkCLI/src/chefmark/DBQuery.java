@@ -1,4 +1,7 @@
 package chefmark;
+
+import java.sql.*;
+
 public class DBQuery {
     private DBConnection dbconnection;
     private Connection connection;
@@ -15,13 +18,14 @@ public class DBQuery {
         this.connection = connection;
     } 
 
-    public setStatement(Statement statement)
+    public void setStatement(Statement statement)
     {
         this.statement = statement;
     }
-    public ResultSet dbQuery(String query)
-    {
+    
+    public ResultSet read(User user) {
         
+
     }
 
 

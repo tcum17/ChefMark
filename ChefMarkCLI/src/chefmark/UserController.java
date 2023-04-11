@@ -25,4 +25,12 @@ public class UserController {
         //return false if it can't be found/deleted, true otherwise
         return true;
     }
+
+    public boolean login(String username, String password, DBConnection db) {
+        DBQuery dbq = new DBQuery();
+        dbq.setConnection(db.getConection());
+        dbq.setDBConnection(db);
+        ResultSet rs = dbq.read(user);
+        return false;
+    }
 }
