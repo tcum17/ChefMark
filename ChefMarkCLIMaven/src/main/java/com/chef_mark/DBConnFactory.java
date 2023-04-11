@@ -16,7 +16,7 @@ public class DBConnFactory {
         
     }
 
-    public static DBConnection accessDBConnFactory(DBConnType DBType){
+    public static DBConnection getDBConnection(DBConnType DBType){
         if(DBType.equals(DBConnType.MYSQL)){
             return new MySQLDB();
         }
