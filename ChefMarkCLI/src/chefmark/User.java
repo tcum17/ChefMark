@@ -46,11 +46,11 @@ public class User {
         return weeklyPlan;
     }
 
-    public void setPassword(String password) {
+    public setPassword(String password) {
         this.password = password;
     }
 
-    public void setEmail(String email) {
+    public setEmail(String email) {
         this.email = email;
     }
 }
