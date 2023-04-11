@@ -1,0 +1,97 @@
+import java.util.*;
+
+public class Main {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        Menu1 menu1 = new Menu1();
+        Menu2 menu2 = new Menu2();
+        Map<String, Menu> menus = new HashMap<>();
+        menus.put("1", menu1);
+        menus.put("2", menu2);
+        String choice = "";
+        while (!choice.equals("q")) {
+            System.out.println("Choose a menu:");
+            System.out.println("1. Menu 1");
+            System.out.println("2. Menu 2");
+            System.out.println("q. Quit");
+            choice = scanner.nextLine();
+            if (menus.containsKey(choice)) {
+                Menu menu = menus.get(choice);
+                String command = "";
+                while (!command.equals("q")) {
+                    menu.displayMenu();
+                    command = scanner.nextLine();
+                    if (menu.acceptedCommands.contains(command)) {
+                        menu.executeCommand(command, USER);
+                    } else {
+                        System.out.println("Invalid command.");
+                    }
+                }
+            } else if (!choice.equals("q")) {
+                System.out.println("Invalid menu.");
+            }
+        }
+    }
+}
+
+interface Menu {
+    Set<String> acceptedCommands = new HashSet<>();
+    void displayMenu();
+    void executeCommand(String command);
+}
+
+class Menu1 implements Menu {
+    public Menu1() {
+        acceptedCommands.add("a");
+        acceptedCommands.add("b");
+        acceptedCommands.add("q");
+    }
+    public void displayMenu() {
+        System.out.println("Menu 1");
+        System.out.println("a. Option A");
+        System.out.println("b. Option B");
+        System.out.println("q. Quit");
+    }
+    public void executeCommand(String command) {
+        switch (command) {
+            case "a":
+                System.out.println("You chose option A.");
+                break;
+            case "b":
+                System.out.println("You chose option B.");
+                break;
+            case "q":
+                break;
+        }
+    }
+}
+
+class Menu2 implements Menu {
+    public Menu2() {
+        acceptedCommands.add("x");
+        acceptedCommands.add("y");
+        acceptedCommands.add("z");
+        acceptedCommands.add("q");
+    }
+    public void displayMenu() {
+        System.out.println("Menu 2");
+        System.out.println("x. Option X");
+        System.out.println("y. Option Y");
+        System.out.println("z. Option Z");
+        System.out.println("q. Quit");
+    }
+    public void executeCommand(String command) {
+        switch (command) {
+            case "x":
+                System.out.println("You chose option X.");
+                break;
+            case "y":
+                System.out.println("You chose option Y.");
+                break;
+            case "z":
+                System.out.println("You chose option Z.");
+                break;
+            case "q":
+                break;
+    }
+}
