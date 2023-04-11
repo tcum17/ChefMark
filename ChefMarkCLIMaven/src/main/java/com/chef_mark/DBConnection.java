@@ -9,6 +9,44 @@ public class DBConnection {
     private String db_URL;
     private String user;
     private String password;
+    private String query;
+    
+    public DBConnection(Connection connection, String jdbc_driver, String db_URL, String user, String password, String query) {
+        this.connection = connection;
+        this.jdbc_driver = jdbc_driver;
+        this.db_URL = db_URL;
+        this.user = user;
+        this.password = password;
+        this.query = query;
+    }
+
+    public Connection getConnection() {
+        return connection;
+    }
+
+    public String getDriver() {
+        return jdbc_driver;
+    }
+
+    public String getURL() {
+        return db_URL;
+    }
+
+    public String getUser() {
+        return user;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public String getQuery() {
+        return query;
+    }
+
+    public void setQuery(String query) {
+        this.query = query;
+    }
 
     public void setConnection(Connection connection){
         this.connection = connection;
