@@ -22,7 +22,23 @@ public class DBQuery {
         statement = connection.createStatement();
     }
 
-    public ResultSet executeQuery(String query) throws SQLException {
+    public ResultSet create(User user) {
+        return executeQuery("INSERT INTO USER VALUES(" + user.getUsername() + ", " + user.getPassword() + ", " + user.getEmail());
+    }
+
+    public ResultSet read(User user) {
+        return executeQuery("SELECT * FROM USER WHERE USERNAME = '" + user.getUsername() + "'");
+    }
+
+    public ResultSet update(User user) {
+        return executeQuery("UPDATE USER SET userPassword = '" + user.getPassword() + "', email = '" + user.getEmail() + "' WHERE USERNAME = '" + user.getUsername() + "'");
+    }
+
+    public ResultSet delete(User user) {
+        return executeQuery("DELETE FROM USER WHERE USERNAME = '" + user.getUsername() + "'");
+    }
+
+    private ResultSet executeQuery(String query) throws SQLException {
         return statement.executeQuery(query);
     }
 
