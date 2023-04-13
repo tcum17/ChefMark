@@ -14,7 +14,7 @@ public class DBQuery {
 
     public void connect() throws SQLException {
         String url = dbConnection.getURL();
-        String user = dbConnection.getUser();
+        String user = dbConnection.getUsername();
         String password = dbConnection.getPassword();
 
         connection = DriverManager.getConnection(url, user, password);
