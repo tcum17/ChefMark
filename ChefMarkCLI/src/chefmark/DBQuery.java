@@ -1,48 +1,34 @@
 package chefmark;
 
-<<<<<<< HEAD
-import java.sql.Connection;
-import java.sql.Statement;
-=======
 import java.sql.*;
->>>>>>> e447491204d5e355c3096bd2e8d91169f3a03ec5
 
 public class DBQuery {
-    private DBConnection dbconnection;
+    private DBConnection dbConnection;
     private Connection connection;
     private Statement statement;
 
 
-    public void setDBConnection(DBConnection dbconnection)
-    {
-        this.dbconnection = dbconnection;
+    public DBQuery(DBConnection dbConnection) {
+        this.dbConnection = dbConnection;
     }
 
-    public void setConnection(Connection connection)
-    {
-        this.connection = connection;
-    } 
+    public void connect() throws SQLException {
+        String url = dbConnection.getURL();
+        String user = dbConnection.getUser();
+        String password = dbConnection.getPassword();
 
-<<<<<<< HEAD
-    // public setStatement(Statement statement)
-    // {
-    //     this.statement = statement;
-    // }
-    // public ResultSet dbQuery(String query)
-    // {
-        
-    // }
-=======
-    public void setStatement(Statement statement)
-    {
-        this.statement = statement;
+        connection = DriverManager.getConnection(url, user, password);
+
+        statement = connection.createStatement();
     }
-    
-    public ResultSet read(User user) {
-        
 
+    public ResultSet executeQuery(String query) throws SQLException {
+        return statement.executeQuery(query);
     }
->>>>>>> e447491204d5e355c3096bd2e8d91169f3a03ec5
 
+    public void disconnect() throws SQLException {
+        statement.close();
+        connection.close();
+    }
 
 }
