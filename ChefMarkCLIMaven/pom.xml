@@ -78,6 +78,11 @@
             <artifactId>checkstyle-rules</artifactId>
             <version>4.9.3</version>
           </dependency>
+          <dependency>
+            <groupId>javax.mail</groupId>
+            <artifactId>mail</artifactId>
+            <version>1.5.0-b01</version>
+          </dependency>
         </dependencies>
         <configuration>
           <configLocation>com/github/ngeor/checkstyle.xml</configLocation>
