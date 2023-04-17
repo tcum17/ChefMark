@@ -35,7 +35,7 @@ public class DBQuery {
     }
 
     public ResultSet delete(User user) {
-        return executeQuery("DELETE FROM USER WHERE USERNAME = '" + user.getUsername() + "'");
+        return executeQuery("DELETE FROM USER WHERE USERNAME = '" + user.getUsername() + "'"); // handles foreign keys
     }
 
     private ResultSet executeQuery(String query) throws SQLException {

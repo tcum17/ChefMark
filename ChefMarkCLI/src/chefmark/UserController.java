@@ -26,10 +26,10 @@ public class UserController {
         return true;
     }
 
-    public boolean login(String username, String password, DBConnection db) {
-        DBQuery dbq = new DBQuery();
-        dbq.setConnection(db.getConection());
-        dbq.setDBConnection(db);
+    public boolean login(String username, String password, DBQuery dbq) {
+        // DBQuery dbq = new DBQuery();
+        // dbq.setConnection(db.getConection());
+        // dbq.setDBConnection(db);
         ResultSet rs = dbq.read(user);
         return false;
     }
