@@ -16,13 +16,14 @@ public class Search {
     private static String edamamAPI = "https://api.edamam.com/api/recipes/v2";
     private static String appid = "f9911515";
     private static String appkey = "eaf6c46148932e8d75de40bcb5392bd3";
-    private static ArrayList<String> pages;
+    private static int currentPage = 0;
+    private static ArrayList<String> pageList;
 
     public static void keywordSearch(String keyword){
         
         String recipeID = "b79327d05b8e5b838ad6cfd9576b30b6";
 
-        String urlString = (edamamAPI+/*"/"+recipeID+*/"?type=public&q="+keyword+"&app_id="+appid+"&app_key="+appkey+"&field=label&field=yield&field=cautions&field=ingredientLines&field=calories&field=totalTime&Field=instructions");
+        String urlString = (edamamAPI+/*"/"+recipeID+*/"?type=public&q="+keyword+"&app_id="+appid+"&app_key="+appkey+"&field=label&field=source&field=url&field=yield&field=cautions&field=ingredientLines&field=calories");
         String pageResult = "";
         try {
             URL url = new URL(urlString);
@@ -43,7 +44,10 @@ public class Search {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        writeSearchPage(pageResult);
+        // writeSearchPage(pageResult);
+        System.out.println(pageResult);
+        pageList.add(pageResult);
+        currentPage = 1;
     }
 
     public static void ingredientSearch(String keyword){
@@ -100,12 +104,14 @@ public class Search {
             JSONObject recipe = (JSONObject) jsonHit.get("recipe");
             String recipeName = "Recipe name: " + recipe.get("label");
             JSONArray ingredientLines = (JSONArray) recipe.get("ingredientLines");
+            String recipeSource = (String) recipe.get("source");
             String recipeUrl = (String) recipe.get("url");
             fileResult += "Hit# " +i+ " " + recipeName + "\n";
             for(Object line : ingredientLines){
                 String sLine = (String) line;
                 fileResult += "\t" + sLine + "\n";
             }
+            fileResult += "\tFor instructions and more information, view the original recipe here at " + recipeSource + "\n\t\t" + recipeUrl + "\n";
             // System.out.println(jsonHit.toJSONString());
             i++;
         }
@@ -113,5 +119,13 @@ public class Search {
 
         fileResult = fileResult.replaceAll("\\\\",""); 
         return fileResult;
+    }
+
+    private static void nextPage(){
+        
+    }
+
+    private static void previousPage(){
+        
     }
 }
