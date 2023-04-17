@@ -2,8 +2,8 @@ package chefmark;
 
 
 import java.util.*;
-import javax.mail.*;
-import javax.mail.internet.*;
+//import javax.mail.*;
+//import javax.mail.internet.*;
 
 
 public class SendEmail{
@@ -22,8 +22,8 @@ public class SendEmail{
         props.put("mail.smtp.auth", "true");
         props.put("mail.smtp.starttls.enable", "true");
 
-        Session session = Session.getInstance(props, new Authenticator() {protected PasswordAuthentication(senderEmail, password);
-        };
+        //Session session = Session.getInstance(props, new Authenticator() {protected PasswordAuthentication(senderEmail, password);
+        //};
         
         try{
             Message mesage = new MimeMessage(session);
