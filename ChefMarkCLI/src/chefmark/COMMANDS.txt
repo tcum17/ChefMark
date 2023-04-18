@@ -1,0 +1,58 @@
+search 
+    random
+        next
+        previous
+    byname
+        next
+        previous
+    byingredient
+        next
+        previous
+    bypantry
+        next
+        previous
+    bycalorie
+        next
+        previous
+create
+    recipe
+    ingredient
+    weeklyplan
+    recipelist
+    back
+delete
+    recipe
+    weeklyplan
+    back
+update
+    recipe
+    weeklyplan
+    back
+add
+    recipelist
+    weeklyplan
+    back
+remove
+    pantry
+    recipelist
+    back
+view
+    pantry
+    recipelist
+    weeklyplan
+    recipe
+    history
+    back
+rate
+    back
+convert
+    back
+share
+    recipe
+    weeklyplan
+    back
+
+
+
+
+
