@@ -2,6 +2,7 @@ package com.chef_mark;
 
 import java.net.URL;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.Scanner;
 import java.io.FileWriter;
@@ -17,14 +18,17 @@ public class Search {
     private static String appid = "f9911515";
     private static String appkey = "eaf6c46148932e8d75de40bcb5392bd3";
     private static int currentPage = 0;
-    private static ArrayList<String> pageList;
+    private static ArrayList<ResultPage> pageList = new ArrayList<>();
 
     public static void keywordSearch(String keyword){
         
         String recipeID = "b79327d05b8e5b838ad6cfd9576b30b6";
 
+        pageList.clear();
+        currentPage = 0;
+
         String urlString = (edamamAPI+/*"/"+recipeID+*/"?type=public&q="+keyword+"&app_id="+appid+"&app_key="+appkey+"&field=label&field=source&field=url&field=yield&field=cautions&field=ingredientLines&field=calories");
-        String pageResult = "";
+        ResultPage pageResult = null;
         try {
             URL url = new URL(urlString);
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
@@ -37,7 +41,7 @@ public class Search {
                 throw new RuntimeException("HTTPResponseCode: " +responseCode);
             }else{
 
-                pageResult = getReturnString(url);
+                pageResult = getPageResponse(url);
 
                 conn.disconnect();
             }
@@ -45,9 +49,8 @@ public class Search {
             e.printStackTrace();
         }
         // writeSearchPage(pageResult);
-        System.out.println(pageResult);
+        System.out.println(pageResult.getPageResult());
         pageList.add(pageResult);
-        currentPage = 1;
     }
 
     public static void ingredientSearch(String keyword){
@@ -68,7 +71,7 @@ public class Search {
         }
     }
 
-    private static String getReturnString(URL url) throws ParseException, IOException
+    private static ResultPage getPageResponse(URL url) throws ParseException, IOException
     {
         StringBuilder responseString = new StringBuilder();
         Scanner scanner = new Scanner(url.openStream());
@@ -98,7 +101,7 @@ public class Search {
         String fileResult = "";
         JSONArray searchHits = null;
         if(jsonresult.containsKey("hits")) searchHits = (JSONArray) jsonresult.get("hits");
-        int i = 1;
+        long i = (long) jsonresult.get("from");
         for(Object hit : searchHits){
             JSONObject jsonHit = (JSONObject) hit;
             JSONObject recipe = (JSONObject) jsonHit.get("recipe");
@@ -115,17 +118,45 @@ public class Search {
             // System.out.println(jsonHit.toJSONString());
             i++;
         }
-        fileResult += "\nNext page link: \n" + nextPage;
+        fileResult += "\nNext page link: \n" + nextPage + "\n";
 
-        fileResult = fileResult.replaceAll("\\\\",""); 
-        return fileResult;
+        fileResult = fileResult.replaceAll("\\\\","");
+
+        ResultPage result = new ResultPage(fileResult, nextPage);
+        return result;
     }
 
-    private static void nextPage(){
-        
+    public static void nextPage(){
+        String result = "";
+        if(currentPage+1 == pageList.size()){
+            try {
+                URL url = new URL(pageList.get(currentPage).getNextPage());
+                HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+                conn.setRequestMethod("GET");
+                conn.connect();
+                ResultPage pageResult = getPageResponse(url);
+                pageList.add(pageResult);
+                result = pageResult.getPageResult();
+                currentPage++;
+            } catch (Exception e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }      
+        }else{
+            currentPage++;
+            result = pageList.get(currentPage).getPageResult();
+        }
+        System.out.println(result);
     }
 
-    private static void previousPage(){
-        
+    public static void previousPage(){
+        String result = "";
+        if(currentPage == 0){
+            System.out.println("No previous page!");
+        }else{
+            currentPage--;
+            result = pageList.get(currentPage).getPageResult();
+        }
+        System.out.println(result);
     }
 }
