@@ -1,4 +1,4 @@
 {
-    "java.configuration.updateBuildConfiguration": "interactive"
-    "java.classpath": "$"
+    "java.configuration.updateBuildConfiguration": "interactive",
+    "java.classpath" : "$ChefMark/ChefMarkCLI/lib/javax.mail.jar"
 }
