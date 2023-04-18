@@ -22,19 +22,19 @@ public class DBQuery {
         statement = connection.createStatement();
     }
 
-    public ResultSet create(User user) {
+    public ResultSet create(User user) throws SQLException {
         return executeQuery("INSERT INTO USER VALUES(" + user.getUsername() + ", " + user.getPassword() + ", " + user.getEmail());
     }
 
-    public ResultSet read(User user) {
+    public ResultSet read(User user) throws SQLException {
         return executeQuery("SELECT * FROM USER WHERE USERNAME = '" + user.getUsername() + "'");
     }
 
-    public ResultSet update(User user) {
+    public ResultSet update(User user) throws SQLException {
         return executeQuery("UPDATE USER SET userPassword = '" + user.getPassword() + "', email = '" + user.getEmail() + "' WHERE USERNAME = '" + user.getUsername() + "'");
     }
 
-    public ResultSet delete(User user) {
+    public ResultSet delete(User user) throws SQLException {
         return executeQuery("DELETE FROM USER WHERE USERNAME = '" + user.getUsername() + "'"); // handles foreign keys
     }
 
