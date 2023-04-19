@@ -19,17 +19,16 @@ System.out.println("4. Share Weekly Plan ");
 }
 
 public void executeCommand(String command){
-    switch(command){
-        case 1:
-            break;
-        case 2:
-            break;
-        case 3:
-            break;
-        case 4:
-            break;
-    }
-
+    // switch(command){
+    //     case 1:
+    //         break;
+    //     case 2:
+    //         break;
+    //     case 3:
+    //         break;
+    //     case 4:
+    //         break;
+    // }
 }
 
 }
