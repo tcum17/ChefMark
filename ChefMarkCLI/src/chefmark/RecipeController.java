@@ -2,7 +2,7 @@ package chefmark;
 public class RecipeController {
     
 
-    public Recipe createRecipe(Recipe recipe)
+    public Recipe createRecipe()
     {
 
     }

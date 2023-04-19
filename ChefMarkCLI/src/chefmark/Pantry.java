@@ -10,9 +10,7 @@ public class Pantry {
     }
 
     public boolean removeIngredient(Ingredient ingredient) {
-
-        Ingredient temp = search(ingredient.getIngredientName());
-        return ingredientList.remove(temp);
+        return ingredientList.remove(search(ingredient.getIngredientName()));
     }
 
     private Ingredient search(String ingredientName) {
@@ -25,4 +23,7 @@ public class Pantry {
     }
 
     // TODO: createIngredient
+    public void createIngredient(Ingredient ingredient) {
+        ingredientList.add(ingredient);
+    }
 }
