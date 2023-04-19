@@ -10,7 +10,9 @@ public class Pantry {
     }
 
     public boolean removeIngredient(Ingredient ingredient) {
-        return ingredientList.remove(search(ingredient.getIngredientName()));
+
+        Ingredient temp = search(ingredient.getIngredientName());
+        return ingredientList.remove(temp);
     }
 
     private Ingredient search(String ingredientName) {
@@ -22,8 +24,13 @@ public class Pantry {
         return null;
     }
 
-    // TODO: createIngredient
-    public void createIngredient(Ingredient ingredient) {
-        ingredientList.add(ingredient);
+    public Ingredient createIngredient(String ingredientName, float quantity, String measure, float weight){
+
+        Ingredient newIngredient = new Ingredient();
+        newIngredient.setIngredientName(ingredientName);
+        newIngredient.setQuantity(quantity);
+        newIngredient.setMeasure(measure);
+        newIngredient.setWeight(weight);
+        return newIngredient;
     }
 }
