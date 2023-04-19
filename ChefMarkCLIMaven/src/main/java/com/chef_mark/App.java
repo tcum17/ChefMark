@@ -18,6 +18,9 @@ public class App
     public static void main( String[] args )
     {
         Search.keywordSearch("Chicken");
+        Search.nextPage();
+        Search.previousPage();
+        Search.previousPage();
     }
 }
 
