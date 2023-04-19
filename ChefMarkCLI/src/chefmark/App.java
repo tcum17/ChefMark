@@ -1,6 +1,7 @@
 package chefmark;
 
 import java.util.Scanner;
+import java.sql.ResultSet;
 
 public class App {
     private static final String RETRY = "Your answer did not match any of our options. Please reenter";
@@ -10,7 +11,8 @@ public class App {
         Scanner sc = new Scanner(System.in);
         String currentUser;
         String password;
-        DBConnection db = new DBConnection(); // mySQL
+        DBQuery dbq = new DBQuery(new MySQLDB());
+        //DBConnection db = new DBConnection(new MySQLDB()); // mySQL
         UserController uc = new UserController();
 
         System.out.println("Type \"Exit\" to quit the program");
@@ -18,7 +20,10 @@ public class App {
         currentUser = sc.nextLine();
         System.out.println("Enter your password: ");
         password = sc.nextLine();
-        uc.login(currentUser, password, db);
+
+        dbq.connect();
+        ResultSet rs = dbq.read(new User(currentUser, password, ""));
+        //uc.login(currentUser, password, dbq);
 
         String exit = sc.nextLine();
 

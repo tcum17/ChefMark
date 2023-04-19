@@ -13,6 +13,13 @@ public class DBQuery {
     }
 
     public void connect() throws SQLException {
+        try {
+            Class.forName("com.mysql.jdbc.Driver");
+        } catch (ClassNotFoundException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
         String url = dbConnection.getURL();
         String user = dbConnection.getUsername();
         String password = dbConnection.getPassword();
