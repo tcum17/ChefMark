@@ -1,6 +1,7 @@
 package chefmark;
 
 import java.sql.ResultSet;
+import java.sql.SQLException;
 
 public class UserController {
     private User user;
@@ -30,7 +31,7 @@ public class UserController {
         return true;
     }
 
-    public boolean login(String username, String password, DBQuery dbq) {
+    public boolean login(String username, String password, DBQuery dbq) throws SQLException {
         // DBQuery dbq = new DBQuery();
         // dbq.setConnection(db.getConection());
         // dbq.setDBConnection(db);

@@ -9,8 +9,14 @@
 	],
 	"settings": {
 		"java.configuration.updateBuildConfiguration": "interactive",
-		"java.project.referencedLibraries": [
-			"lib/**/*.jar"
-		]
+		"java.project.referencedLibraries": {
+			"include": [
+				"lib/**/*.jar"
+			],
+			"exclude": [
+				"lib/mysql-socket-factory-connector-j-8-1.11.0-jar-with-dependencies.jar",
+				"lib/javax.mail.jar"
+			]
+		}
 	}
 }
