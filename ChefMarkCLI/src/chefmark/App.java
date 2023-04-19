@@ -211,6 +211,7 @@ public class App {
                     } else {
                         System.out.println(RETRY);
                     }
+                }
             } else if (homeInput.equals("9")){
                 
             } else if (homeInput.equals("10")){

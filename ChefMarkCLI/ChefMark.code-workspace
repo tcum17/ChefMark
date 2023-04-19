@@ -8,6 +8,9 @@
 		}
 	],
 	"settings": {
-		"java.configuration.updateBuildConfiguration": "interactive"
+		"java.configuration.updateBuildConfiguration": "interactive",
+		"java.project.referencedLibraries": [
+			"lib/**/*.jar"
+		]
 	}
 }
