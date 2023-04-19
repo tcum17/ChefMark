@@ -14,7 +14,7 @@ public class DBQuery {
 
     public void connect() throws SQLException {
         try {
-            Class.forName("com.mysql.jdbc.Driver");
+            Class.forName("com.mysql.cj.jdbc.Driver");
         } catch (ClassNotFoundException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
@@ -24,13 +24,14 @@ public class DBQuery {
         String user = dbConnection.getUsername();
         String password = dbConnection.getPassword();
 
-        connection = DriverManager.getConnection(url, user, password);
+        connection = DriverManager.getConnection(url, user, password); // check if db is online
 
         statement = connection.createStatement();
     }
 
-    public ResultSet create(User user) throws SQLException {
-        return executeQuery("INSERT INTO USER VALUES(" + user.getUsername() + ", " + user.getPassword() + ", " + user.getEmail());
+    public void create(User user) throws SQLException {
+        //String query = "INSERT INTO USER VALUES('" + user.getUsername() + "', '" + user.getPassword() + "', '" + user.getEmail() + "'";
+        statement.execute("INSERT INTO USER VALUES('" + user.getUsername() + "', '" + user.getPassword() + "', '" + user.getEmail() + "', '', '')");
     }
 
     public ResultSet read(User user) throws SQLException {
