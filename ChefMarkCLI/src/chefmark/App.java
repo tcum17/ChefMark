@@ -1,7 +1,10 @@
 package chefmark;
 
+
+
 import java.util.Scanner;
 import java.sql.ResultSet;
+import java.util.ArrayList;
 
 public class App {
     private static final String RETRY = "Your answer did not match any of our options. Please reenter";
@@ -119,8 +122,42 @@ public class App {
                             while(searchAgain)
                             {
                                 System.out.println("Please enter the name of the recipe you would like to search: ");
+                                String nameInput = sc.nextLine();
+                                //search method
+
+                                System.out.println("Do you want to search for another recipe?\n1 - Yes\n2 - No");
+                                String researchInput = sc.nextLine();
+                                if(researchInput.equals("2"))
+                                {
+                                    searchAgain = false;
+                                }
                             }
                     } else if (searchInput.equals("2")) {
+                        boolean searchAgain = true;
+                            while(searchAgain)
+                            {
+                                ArrayList<String> ingredients = new ArrayList<String>();
+                                String ingredInput = "";
+                                System.out.println("Please enter the ingredients you would like to use in a recipe:\nEnter \"Stop\" to stop");
+                                while(!ingredInput.equalsIgnoreCase("stop"))
+                                {
+                                    ingredInput = sc.nextLine();
+                                    if(!ingredInput.equalsIgnoreCase("stop"))
+                                    {
+                                        ingredients.add(ingredInput);
+                                    }
+                                    
+                                }
+                                
+                                
+
+                                System.out.println("Do you want to search for another recipe?\n1 - Yes\n2 - No");
+                                String researchInput = sc.nextLine();
+                                if(researchInput.equals("2"))
+                                {
+                                    searchAgain = false;
+                                }
+                            }
 
                     } else if (searchInput.equals("3")) {
 
@@ -167,9 +204,8 @@ public class App {
                                     System.out.println("Please enter try again: ");
                                     weight = sc.nextFloat();
                                 }
-                                System.out.println("Please enter the ingredient food category: ");
-                                String category = sc.nextLine();
-                                Ingredient newIngredient = new Ingredient();
+                                //ingredi.createIngredient(ingredientName, quantity, measure, weight);
+                            
                                 
                                 
                             }
@@ -286,6 +322,7 @@ public class App {
                         System.out.println(RETRY);
                     }
                 }
+
             } else if (homeInput.equals("9")){
                 //convert
                 String convertInput = "";
