@@ -7,29 +7,23 @@ public class App {
     private static final String RETRY = "Your answer did not match any of our options. Please reenter";
 
     public static void main(String[] args) throws Exception {
-        System.out.println("Hello, World!");
         Scanner sc = new Scanner(System.in);
         String currentUser;
         String password;
         DBQuery dbq = new DBQuery(new MySQLDB());
+        User user;
+        String state = "";
         //DBConnection db = new DBConnection(new MySQLDB()); // mySQL
         UserController uc = new UserController();
 
-        System.out.println("Type \"Exit\" to quit the program");
-        System.out.println("Enter your username: ");
-        currentUser = sc.nextLine();
-        System.out.println("Enter your password: ");
-        password = sc.nextLine();
-
+        //System.out.println("Type \"Exit\" to quit the program");
         dbq.connect();
-        ResultSet rs = dbq.read(new User(currentUser, password, ""));
-        //uc.login(currentUser, password, dbq);
 
-        String exit = sc.nextLine();
+        //String exit = sc.nextLine();
 
-        if (exit.equals("Exit")) {
-            System.exit(0);
-        }
+        // if (exit.equals("Exit")) {
+        //     System.exit(0);
+        // }
         boolean signedIn = false;
         String choice = "";
         while (!choice.equals("quit")) {
@@ -41,6 +35,22 @@ public class App {
                 String startScreenInput = sc.nextLine();
 
                 if (startScreenInput.equals("login")) {
+                    System.out.println("\nEnter your username: ");
+                    currentUser = sc.nextLine();
+                    System.out.println("Enter your password: ");
+                    password = sc.nextLine();
+            
+                    //dbq.connect();
+                    ResultSet rs = dbq.read(new User(currentUser, password, ""));
+                    while (rs.next()) {
+                        if (rs.getString(1).equals(currentUser) && rs.getString(2).equals(password)) {
+                            System.out.println("\nLogin successful! Press 'Enter' to continue");
+                            signedIn=true;
+                        }
+                        else {
+                            System.out.println("\nUsername or password is incorrect. Do you have an account?");
+                        }
+                    }
                     /**
                      * LOGIN
                      * 
@@ -49,8 +59,32 @@ public class App {
                      * If password incorrect, tell user, reprompt password field
                      * Otherwise, enter into main application
                      */
-                    signedIn = true;
+                    //signedIn = true;
                 } else if (startScreenInput.equals("signup")) {
+                    String email = "";
+                    System.out.println("Enter your desired username: ");
+                    currentUser = sc.nextLine();
+                    System.out.println("Enter your desired password: ");
+                    password = sc.nextLine();
+                    System.out.println("Enter your desired email: ");
+                    email = sc.nextLine();
+                    user = new User(currentUser, password, email);
+                    ResultSet rs = dbq.read(user);
+                    while (rs.next()) {
+                        while (currentUser.equals(rs.getString(1))) {
+                            System.out.println("Username already taken. Please enter a new username: ");
+                            currentUser = sc.nextLine();
+                        }
+                        while (email.equals(rs.getString(3))) {
+                            System.out.println("Email already taken. Please enter a new email: ");
+                            email = sc.nextLine();
+                        }
+
+                    }
+                    dbq.create(user);
+                    System.out.println("You are now logged in. Please save your login info as this cannot be retrieved.");
+                    currentUser = user.getUsername();
+                    //dbq.create(new User(currentUser, password, email));
                     /**
                      * SIGNUP
                      * 
@@ -81,7 +115,11 @@ public class App {
                             "1 - By Name\n2 - By Ingredient\n3 - By Pantry\n4 - By Calories\n5 - Random\n6 - Back");
                     searchInput = sc.nextLine();
                     if (searchInput.equals("1")) {
-
+                            boolean searchAgain = true;
+                            while(searchAgain)
+                            {
+                                System.out.println("Please enter the name of the recipe you would like to search: ");
+                            }
                     } else if (searchInput.equals("2")) {
 
                     } else if (searchInput.equals("3")) {
@@ -106,9 +144,41 @@ public class App {
                         if (createInput.equals("1")) {
 
                         } else if (createInput.equals("2")) {
-
+                            String back = "";
+                            while(!back.equals("back"))
+                            {
+                                System.out.println("Create an Ingredient:");
+                                System.out.println("Please enter a Name for the ingredient: ");
+                                String ingredientName = sc.nextLine();
+                                System.out.println("Please enter a number quantity of your ingredient: ");
+                                float quantity = sc.nextFloat();
+                                while(quantity>Float.MAX_VALUE || quantity<Float.MIN_VALUE){
+                                    System.out.println("Your number is either to large or to small");
+                                    System.out.println("Please enter try again: ");
+                                    quantity = sc.nextFloat();
+                                }
+                                System.out.println(
+                                    "Please enter a measure for the quantity of your ingredients(Cups, grams, ect...): ");
+                                    String measure = sc.nextLine();
+                                System.out.println("Please enter a weight for your ingredient");
+                                    float weight = sc.nextFloat();
+                                while(weight>Float.MAX_VALUE || weight<Float.MIN_VALUE){
+                                    System.out.println("Your number is either to large or to small");
+                                    System.out.println("Please enter try again: ");
+                                    weight = sc.nextFloat();
+                                }
+                                System.out.println("Please enter the ingredient food category: ");
+                                String category = sc.nextLine();
+                                Ingredient newIngredient = new Ingredient();
+                                
+                                
+                            }
                         } else if (createInput.equals("3")) {
-
+                            //@author 
+                            String back = "";
+                            while (!back.equals("back")) {
+                                System.out.println("");
+                            }
                         } else if (createInput.equals("4")) {
 
                         } else if (createInput.equals("5")) {
@@ -202,9 +272,8 @@ public class App {
                         System.out.println(RETRY);
                     }
                 }
-                
+
             } else if (homeInput.equals("8")){
-                //rate
                 String rateInput = "";
                 while (!rateInput.equals("2")) {
                     System.out.println("1 - Recipe\n2 - Back");
@@ -216,9 +285,39 @@ public class App {
                     } else {
                         System.out.println(RETRY);
                     }
+                }
+
             } else if (homeInput.equals("9")){
+                //convert
+                String convertInput = "";
+                while (!convertInput.equals("2")) {
+                    System.out.println("1 - Recipe\n2 - Back");
+                    convertInput = sc.nextLine();
+                    if (convertInput.equals("1")) {
+                        //find the one to rate
+                    } else if (convertInput.equals("2")) {
+                        convertInput = "6";
+                    } else {
+                        System.out.println(RETRY);
+                    }
+                }
                 
             } else if (homeInput.equals("10")){
+                String shareInput = "";
+                while (!shareInput.equals("3")) {
+                    System.out
+                            .println("1 - Recipe\n2 - Weekly Plan\n3 - Back");
+                    shareInput = sc.nextLine();
+                    if (shareInput.equals("1")) {
+
+                    } else if (shareInput.equals("2")) {
+
+                    } else if (shareInput.equals("3")) {
+                        shareInput = "3";
+                    } else {
+                        System.out.println(RETRY);
+                    }
+                }
                 
             } else if (homeInput.equals("11")){
                 
