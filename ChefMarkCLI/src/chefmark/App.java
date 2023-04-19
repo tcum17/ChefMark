@@ -286,7 +286,6 @@ public class App {
                         System.out.println(RETRY);
                     }
                 }
-
             } else if (homeInput.equals("9")){
                 //convert
                 String convertInput = "";
