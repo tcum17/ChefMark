@@ -1,4 +1,4 @@
-package com.chef_mark;
+package chefmark;
 
 import java.net.URL;
 import java.net.HttpURLConnection;

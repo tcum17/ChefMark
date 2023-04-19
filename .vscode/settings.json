@@ -1,8 +1,4 @@
 {
     "java.configuration.updateBuildConfiguration": "interactive",
-    "java.project.referencedLibraries": [
-        {
-            "path": "../ChefMarkCLI/lib/mysql-connector-java-8.0.27.jar"
-        }
-    ]
+    "java.classpath": "$/ChefMarkCLI/lib/javax.mail.jar"
 }

@@ -202,9 +202,21 @@ public class App {
                         System.out.println(RETRY);
                     }
                 }
-
+                
             } else if (homeInput.equals("8")){
-
+                //rate
+                String rateInput = "";
+                while (!rateInput.equals("2")) {
+                    System.out.println("1 - Recipe\n2 - Back");
+                    rateInput = sc.nextLine();
+                    if (rateInput.equals("1")) {
+                        //find the one to rate
+                    } else if (rateInput.equals("2")) {
+                        rateInput = "6";
+                    } else {
+                        System.out.println(RETRY);
+                    }
+                }
             } else if (homeInput.equals("9")){
                 
             } else if (homeInput.equals("10")){
