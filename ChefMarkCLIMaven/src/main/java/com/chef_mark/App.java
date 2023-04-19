@@ -21,6 +21,7 @@ public class App
         Search.nextPage();
         Search.previousPage();
         Search.previousPage();
+        Search.viewRecipe(20);
     }
 }
 
