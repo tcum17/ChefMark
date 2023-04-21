@@ -24,7 +24,7 @@ public class App {
         Pattern passwordRegex = Pattern.compile("^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=!])(?=[^\r\n\t\f ]+$).{8,}$"); // password
 
         //System.out.println("Type \"Exit\" to quit the program");
-        // dbq.connect();
+        dbq.connect();
 
         //String exit = sc.nextLine();
 
@@ -109,7 +109,7 @@ public class App {
 
                     }
                     dbq.create(user);
-                    System.out.println("You are now logged in. Please save your login info as this cannot be retrieved.");
+                    System.out.println("You are now logged in. Please save your login info as this cannot be retrieved. Press enter to continue");
                     currentUser = user.getUsername();
                     //dbq.create(new User(currentUser, password, email));
                     /**
