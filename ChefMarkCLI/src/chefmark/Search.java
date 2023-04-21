@@ -18,18 +18,16 @@ public class Search {
     private static String appid = "f9911515";
     private static String appkey = "eaf6c46148932e8d75de40bcb5392bd3";
     private static int currentPage = 0;
-    private static ArrayList<ResultPage> pageList = new ArrayList<>();
+    private static ArrayList<ResultPage> pageList = new ArrayList<>(); //cache results
     private static ArrayList<JSONObject> jsonPageList = new ArrayList<>();
 
     public static void keywordSearch(String keyword){
-        
-        String recipeID = "b79327d05b8e5b838ad6cfd9576b30b6";
 
         jsonPageList.clear();
         pageList.clear();
         currentPage = 0;
 
-        String urlString = (edamamAPI+/*"/"+recipeID+*/"?type=public&q="+keyword+"&app_id="+appid+"&app_key="+appkey+"&field=uri&field=label&field=source&field=url&field=yield&field=cautions&field=ingredientLines&field=calories");
+        String urlString = (edamamAPI+"?type=public&q="+keyword+"&app_id="+appid+"&app_key="+appkey+"&field=uri&field=label&field=source&field=url&field=yield&field=cautions&field=ingredientLines&field=calories");
         ResultPage pageResult = null;
         try {
             URL url = new URL(urlString);
@@ -50,7 +48,6 @@ public class Search {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        // writeSearchPage(pageResult);
         System.out.println(pageResult.getPageResult());
         System.out.flush();
         pageList.add(pageResult);
@@ -58,20 +55,6 @@ public class Search {
 
     public static void ingredientSearch(String keyword){
         keywordSearch(keyword);
-    }
-
-    public static void writeSearchPage(String page){
-        try {
-            FileWriter file = new FileWriter("testjson.txt");
-
-            file.write(page);
-            file.flush();
-            file.close();
-            
-        } catch (Exception e) {
-            // TODO: handle exception
-            e.printStackTrace();
-        }
     }
 
     private static ResultPage getPageResponse(URL url) throws ParseException, IOException
@@ -85,13 +68,9 @@ public class Search {
 
         scanner.close();
 
-        // System.out.println(responseString);
-
         JSONParser parser = new JSONParser();
         Object obj = parser.parse(String.valueOf(responseString));
 
-        //Get the first JSON object in the JSON array
-        // System.out.println(array.get(0));
         JSONObject jsonresult = (JSONObject) obj;
         jsonPageList.add(jsonresult);
         JSONObject links = null;
@@ -100,9 +79,8 @@ public class Search {
         if(jsonresult.containsKey("_links")) links = (JSONObject) jsonresult.get("_links");
         if(links.containsKey("next") && links != null) next = (JSONObject) links.get("next");
         if(next.containsKey("href") && next != null) nextPage = (String) next.get("href");
-        // System.out.println(recipe);
 
-        String fileResult = "";
+        String resultString = "";
         JSONArray searchHits = null;
         if(jsonresult.containsKey("hits")) searchHits = (JSONArray) jsonresult.get("hits");
         long resultNumber = (long) jsonresult.get("from");
@@ -114,21 +92,20 @@ public class Search {
             JSONArray ingredientLines = (JSONArray) recipe.get("ingredientLines");
             String recipeSource = (String) recipe.get("source");
             String recipeUrl = (String) recipe.get("url");
-            fileResult += pageIndex+" Hit# " +resultNumber+ " " + recipeName + "\n";
+            resultString += pageIndex+" " + recipeName + "\n";
             for(Object line : ingredientLines){
                 String sLine = (String) line;
-                fileResult += "\t" + sLine + "\n";
+                resultString += "\t" + sLine + "\n";
             }
-            fileResult += "\tFor instructions and more information, view the original recipe here at " + recipeSource + "\n\t\t" + recipeUrl + "\n";
-            // System.out.println(jsonHit.toJSONString());
+            resultString += "\tFor instructions and more information, view the original recipe here at " + recipeSource + "\n\t\t" + recipeUrl + "\n";
             resultNumber++; 
             pageIndex++;
         }
-        fileResult += "\nNext page link: \n" + nextPage + "\n";
+        resultString += "\nNext page link: \n" + nextPage + "\n";
 
-        fileResult = fileResult.replaceAll("\\\\","");
+        resultString = resultString.replaceAll("\\\\","");
 
-        ResultPage result = new ResultPage(fileResult, nextPage);
+        ResultPage result = new ResultPage(resultString, nextPage);
         return result;
     }
 
@@ -229,6 +206,13 @@ public class Search {
         }else{
             result = "The index provided is out of bounds, it must be 1-20";
         }
+        System.out.println(result);
+        System.out.flush();
+    }
+
+    public static void displayCurrentPage(){
+        String result;
+        result = pageList.get(currentPage).getPageResult();
         System.out.println(result);
         System.out.flush();
     }
