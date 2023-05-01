@@ -1,0 +1,32 @@
+View:
+    1 - Weekly Plan, 2 - Recipe List, 3 - Pantry, 4 - Custom Recipes, 5 - Back
+        (2)
+            show all recipe lists
+                (choose recipe list by name)
+                    display all recipes in recipe list (rl.info())
+                        1 - Update Recipe List Info, 2 - Delete Recipe, 3 - View Recipe, 4 - Back
+
+View:
+    1 - Weekly Plan, 2 - Recipe List, 3 - Pantry, 4 - Custom Recipes, 5 - Back
+        (1)
+            show all weekly plans
+                (choose weekly plan by name)
+                    display all recipes in weekly plan (sysout(wp.info()))
+                        1 - Update Weekly Plan Info, 2 - Delete Recipe, 3 - View Recipe, 4 - Back
+
+View:
+    1 - Weekly Plan, 2 - Recipe List, 3 - Pantry, 4 - Custom Recipes, 5 - Back
+        (3)
+            show all ingredients in pantry
+                1 - Add Ingredient, 2 - Delete Ingredient, 3 - Update Ingredient, 4 - Back
+
+View:
+    1 - Weekly Plan, 2 - Recipe List, 3 - Pantry, 4 - Custom Recipes, 5 - Back
+        (4)
+            show all recipes
+                1 - Delete Recipe, 2 - View Recipe, 3 - Back
+
+View Recipe:
+    display recipe info
+        1 - Add Recipe, 2 - Update Recipe, 3 - Rate, 4 - Back 
+            (For Update Recipe, Save this as a custom recipe)
