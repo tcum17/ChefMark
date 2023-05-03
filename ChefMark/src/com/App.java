@@ -1215,10 +1215,10 @@ public class App {
     
     private static void viewRecipe(Recipe recipe, Scanner sc, UserController uc, DBQuery dbq) throws SQLException
     {
+        uc.getUser().addToRecipeHistory(recipe);
         boolean done =false;
         while(!done)
         {
-            uc.getUser().addToRecipeHistory(recipe);
             System.out.println("=== Viewed Recipe ===\n"+recipe.printRecipe());
             System.out.println(VIEW_RECIPE_OPTIONS);
             String input = sc.nextLine();
