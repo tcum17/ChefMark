@@ -1,7 +1,5 @@
 
 
-import java.sql.*;
-
 public class MySQLDB extends DBConnection{
     
     @Override

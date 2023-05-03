@@ -10,6 +10,14 @@ public class NutritionalFacts {
     private double glycemicIndex;
     private double yeild;
 
+    public NutritionalFacts(ArrayList<String> dietLabels, ArrayList<String> healthLabels, double calories) {
+        this.dietLables = dietLabels;
+        this.healthLables = healthLabels;
+        this.calories = calories;
+    }
+
+    public NutritionalFacts() {}
+
     public ArrayList<String> getHealthLables() {
         return healthLables;
     }

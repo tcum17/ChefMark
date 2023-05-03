@@ -2,6 +2,7 @@ import java.sql.Connection;
 import java.sql.Statement;
 import java.sql.SQLException;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
 public class MySQLQuery extends DBQuery{
@@ -98,12 +99,40 @@ public class MySQLQuery extends DBQuery{
 
     }
 
+    public ResultSet populateWeeklyPlan(WeeklyPlan weeklyPlan, User user) throws SQLException {
+        String query = "SELECT * FROM WEEKLYPLAN WHERE weeklyplan.USERNAME=?";
+        PreparedStatement statement = connection.prepareStatement(query);
+        statement.setString(1, user.getUsername());
+        ResultSet rs = statement.executeQuery();
+        //ResultSet rs = statement.executeQuery("SELECT * FROM WEEKLYPLAN,USER WHERE user.username=weeklyplan.username and user.USERNAME='" + user.getUsername() + "'");
+        if (rs.next()) {
+
+        }
+        return rs;
+    }
+
+    public ResultSet populateCustomRecipe(Recipe recipe, User user) throws SQLException {
+        String query = "select distinct recipeName, url, source, ingredients, dietLabels, healthLabels, calories, instructions, cautions, recipe.username from recipe where recipe.username=? and recipe.source is null";
+        PreparedStatement statement = connection.prepareStatement(query);
+        statement.setString(1, user.getUsername());
+        ResultSet rs = statement.executeQuery();
+        return rs;
+    }
+
+    public ResultSet read(WeeklyPlan weeklyPlan, User user) throws SQLException {
+        return statement.executeQuery("SELECT * FROM WEEKLYPLAN WHERE USERNAME='" + user.getUsername() + "' AND NAME='" + weeklyPlan.getName() + "'");
+    }
+
+    public ResultSet read(WeeklyPlan weeklyPlan, User user, String day) throws SQLException {
+        return statement.executeQuery("select distinct recipeName, url, source, ingredients, dietLabels, healthLabels, calories, instructions, cautions, recipe.username from recipe,weeklyplan,weeklyplanitem where recipe.username=weeklyplan.username and weeklyplan.weeklyPlanid=weeklyplanitem.weeklyplanid and recipe.username='" + user.getUsername() + "' and dayOfWeek='" + day + "' and recipe.recipeID=weeklyplanitem.recipeid and weeklyPlan.name='" + weeklyPlan.getName() + "'");
+    }
+
     public void create(WeeklyPlan weeklyPlan, User user) throws SQLException {
         //check if it exists
-        ResultSet rs = statement.executeQuery("SELECT WEEKLYPLANID FROM WEEKLYPLAN,USER WHERE WEEKLYPLANNAME='" + weeklyPlan.getName() + "' AND USERNAME = '" + user.getUsername() + "'");
+        ResultSet rs = statement.executeQuery("SELECT WEEKLYPLANID FROM WEEKLYPLAN WHERE NAME='" + weeklyPlan.getName() + "' AND USERNAME = '" + user.getUsername() + "'");
         //String recipeIds = RecipeController.
-        if (rs.next()) {
-            statement.execute("INSERT INTO WEEKLYPLAN (WEEKLYPLANNAME, RECIPEIDS, USERNAME) VALUES('" + weeklyPlan.getName() + "', '', '" + user.getUsername() + "')");
+        if (!rs.next()) {
+            statement.execute("INSERT INTO WEEKLYPLAN (NAME, USERNAME) VALUES('" + weeklyPlan.getName() + "', '" + user.getUsername() + "')");
             //ResultSet rs2 = statement.executeQuery("SELECT WEEKLYPLANID FROM WEEKLYPLAN WHERE WEEKLYPLANNAME='" + weeklyPlan.getName() + "' AND USERNAME='" + user.getUsername() + "'");
             //statement.execute("INSERT INTO WEEKLYPLANITEM ()")
         }
@@ -112,12 +141,36 @@ public class MySQLQuery extends DBQuery{
         }
     }
 
-    public void update(WeeklyPlan weeklyPlan, User user) throws SQLException {
+    public void update(WeeklyPlan weeklyPlan, Recipe recipe, User user) throws SQLException {
         ResultSet rs = statement.executeQuery("SELECT WEEKLYPLANID FROM WEEKLYPLAN,USER WHERE WEEKLYPLANNAME='" + weeklyPlan.getName() + "' AND USERNAME = '" + user.getUsername() + "'");
-        if (rs.next()) {
+        if (!rs.next()) {
+            ResultSet rs2 = read(recipe, user);
+            if (rs2.next()) {
+                ResultSet rs3 = read(weeklyPlan, user);
+                if (rs3.next()) {
+                    //statement.execute("UPDATE WEEKLYPLANITEM ")
+                }
+            }
             //weeklyPlan.get -- ask group what we really want
             statement.execute("UPDATE WEEKLYPLAN");
         }
+    }
+
+    public void create(WeeklyPlan weeklyPlan, Recipe recipe, User user, String day) throws SQLException {
+        //ResultSet rs = statement.executeQuery("SELECT WEEKLYPLANID FROM WEEKLYPLAN,USER WHERE NAME='" + weeklyPlan.getName() + "' AND USER.USERNAME = '" + user.getUsername() + "'");
+        //if (!rs.next()) {
+            ResultSet rs2 = read(recipe, user);
+            int recipeId = -1;
+            if (rs2.next()) {
+                recipeId=Integer.parseInt(rs2.getString(1));
+            }
+            ResultSet rs3 = read(weeklyPlan, user);
+            if (rs3.next()) {
+                statement.execute("INSERT INTO WEEKLYPLANITEM (dayOfWeek, recipeId, weeklyPlanId) values('" + day + "', " + recipeId + ", " + Integer.parseInt(rs3.getString(1)) + ")");
+            }
+            //weeklyPlan.get -- ask group what we really want
+            //statement.execute("UPDATE WEEKLYPLAN");
+        //}
     }
 
     public void create(Recipe recipe, User user) throws SQLException {
@@ -126,13 +179,21 @@ public class MySQLQuery extends DBQuery{
         String healthLabels = RecipeController.arrayListToText(recipe.getNutritionalFacts().getHealthLables());
         double calories = recipe.getNutritionalFacts().getCalories();
         double glycemicIndex = recipe.getNutritionalFacts().getGlycemicIndex();
-        double yield = recipe.getNutritionalFacts().getYeild();
+        double recipeYield = recipe.getNutritionalFacts().getYeild();
+        String instructions = RecipeController.arrayListToText(recipe.getInstructions().getInstructions());
+        String cautions = RecipeController.arrayListToText(recipe.getInstructions().getCautions());
         ResultSet rs = statement.executeQuery("SELECT RECIPEID FROM RECIPE WHERE RECIPENAME='" + recipe.getName() + "'");
         if (!rs.next()) {
-            statement.execute("INSERT INTO RECIPE (recipeName, url, source, ingredients, totalWeight, dietLabels, healthLabels, calories, glycemicIndex, yield, instructions, cautions, dishType, mealType, username)" +
-            "values('" + recipe.getName() + "', '" + recipe.getURL() + "', '" + recipe.getSource() + "', '" + ingredients + "', " + recipe.getTotalWeight() + ", '" + dietLabels + "', '" + healthLabels + "', " + calories + ", " + glycemicIndex + ", " + )");
+            statement.execute("INSERT INTO RECIPE (recipeName, url, source, ingredients, totalWeight, dietLabels, healthLabels, calories, glycemicIndex, yield, instructions, cautions, username)" +
+            "values('" + recipe.getName() + "', '" + recipe.getURL() + "', '" + recipe.getSource() + "', '" + ingredients + "', " + recipe.getTotalWeight() + ", '" + dietLabels + "', '" + healthLabels + "', " + calories + ", " + glycemicIndex + ", " + recipeYield + ", '" + instructions + "', '" + cautions + "', '" + user.getUsername() + "')");
         }
     }
+
+    public ResultSet read(Recipe recipe, User user) throws SQLException {
+        return statement.executeQuery("SELECT recipeId, recipeName, url, source, ingredients, totalWeight, dietLabels, healthLabels, calories, glycemicIndex, yield, instructions, cautions, username from RECIPE where username='" + user.getUsername() + "' and recipeName='" + recipe.getName() + "'");
+    }
+
+
 
     
 

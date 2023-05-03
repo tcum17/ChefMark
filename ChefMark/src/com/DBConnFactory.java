@@ -18,10 +18,12 @@ public class DBConnFactory {
 
     public static DBConnection getDBConnection(DBConnType DBType){
         if(DBType.equals(DBConnType.MYSQL)){
-            return new MySQLDB();
-        }
+            if (conn == null) conn = new MySQLDB();
+            return conn;
+        }   
         else{
-            return new MySQLDB();
+            if (conn == null) conn = new MySQLDB();
+            return conn;
         }
     }
     

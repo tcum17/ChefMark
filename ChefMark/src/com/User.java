@@ -1,6 +1,5 @@
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 public class User {
     private String username;
@@ -185,15 +184,17 @@ public class User {
     }
 
     public void addToRecipeHistory(Recipe recipe){
-        recipeHistory.add(recipe);
-        if(recipeHistory.size() > MAX_RECIPE_HISTORY_SIZE) recipeHistory.remove(recipeHistory.size()-1);
+        recipeHistory.add(0, recipe);
+        if(recipeHistory.size() > MAX_RECIPE_HISTORY_SIZE){
+            recipeHistory.remove(recipeHistory.size()-1);
+        }
     }
 
     public void addToFavoriteRecipes(Recipe recipe){
 
         for(int i = 0; i < favoriteRecipes.size(); i++)
         {
-            if(recipe.name.equals(favoriteRecipes.get(i)))
+            if(recipe.name.equalsIgnoreCase(favoriteRecipes.get(i).getName()))
             {
                 return;
             }

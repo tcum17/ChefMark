@@ -22,6 +22,36 @@ public class RecipeController {
         return returnString;
     }
 
+    public static ArrayList<String> textToArrayList(String text) {
+        ArrayList<String> returnList = new ArrayList<>();
+        if (text!=null)
+        {
+            String[] splitString = text.split("\\|");
+            for (String s : splitString) {
+                if (!s.isEmpty()) {
+                    returnList.add(s);
+                }
+            }
+        }
+        return returnList;
+    }
+
+    public static ArrayList<Ingredient> textToIngredientList(String text) {
+        ArrayList<Ingredient> returnList = new ArrayList<>();
+        String[] splitString = text.split("\\|");
+        for (String s : splitString) {
+            if (!s.isEmpty()) {
+                ArrayList<String> parts = new ArrayList<String>();
+                String[] tokens = s.split(" ", 3);
+                for (String token : tokens) {
+                    parts.add(token);
+                }
+                returnList.add(new Ingredient(parts.get(2), "", Float.parseFloat(parts.get(0)), parts.get(1)));
+            }
+        }
+        return returnList;
+    }
+
     public Recipe createRecipe(String recipeName, Scanner sc)
     {
         Recipe newRecipe = new Recipe();

@@ -8,8 +8,6 @@ abstract class DBQuery {
     private Connection connection;
     private Statement statement;
 
-    public DBQuery(){}
-
     public void connect() throws SQLException{}
     public void disconnect() throws SQLException{}
 
@@ -26,11 +24,33 @@ abstract class DBQuery {
     public void update(Ingredient ingredient, User user) throws SQLException{}
     public void delete(Ingredient ingredient, User user) throws SQLException {}
     public void create(WeeklyPlan weeklyPlan, User user) throws SQLException {}
+    public void create(Recipe recipe, User user) throws SQLException {}
+    public void create(WeeklyPlan weeklyPlan, Recipe recipe, User user, String day) throws SQLException {}
+    public ResultSet populateCustomRecipe(Recipe recipe, User user) throws SQLException {
+        ResultSet rs = null;
+        return rs;
+    }
+    public ResultSet populateWeeklyPlan(WeeklyPlan weeklyPlan, User user) throws SQLException {
+        ResultSet rs = null;
+        return rs;
+    }
     public ResultSet read(Pantry pantry, User user) throws SQLException {
         ResultSet rs = null;
         return rs;
     }
     public ResultSet read(Ingredient ingredient, User user) throws SQLException {
+        ResultSet rs = null;
+        return rs;
+    }
+    public ResultSet read(Recipe recipe, User user) throws SQLException {
+        ResultSet rs = null;
+        return rs;
+    }
+    public ResultSet read(WeeklyPlan weeklyPlan, User user, String day) throws SQLException {
+        ResultSet rs = null;
+        return rs;
+    }
+    public ResultSet read(WeeklyPlan weeklyPlan, User user) throws SQLException {
         ResultSet rs = null;
         return rs;
     }

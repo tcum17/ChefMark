@@ -67,34 +67,39 @@ public class WeeklyPlan {
 
     public String info() {
         String str = "";
-        str += "Monday: \n";
+        str += "Monday- ";
         for (int i = 0; i < weeklyPlan.get("Monday").size(); i++) {
-            str += "\t\t" + weeklyPlan.get("Monday").get(i) + "\n";
+            str += "\n" + weeklyPlan.get("Monday").get(i) + "\n";
+            str.replace(":", "");
         }
-        str += "\nTuesday: \n";
+        str += "\nTuesday- ";
         for (int i = 0; i < weeklyPlan.get("Tuesday").size(); i++) {
-            str += "\t\t" + weeklyPlan.get("Tuesday").get(i) + "\n";
+            str += "\n" + weeklyPlan.get("Tuesday").get(i) + "\n";
+            str.replace(":", "");
         }
-        str += "\nWednesday: \n";
+        str += "\nWednesday- ";
         for (int i = 0; i < weeklyPlan.get("Wednesday").size(); i++) {
-            str += "\t\t" + weeklyPlan.get("Wednesday").get(i) + "\n";
+            str += "\n" + weeklyPlan.get("Wednesday").get(i) + "\n";
         }
-        str += "\nThursday: \n";
+        str += "\nThursday- ";
         for (int i = 0; i < weeklyPlan.get("Thursday").size(); i++) {
-            str += "\t\t" + weeklyPlan.get("Thursday").get(i) + "\n";
+            str += "\n" + weeklyPlan.get("Thursday").get(i) + "\n";
         }
-        str += "\nFriday: \n";
+        str += "\nFriday- ";
         for (int i = 0; i < weeklyPlan.get("Friday").size(); i++) {
-            str += "\t\t" + weeklyPlan.get("Friday").get(i) + "\n";
+            str += "\n" + weeklyPlan.get("Friday").get(i) + "\n";
         }
-        str += "\nSaturday: \n";
+        str += "\nSaturday- ";
         for (int i = 0; i < weeklyPlan.get("Saturday").size(); i++) {
-            str += "\t\t" + weeklyPlan.get("Saturday").get(i) + "\n";
+            str += "\n" + weeklyPlan.get("Saturday").get(i) + "\n";
         }
-        str += "\nSunday: \n";
+        str += "\nSunday- ";
         for (int i = 0; i < weeklyPlan.get("Sunday").size(); i++) {
-            str += "\t\t" + weeklyPlan.get("Sunday").get(i) + "\n";
+            str += "\n" + weeklyPlan.get("Sunday").get(i) + "\n";
         }
+        str = str.replaceAll(":", "");
+        str = str.replaceAll("-", ":");
+        str = str.replaceAll("Ingredients", "Ingredients:");
 
         return str;
     }

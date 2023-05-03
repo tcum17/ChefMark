@@ -122,14 +122,9 @@ public class Search {
             JSONObject jsonHit = (JSONObject) hit;
             JSONObject recipe = (JSONObject) jsonHit.get("recipe");
             String recipeName = "Recipe name: " + recipe.get("label");
-            JSONArray ingredientLines = (JSONArray) recipe.get("ingredientLines");
             String recipeSource = (String) recipe.get("source");
             String recipeUrl = (String) recipe.get("url");
             resultString += pageIndex+" " + recipeName + "\n";
-            // for(Object line : ingredientLines){
-            //     String sLine = (String) line;
-            //     resultString += "\t" + sLine + "\n";
-            // }
             resultString += "\tFor instructions and more information, view the original recipe here at " + recipeSource + "\n\t\t" + recipeUrl + "\n";
             resultNumber++; 
             pageIndex++;

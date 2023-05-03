@@ -11,7 +11,7 @@ public class Recipe {
     ArrayList<Ingredient> ingredients = new ArrayList<Ingredient>();
     double totalWeight;
     RecipeDescriptors recipeDescriptors;
-    Rating rating;
+    Rating rating = new Rating();
     Instructions instructions = new Instructions();
     NutritionalFacts nutritionalFacts;
     ArrayList<String> ingredientLines = new ArrayList<>();
@@ -34,6 +34,14 @@ public class Recipe {
         this.rating = rating;
         this.instructions = instructions;
         this.nutritionalFacts = nutritionalFacts;
+    }
+//select distinct recipeName, url, source, ingredients, dietLabels, healthLabels, calories, instructions, cautions, recipe.username from recipe,weeklyplan,weeklyplanitem where recipe.username=weeklyplan.username and weeklyplan.weeklyPlanid=weeklyplanitem.weeklyplanid and recipe.username='" + user.getUsername() + "' and dayOfWeek='" + day + "' and recipe.recipeID=weeklyplanitem.recipeid and weeklyPlan.name='" + weeklyPlan.getName() + "'
+    public Recipe(String recipeName, String url, String source, ArrayList<Ingredient> ingredients, NutritionalFacts nutritionalFacts, Instructions instructions) {
+        this.name=recipeName;
+        this.source=source;
+        this.ingredients=ingredients;
+        this.nutritionalFacts=nutritionalFacts;
+        this.instructions=instructions;
     }
 
     public String getUri() {
@@ -272,19 +280,21 @@ public class Recipe {
     {
         String result = "";
         result += this.getName() + "\n";
+        result += "\nIngredients:\n";
         for(int i=0;i<this.getIngredients().size();i++)
         {
             String test = this.getIngredients().get(i).toString();
-            result = result + test;
+            result = result + test + "\n";
             //result = result + "Ingredient - " + this.getIngredients().get(i).toString() + "\n"; 
         }
+        result = result + "\n";
         int returnRate = this.getRating().getRating();
         if(returnRate!=-1)
         {
             result += "\nRating: " + returnRate + " stars\n";
         }
         Instructions instruct = this.getInstructions();
-        if(instruct != null) result += instruct.toString();
+        if(instruct != null) result += "\n" + instruct.toString();
         return result;
     }
 }
