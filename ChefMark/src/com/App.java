@@ -810,20 +810,7 @@ public class App {
         } else {
             uc.getUser().addCustomRecipe(RC.createRecipe(recipeName, sc, uc, dbq));
         }
-    }
-
-    // public static void createIngredient(Scanner sc, UserController uc, RecipeController RC)
-    // {
-    //     System.out.println("\nWelcome to create a recipe:\n");
-    //     System.out.println("Please enter a name for your recipe or type back to cancel: ");
-    //     String recipeName = sc.nextLine();
-    //     if(recipeName.equals(BACK)){
-    //       return;
-    //     } else {
-    //         uc.getUser().addCustomRecipe(RC.createRecipe(recipeName, sc));
-    //     }
-    // }
-    
+    } 
     
     public static void createCustomIngredient(Scanner sc, UserController uc, RecipeController RC, DBQuery dbq)
     {
