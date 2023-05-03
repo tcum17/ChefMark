@@ -19,12 +19,13 @@ public class App {
     private static final String DELETE = "delete";
     private static final String QUIT = "quit";
     private static final String SELECTION = "\n==== Enter your selection ====\n1 - Search\n2 - Create\n3 - Delete\n4 - View\n5 - quit\n";
-    private static final String SEARCH_PROMPT = "1 - By Keyword\n2 - By Ingredient\n3 - By Pantry\n4 - By Calories\n5 - Random\n6 - Back";
+    private static final String SEARCH_PROMPT = "=== SEARCH===\n1 - By Keyword\n2 - By Ingredient\n3 - By Pantry\n4 - By Calories\n5 - Random\n6 - Back";
     private static final String SEARCH_AGAIN = "Do you want to search for another recipe?\n1 - Yes\n2 - No";
     private static final String INGREDIENT_SEARCH_PROMPT = "Please enter the ingredients you would like to use in a recipe:\nEnter \"Remove\" to remove the previous ingredient\nEnter \"Stop\" to stop";
-    private static final String CREATE_PROMPT = "1 - Recipe\n2 - Ingredient\n3 - WeeklyPlan\n4 - RecipeList\n5 - Back";
-    private static final String VIEW_PROMPT = "\n==== Enter your selection ====\n1 - Recipe List\n2 - Pantry\n3 - Weekly Plan\n4 - History\n5 - Custom Recipes\n6 - Back";
-    private static final String VIEW_RECIPE_OPTIONS = "What do you want to do with this recipe: \n1 - Add to recipe List\n2- Add to weekly plan\n3 - Share the recipe\n4 - Back";
+    private static final String CREATE_PROMPT = "\n==== What do you want to create? ====\n1 - Recipe\n2 - Ingredient\n3 - WeeklyPlan\n4 - RecipeList\n5 - Back";
+    private static final String VIEW_PROMPT = "\n==== Enter your View selection ====\n1 - Recipe List\n2 - Pantry\n3 - Weekly Plan\n4 - History\n5 - Custom Recipes\n6 - Back";
+    private static final String VIEW_RECIPE_OPTIONS = "What do you want to do with this recipe:\n1 - Add to weekly plan"+
+    "\n2 - Add to Recipe List\n3 - Add to favorite recipes\n4 - Share\n5 - Change recipe serving sizes\n6 - Back";
     private static final String ONE = "1", TWO = "2", THREE = "3", FOUR = "4", FIVE = "5", SIX = "6";
     private static final String INVALID_SELECT = "Please enter a valid choice\n";
     private static final String STOP = "Stop", REMOVE = "Remove", BACK = "back";
@@ -40,7 +41,7 @@ public class App {
 
         System.out.println("Type \"Exit\" to quit the program");
         dbq.connect();
-
+        
         boolean signedIn = false;
         String choice = "";
         while (!choice.equalsIgnoreCase(QUIT)) {
@@ -109,10 +110,6 @@ public class App {
                 view(sc, uc, dbq);
 
             }  else if (homeInput.equals(FIVE)){
-                // Ingredient i = new Ingredient("Salt", "", 2.5f, "cups", 2.5f, "salty");
-                // uc.getUser().getPantry().addIngredient(i);
-                // dbq.create(uc.getUser().getPantry(), uc.getUser());
-                // dbq.update(uc.getUser().getPantry(), i, uc.getUser());
                 choice = QUIT;
             } 
             else {
@@ -289,33 +286,9 @@ public class App {
                 int size = uc.getUser().getFavoriteRecipes().size();
                 if(size != 0)
                 {
-                int ranRecipe = (int) Math.random() * size;
-                Recipe ranRec = uc.getUser().getFavoriteRecipes().get(ranRecipe);
-                System.out.println(ranRec.getName());
-                System.out.println(VIEW_RECIPE_OPTIONS);
-                randomInput = sc.nextLine();
-                    while(randomInput !=FOUR)
-                    {
-                        if(randomInput.equals(ONE))
-                        {
-                            addRecipeToRecipeList(sc, uc, ranRec, dbq);
-                        }
-                        else if(randomInput.equals(TWO))
-                        {
-                            addRecipeToWeeklyPlan(sc, uc, ranRec, dbq);
-                        }
-                        else if(randomInput.equals(THREE))
-                        {
-                            userRecipeShare(sc, ranRec, uc.getUser());
-                        }
-                        else if(randomInput.equals(FOUR))
-                        {
-                            randomInput = FOUR;
-                        }
-                        else{
-                            System.out.println(RETRY);
-                        }
-                    }
+                    int ranRecipe = (int) Math.random() * size;
+                    Recipe ranRec = uc.getUser().getFavoriteRecipes().get(ranRecipe);
+                    viewRecipe(ranRec, sc, uc, dbq);
                 }
                 else{
                     System.out.println("You have no liked recipes to choose from!");
@@ -352,9 +325,11 @@ public class App {
             String searchPageInput = sc.nextLine();
             switch (searchPageInput) {
                 case ONE:
+                    System.out.printf(".....");
                     Search.previousPage();
                     break;
                 case TWO:
+                    System.out.printf(".....");
                     Search.nextPage();
                     break;
                 case THREE:
@@ -389,23 +364,27 @@ public class App {
                 switch (input) {
                     case ONE:
                         if(curRecipe != null){
-                            addRecipe(sc, uc, curRecipe, dbq);
-                        }else System.err.println("Error converting JSON to recipe, recipe=null");
-                        return;
-                    case TWO:
-                        if(curRecipe != null){
                             addRecipeToWeeklyPlan(sc, uc, curRecipe, dbq);
                         }else System.err.println("Error converting JSON to recipe, recipe=null");
                         break;
+                    case TWO:
+                        if(curRecipe != null){
+                            addRecipeToRecipeList(sc, uc, curRecipe, dbq);
+                        }else System.err.println("Error converting JSON to recipe, recipe=null");
+                        break;
                     case THREE:
+                        uc.getUser().addToFavoriteRecipes(curRecipe);
+                        break;
+                    case FOUR:
                         if(curRecipe != null){
                             userRecipeShare(sc, curRecipe, curUser);
                         }else System.err.println("Error converting JSON to recipe, recipe=null");
-                        //curUser.getRecipeLists().addRecipeToRecipeList(curRecipe);
                         break;
-                    case FOUR:
+                    case FIVE:
+                        changeRecipeServingSize(curRecipe, sc, uc);
+                        break;
+                    case SIX:
                         viewingRecipe=false;
-                        //Search.displayCurrentPage();
                         break;
                     default:
                         System.out.println(INVALID_SELECT);
@@ -683,6 +662,7 @@ public class App {
 
                 System.out.println("1-View Recipe, 2-Delete Recipe, 3-back");
                 String input = sc.nextLine();
+                System.out.println();
                 if(input.equals(ONE))
                 {
                     System.out.println("Type the number of the recipe you want to view");
@@ -699,7 +679,8 @@ public class App {
                     }
                     else
                     {
-                        System.out.println(recipes.get(recipeNum-1).printRecipe());
+                        Recipe recipe = recipes.get(recipeNum-1);
+                        viewRecipe(recipe, sc, uc, dbq);
                     }
 
                 }
@@ -836,22 +817,9 @@ public class App {
         } else {
             uc.getUser().addCustomRecipe(RC.createRecipe(recipeName, sc, uc, dbq));
         }
-    }
-
-    // public static void createIngredient(Scanner sc, UserController uc, RecipeController RC)
-    // {
-    //     System.out.println("\nWelcome to create a recipe:\n");
-    //     System.out.println("Please enter a name for your recipe or type back to cancel: ");
-    //     String recipeName = sc.nextLine();
-    //     if(recipeName.equals(BACK)){
-    //       return;
-    //     } else {
-    //         uc.getUser().addCustomRecipe(RC.createRecipe(recipeName, sc));
-    //     }
-    // }
+    } 
     
-    
-    public static void createCustomRecipe(Scanner sc, UserController uc, RecipeController RC, DBQuery dbq)
+    public static void createCustomIngredient(Scanner sc, UserController uc, RecipeController RC, DBQuery dbq) throws SQLException
     {
         String backIngredient = "";
                             
@@ -888,7 +856,7 @@ public class App {
             temp.setIngredientName(ingredientName);
             temp.setQuantity(quantity);
             temp.setMeasure(measure);
-            //dbq.create(temp, uc.getUser());
+            dbq.create(uc.getUser().getPantry(), temp, uc.getUser());
             uc.getUser().getPantry().addIngredient(temp);
             System.out.println(ingredientName + " has been added to the pantry");
             backIngredient = BACK;
@@ -950,7 +918,7 @@ public class App {
             } 
             else if (createInput.equals(TWO)) 
             {
-                createCustomRecipe(sc, uc, RC, dbq);
+                createCustomIngredient(sc, uc, RC, dbq);
             }
             else if (createInput.equals(THREE)) 
             {
@@ -975,32 +943,128 @@ public class App {
         String pantryInput ="";
         while(!(pantryInput.equals(FOUR)))
         {
-            System.out.println(uc.getUser().getPantry());
-            System.out.println("\nWhat would you like to do in the pantry?\n1 - Add Ingredient\n2 - Delete Ingredient\n3 - Update Ingredient\n4 - Back");
-            pantryInput = sc.nextLine();
-
-            if(pantryInput.equals(ONE))
+            
+            if(uc.getUser().getPantry().ingredientListLength()==0)
             {
-                boolean addAgain = true;
-                while(addAgain)
+                System.out.println();
+                System.out.println("You have nothing in your pantry");
+                System.out.println("\nWhat would you like to do in the pantry?\n1 - Add Ingredient\n2 - Back");
+
+                pantryInput = sc.nextLine();
+
+                switch(pantryInput)
                 {
-                    Ingredient temp = new Ingredient();
-                    
-                    System.out.println("Enter the name of the ingredient you want to add:\n");
-                    String ingredientInput = sc.nextLine();  
-                    if(!(uc.getUser().getPantry().hasIngredient(ingredientInput)) && !(dbq.read(new Ingredient(ingredientInput, "", 0.0f, "" ), uc.getUser()).next()))
-                    { 
-                        temp.setIngredientName(ingredientInput);
-                        ingredientInput = "";
-                        System.out.println("Enter the quantity of your ingredient(number only):\n");
-                        ingredientInput = sc.nextLine();
+                    case ONE:
+                    addIngredientToPantry(uc, dbq, sc);
+                    case TWO:
+                    pantryInput = FOUR;
+                    break;
+                    default:
+                    System.out.println("Not a valid input");
+                }
+            }
+            else
+            {
+                System.out.println(uc.getUser().getPantry().toString());
+                System.out.println("\nWhat would you like to do in the pantry?\n1 - Add Ingredient\n2 - Delete Ingredient\n3 - Update Ingredient\n4 - Back");
+
+                pantryInput = sc.nextLine();
+
+                switch(pantryInput)
+                {
+                    case ONE:
+                    addIngredientToPantry(uc, dbq, sc);
+                    case TWO:
+                    deleteIngredientFromPantry(uc, sc, dbq);//TODO deleting ingredient cause infinite loop
+                    case THREE:
+                    updateIngredientInPantry(uc, sc, dbq);
+                    case FOUR:
+                    pantryInput = FOUR;
+                    break;
+                    default:
+                    System.out.println("Not a valid input");
+                }
+            }
+        }
+    }
+
+    private static void deleteIngredientFromPantry(UserController uc, Scanner sc, DBQuery dbq) throws SQLException
+    {
+        if(uc.getUser().getPantry().getIngredientList().size() > 0)
+        {
+            boolean deleteAgain = true;
+            while(deleteAgain)
+            {
+                System.out.println("What is the name of ingredient you want to delete?");
+                String ingredientName = sc.nextLine();
+                if( uc.getUser().getPantry().removeIngredient(ingredientName))
+                {
+                    System.out.println(ingredientName + " has been removed from the pantry");
+                    dbq.delete(new Ingredient(ingredientName, "", 0.0f, ""), uc.getUser());
+                }
+                else
+                {
+                    System.out.println(ingredientName + " does not exist!");
+                }
+                
+                System.out.println("Do you want to delete something again?\n1 - Yes\n2 - No");
+                String tryAgainInput = sc.nextLine();
+                while(!tryAgainInput.equals(ONE))
+                {
+                    if(tryAgainInput.equals(TWO))
+                    {
+                        deleteAgain =false;
+                    }
+                    else{
+                        System.out.println(RETRY);
+                    }
+                }
+            }    
+        }
+        else
+        {
+            System.out.println("You have no ingredients in your pantry");
+        }
+    }
+
+    private static void updateIngredientInPantry(UserController uc, Scanner sc, DBQuery dbq) throws SQLException
+    {
+        boolean updateAgain = true;
+        while(updateAgain)
+        {
+            if(uc.getUser().getPantry().getIngredientList().size() > 0)
+            {
+                System.out.println("Enter the name of the ingredient you want to update:\n");
+                String ingredientName = sc.nextLine();
+                if(uc.getUser().getPantry().hasIngredient(ingredientName))
+                {
+                    Ingredient temp = uc.getUser().getPantry().search(ingredientName);
+
+                    System.out.println("The Ingredient's current name is \"" + temp.getIngredientName() +"\"\nEnter a new name or \"Next\" to keep the old one");
+                    String oldName = temp.getIngredientName();
+                    String input = sc.nextLine();
+                    if(input.equalsIgnoreCase("Next"))
+                    {
+                        System.out.println("Keeping the original name");
+                    }
+                    else{
+                        temp.setIngredientName(input);
+                    }
+                    System.out.println("The Ingredient's current quantity is \"" + temp.getQuantity() +"\"\nEnter a new number(just the number) or \"Next\" to keep the old one");
+                    input = "";
+                    input = sc.nextLine();
+                    if(input.equalsIgnoreCase("Next"))
+                    {
+                        continue;
+                    }
+                    else{
                         boolean hasFloat = false;
                         float quantity = -1;
                         while(!hasFloat)
                         {
                             try
                             {
-                                quantity = Float.parseFloat(ingredientInput);
+                                quantity = Float.parseFloat(input);
                             }
                             catch(NumberFormatException e)
                             {
@@ -1009,161 +1073,41 @@ public class App {
                             hasFloat = true;
                             temp.setQuantity(quantity);
                         }
-                        System.out.println("What are the units of your quantity:\n");
-                        ingredientInput = "";
-                        ingredientInput = sc.nextLine();
-                        temp.setMeasure(ingredientInput);
-                        uc.getUser().getPantry().addIngredient(temp);
-                        System.out.println("The ingredient you added is:\n" + temp.getQuantity() + " " + temp.getMeasure() + " " + temp.getIngredientName());
-                        dbq.create(uc.getUser().getPantry(), temp, uc.getUser());
-                        // ResultSet rs = dbq.read(temp, uc.getUser());
-                        // if (rs.next()) {
-                                
-                        //     int ingredientID = rs.getInt(2);
-                        //     temp.setIngredientID("" + ingredientID);
-                        // }
-                        System.out.println("\nWould you like to add another ingredient?\n1 - Yes\n2 - No");
-                        String updateAgainInput = sc.nextLine();
-                        if(!(updateAgainInput.equalsIgnoreCase(ONE)))
-                        {
-                            addAgain = false;
-                        }
-                    }  
-                    else
+                    }
+                    System.out.println("The Ingredient's current units are \"" + temp.getMeasure() + "\"\nEnter a new unit or \"Next\" to keep the old one");
+                    input = "";
+                    input = sc.nextLine();
+                    if(input.equalsIgnoreCase("Next"))
                     {
-                        System.out.println("You already have that ingredient in your pantry");
-                        addAgain = false;
-                    } 
-                }
-            }   
-            else if(pantryInput.equals(TWO))
-            {
-                if(uc.getUser().getPantry().getIngredientList().size() > 0)
-                {
-                    boolean deleteAgain = true;
-                    while(deleteAgain)
-                    {
-                        System.out.println("What is the name of ingredient you want to delete?");
-                        String ingredientName = sc.nextLine();
-                        if( uc.getUser().getPantry().removeIngredient(ingredientName))
-                        {
-                            System.out.println(ingredientName + " has been removed from the pantry");
-                            dbq.delete(new Ingredient(ingredientName, "", 0.0f, ""), uc.getUser());
-                        }
-                        else
-                        {
-                            System.out.println(ingredientName + " does not exist!");
-                        }
-                        
-                        System.out.println("Do you want to delete something again?\n1 - Yes\n2 - No");
-                        String tryAgainInput = sc.nextLine();
-                        while(!tryAgainInput.equals(ONE))
-                        {
-                            if(tryAgainInput.equals(TWO))
-                            {
-                                deleteAgain =false;
-                            }
-                            else{
-                                System.out.println(RETRY);
-                            }
-                        }
-                    }    
-                }
-                else
-                {
-                    System.out.println("You have no ingredients in your pantry");
-                }
-            }    
-            else if(pantryInput.equals(THREE))
-            {
-                boolean updateAgain = true;
-                while(updateAgain)
-                {
-                    if(uc.getUser().getPantry().getIngredientList().size() > 0)
-                    {
-                        System.out.println("Enter the name of the ingredient you want to update:\n");
-                        String ingredientName = sc.nextLine();
-                        if(uc.getUser().getPantry().hasIngredient(ingredientName))
-                        {
-                            Ingredient temp = uc.getUser().getPantry().search(ingredientName);
-
-                            System.out.println("The Ingredient's current name is \"" + temp.getIngredientName() +"\"\nEnter a new name or \"Next\" to keep the old one");
-                            String oldName = temp.getIngredientName();
-                            String input = sc.nextLine();
-                            if(input.equalsIgnoreCase("Next"))
-                            {
-                                System.out.println("Keeping the original name");
-                            }
-                            else{
-                                temp.setIngredientName(input);
-                            }
-                            System.out.println("The Ingredient's current quantity is \"" + temp.getQuantity() +"\"\nEnter a new number(just the number) or \"Next\" to keep the old one");
-                            input = "";
-                            input = sc.nextLine();
-                            if(input.equalsIgnoreCase("Next"))
-                            {
-                                continue;
-                            }
-                            else{
-                                boolean hasFloat = false;
-                                float quantity = -1;
-                                while(!hasFloat)
-                                {
-                                    try
-                                    {
-                                        quantity = Float.parseFloat(input);
-                                    }
-                                    catch(NumberFormatException e)
-                                    {
-                                        System.out.println(RETRY);
-                                    }
-                                    hasFloat = true;
-                                    temp.setQuantity(quantity);
-                                }
-                            }
-                            System.out.println("The Ingredient's current units are \"" + temp.getMeasure() + "\"\nEnter a new unit or \"Next\" to keep the old one");
-                            input = "";
-                            input = sc.nextLine();
-                            if(input.equalsIgnoreCase("Next"))
-                            {
-                                continue;
-                            }
-                            else{
-                                temp.setMeasure(input);
-                            }
-
-                            System.out.println("The ingredient has been updated to be:\n" + temp.getQuantity() + " " + temp.getMeasure() + " " + temp.getIngredientName());
-                            String newName = temp.getIngredientName();
-                            temp.setIngredientName(oldName); // weird technical thing with database, no way to store ID from query unless specifically read somewhere...
-                            ResultSet rs = dbq.read(temp, uc.getUser());
-                            if (rs.next()) {
-                                
-                                int ingredientID = rs.getInt(2);
-                                temp.setIngredientID("" + ingredientID);
-                            }
-                            temp.setIngredientName(newName); // set back to new name immediately after getting the ID that matches the old ingredient name
-                            dbq.update(temp, uc.getUser());
-                            System.out.println("\nWould you like to update another ingredient?\n1 - Yes\n2 - No");
-                            String updateAgainInput = sc.nextLine();
-                            if(!updateAgainInput.equalsIgnoreCase(ONE))
-                            {
-                                updateAgain = false;
-                            }
-                            
-                        }
+                        continue;
                     }
                     else{
-                        System.out.println("You have no ingredients in your pantry");
+                        temp.setMeasure(input);
+                    }
+
+                    System.out.println("The ingredient has been updated to be:\n" + temp.getQuantity() + " " + temp.getMeasure() + " " + temp.getIngredientName());
+                    String newName = temp.getIngredientName();
+                    temp.setIngredientName(oldName); // weird technical thing with database, no way to store ID from query unless specifically read somewhere...
+                    ResultSet rs = dbq.read(temp, uc.getUser());
+                    if (rs.next()) {
+                        
+                        int ingredientID = rs.getInt(2);
+                        temp.setIngredientID("" + ingredientID);
+                    }
+                    temp.setIngredientName(newName); // set back to new name immediately after getting the ID that matches the old ingredient name
+                    dbq.update(temp, uc.getUser());
+                    System.out.println("\nWould you like to update another ingredient?\n1 - Yes\n2 - No");
+                    String updateAgainInput = sc.nextLine();
+                    if(!updateAgainInput.equalsIgnoreCase(ONE))
+                    {
                         updateAgain = false;
                     }
+                    
                 }
             }
-            else if(pantryInput.equals(FOUR))
-            {
-                pantryInput = FOUR;
-            }
             else{
-                System.out.println(RETRY);
+                System.out.println("You have no ingredients in your pantry");
+                updateAgain = false;
             }
         }
     }
@@ -1183,56 +1127,58 @@ public class App {
                 viewWeeklyPlans(sc, uc, dbq);
             } else if (viewInput.equals(FOUR)) {
                 ArrayList<Recipe> recipeHis = uc.getUser().getRecipeHistory();
-                int counter = 0;
-                for(Recipe x : recipeHis)
-                {
-                    counter++;
-                    System.out.println(counter + " " + x.getName()); 
-                }
-                System.out.println("What do you want to do?\n1 - View Recipe\n2 - back");
-                String historyInput = "";
-                boolean goodInput = false;
-                while(!goodInput)
-                {
-                    historyInput = sc.nextLine();
-                    if(historyInput.equalsIgnoreCase(ONE))
+                if(recipeHis.size() == 0){
+                    System.out.println("\nYou have no recipe history\n");
+                }else{
+                    int counter = 0;
+                    for(Recipe x : recipeHis)
                     {
-                        historyInput ="";
-                        boolean goodInput2 = true;
-                        int num = -1;
-                        while(!goodInput2)
+                        counter++;
+                        System.out.println(counter + " " + x.getName()); 
+                    }
+                    System.out.println("What do you want to do?\n1 - View Recipe\n2 - back");
+                    String historyInput = "";
+                    boolean goodInput = false;
+                    while(!goodInput)
+                    {
+                        historyInput = sc.nextLine();
+                        if(historyInput.equalsIgnoreCase(ONE))
                         {
-                            System.out.println("Enter the number of the recipe you want to view:\n");
-                            ArrayList<Recipe> temp = uc.getUser().getRecipeHistory();
-                            historyInput = sc.nextLine();
-                            try{
-                                num = Integer.parseInt(historyInput);
-                            }
-                            catch(NumberFormatException e)
+                            historyInput ="";
+                            boolean goodInput2 = true;
+                            int num = -1;
+                            while(!goodInput2)
                             {
-                                System.out.println(RETRY);
-                            }
-                        
-                            if(num > 0 && num <= 20)
-                            {
-                                viewRecipe(temp.get(num-1), sc, uc, dbq);
-                                goodInput2 = true;
-                            }
-                            else{
-                                System.out.println(RETRY);
-                            }
+                                System.out.println("Enter the number of the recipe you want to view:\n");
+                                ArrayList<Recipe> temp = uc.getUser().getRecipeHistory();
+                                historyInput = sc.nextLine();
+                                try{
+                                    num = Integer.parseInt(historyInput);
+                                }
+                                catch(NumberFormatException e)
+                                {
+                                    System.out.println(RETRY);
+                                }
+                            
+                                if(num > 0 && num <= 20)
+                                {
+                                    viewRecipe(temp.get(num-1), sc, uc, dbq);
+                                    goodInput2 = true;
+                                }
+                                else{
+                                    System.out.println(RETRY);
+                                }
+                            } 
                         }
-
-                        
-                    }
-                    else if(historyInput.equalsIgnoreCase(TWO))
-                    {
-                        goodInput = true;
-                    }
-                    else{
-                        System.out.println(RETRY);
-                    }
-                }   
+                        else if(historyInput.equalsIgnoreCase(TWO))
+                        {
+                            goodInput = true;
+                        }
+                        else{
+                            System.out.println(RETRY);
+                        }
+                    }   
+                }
             } else if (viewInput.equals(FIVE)) {
                 viewCustomRecipes(sc, uc, dbq);
             } else if (viewInput.equals(SIX)) {
@@ -1267,9 +1213,8 @@ public class App {
         while(!done)
         {
             uc.getUser().addToRecipeHistory(recipe);
-            System.out.println(recipe.printRecipe());
-            System.out.println("What do you want to do with this recipe:\n1 - Add to weekly plan"+
-                "\n2 - Add to Recipe List\n3 - Add to liked recipes\n4 - Share\n5 - Change recipe serving sizes\n6 - Back");
+            System.out.println("=== Viewed Recipe ===\n"+recipe.printRecipe());
+            System.out.println(VIEW_RECIPE_OPTIONS);
             String input = sc.nextLine();
             switch (input) {
             case ONE:
@@ -1280,6 +1225,7 @@ public class App {
                 break;
             case THREE:
                 uc.getUser().addToFavoriteRecipes(recipe);
+                System.out.println("Added recipe to your favorite recipes");
                 break;
             case FOUR:
                 userRecipeShare(sc, recipe, uc.getUser());
@@ -1296,6 +1242,64 @@ public class App {
             }
         }
         
+    }
+
+    private static void addIngredientToPantry(UserController uc, DBQuery dbq, Scanner sc) throws SQLException
+    {
+        boolean addAgain = true;
+        while(addAgain)
+        {
+            Ingredient temp = new Ingredient();
+            
+            System.out.println("Enter the name of the ingredient you want to add:\n");
+            String ingredientInput = sc.nextLine();  
+            if(!(uc.getUser().getPantry().hasIngredient(ingredientInput)) && !(dbq.read(new Ingredient(ingredientInput, "", 0.0f, "" ), uc.getUser()).next()))
+            { 
+                temp.setIngredientName(ingredientInput);
+                ingredientInput = "";
+                System.out.println("Enter the quantity of your ingredient(number only):\n");
+                ingredientInput = sc.nextLine();
+                boolean hasFloat = false;
+                float quantity = -1;
+                while(!hasFloat)
+                {
+                    try
+                    {
+                        quantity = Float.parseFloat(ingredientInput);
+                    }
+                    catch(NumberFormatException e)
+                    {
+                        System.out.println(RETRY);
+                    }
+                    hasFloat = true;
+                    temp.setQuantity(quantity);
+                }
+                System.out.println("What are the units of your quantity:\n");
+                ingredientInput = "";
+                ingredientInput = sc.nextLine();
+                temp.setMeasure(ingredientInput);
+                uc.getUser().getPantry().addIngredient(temp);
+                System.out.println("The ingredient you added is:\n" + temp.getQuantity() + " " + temp.getMeasure() + " " + temp.getIngredientName());
+                dbq.create(uc.getUser().getPantry(), temp, uc.getUser());
+                // ResultSet rs = dbq.read(temp, uc.getUser());
+                // if (rs.next()) {
+                        
+                //     int ingredientID = rs.getInt(2);
+                //     temp.setIngredientID("" + ingredientID);
+                // }
+                System.out.println("\nWould you like to add another ingredient?\n1 - Yes\n2 - No");
+                String updateAgainInput = sc.nextLine();
+                if(!(updateAgainInput.equalsIgnoreCase(ONE)))
+                {
+                    addAgain = false;
+                }
+            }  
+            else
+            {
+                System.out.println("You already have that ingredient in your pantry");
+                addAgain = false;
+            } 
+        }
     }
 
     private static void delete(Scanner sc, UserController uc){

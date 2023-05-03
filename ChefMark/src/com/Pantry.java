@@ -24,6 +24,11 @@ public class Pantry {
         
     }
 
+    public int ingredientListLength()
+    {
+        return ingredientList.size();
+    }
+
     public Ingredient search(String ingredientName) {
         for (int i = 0; i < ingredientList.size(); i++) {
             if (ingredientList.get(i).getIngredientName().equals(ingredientName)) {
