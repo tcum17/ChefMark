@@ -1036,6 +1036,7 @@ public class App {
                             if(tryAgainInput.equals(TWO))
                             {
                                 deleteAgain =false;
+                                tryAgainInput=ONE;
                             }
                             else{
                                 System.out.println(RETRY);
