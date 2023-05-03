@@ -1150,7 +1150,8 @@ public class App {
                         if(historyInput.equalsIgnoreCase(ONE))
                         {
                             historyInput ="";
-                            boolean goodInput2 = true;
+                            goodInput = true;
+                            boolean goodInput2 = false;
                             int num = -1;
                             while(!goodInput2)
                             {
