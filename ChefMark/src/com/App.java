@@ -23,7 +23,7 @@ public class App {
     private static final String SEARCH_AGAIN = "Do you want to search for another recipe?\n1 - Yes\n2 - No";
     private static final String INGREDIENT_SEARCH_PROMPT = "Please enter the ingredients you would like to use in a recipe:\nEnter \"Remove\" to remove the previous ingredient\nEnter \"Stop\" to stop";
     private static final String CREATE_PROMPT = "\n==== What do you want to create? ====\n1 - Recipe\n2 - Ingredient\n3 - WeeklyPlan\n4 - RecipeList\n5 - Back";
-    private static final String VIEW_PROMPT = "\n==== Enter your selection ====\n1 - Recipe List\n2 - Pantry\n3 - Weekly Plan\n4 - History\n5 - Custom Recipes\n6 - Back";
+    private static final String VIEW_PROMPT = "\n==== Enter your View selection ====\n1 - Recipe List\n2 - Pantry\n3 - Weekly Plan\n4 - History\n5 - Custom Recipes\n6 - Back";
     private static final String VIEW_RECIPE_OPTIONS = "What do you want to do with this recipe:\n1 - Add to weekly plan"+
     "\n2 - Add to Recipe List\n3 - Add to favorite recipes\n4 - Share\n5 - Change recipe serving sizes\n6 - Back";
     private static final String ONE = "1", TWO = "2", THREE = "3", FOUR = "4", FIVE = "5", SIX = "6";
@@ -1144,54 +1144,58 @@ public class App {
                 viewWeeklyPlans(sc, uc, dbq);
             } else if (viewInput.equals(FOUR)) {
                 ArrayList<Recipe> recipeHis = uc.getUser().getRecipeHistory();
-                int counter = 0;
-                for(Recipe x : recipeHis)
-                {
-                    counter++;
-                    System.out.println(counter + " " + x.getName()); 
-                }
-                System.out.println("What do you want to do?\n1 - View Recipe\n2 - back");
-                String historyInput = "";
-                boolean goodInput = false;
-                while(!goodInput)
-                {
-                    historyInput = sc.nextLine();
-                    if(historyInput.equalsIgnoreCase(ONE))
+                if(recipeHis.size() == 0){
+                    System.out.println("\nYou have no recipe history\n");
+                }else{
+                    int counter = 0;
+                    for(Recipe x : recipeHis)
                     {
-                        historyInput ="";
-                        boolean goodInput2 = true;
-                        int num = -1;
-                        while(!goodInput2)
+                        counter++;
+                        System.out.println(counter + " " + x.getName()); 
+                    }
+                    System.out.println("What do you want to do?\n1 - View Recipe\n2 - back");
+                    String historyInput = "";
+                    boolean goodInput = false;
+                    while(!goodInput)
+                    {
+                        historyInput = sc.nextLine();
+                        if(historyInput.equalsIgnoreCase(ONE))
                         {
-                            System.out.println("Enter the number of the recipe you want to view:\n");
-                            ArrayList<Recipe> temp = uc.getUser().getRecipeHistory();
-                            historyInput = sc.nextLine();
-                            try{
-                                num = Integer.parseInt(historyInput);
-                            }
-                            catch(NumberFormatException e)
+                            historyInput ="";
+                            boolean goodInput2 = true;
+                            int num = -1;
+                            while(!goodInput2)
                             {
-                                System.out.println(RETRY);
-                            }
-                        
-                            if(num > 0 && num <= 20)
-                            {
-                                viewRecipe(temp.get(num-1), sc, uc, dbq);
-                                goodInput2 = true;
-                            }
-                            else{
-                                System.out.println(RETRY);
-                            }
-                        } 
-                    }
-                    else if(historyInput.equalsIgnoreCase(TWO))
-                    {
-                        goodInput = true;
-                    }
-                    else{
-                        System.out.println(RETRY);
-                    }
-                }   
+                                System.out.println("Enter the number of the recipe you want to view:\n");
+                                ArrayList<Recipe> temp = uc.getUser().getRecipeHistory();
+                                historyInput = sc.nextLine();
+                                try{
+                                    num = Integer.parseInt(historyInput);
+                                }
+                                catch(NumberFormatException e)
+                                {
+                                    System.out.println(RETRY);
+                                }
+                            
+                                if(num > 0 && num <= 20)
+                                {
+                                    viewRecipe(temp.get(num-1), sc, uc, dbq);
+                                    goodInput2 = true;
+                                }
+                                else{
+                                    System.out.println(RETRY);
+                                }
+                            } 
+                        }
+                        else if(historyInput.equalsIgnoreCase(TWO))
+                        {
+                            goodInput = true;
+                        }
+                        else{
+                            System.out.println(RETRY);
+                        }
+                    }   
+                }
             } else if (viewInput.equals(FIVE)) {
                 viewCustomRecipes(sc, uc, dbq);
             } else if (viewInput.equals(SIX)) {
