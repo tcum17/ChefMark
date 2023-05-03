@@ -1261,30 +1261,28 @@ public class App {
         {
             uc.getUser().addToRecipeHistory(recipe);
             System.out.println(recipe.printRecipe());
-            System.out.println("What do you want to do with this recipe:\n1 - Add to weekly plan\n2 - Add to Recipe List\n3 - Add to liked recipes\n4 - Share\n5 - Change recipe serving sizes");
-            String line = sc.nextLine();
-            int option = Integer.parseInt(line);
-            switch (option) {
-            case 1:
-                // System.out.println("Adding recipe to weekly plan...");
+            System.out.println("What do you want to do with this recipe:\n1 - Add to weekly plan"+
+                "\n2 - Add to Recipe List\n3 - Add to liked recipes\n4 - Share\n5 - Change recipe serving sizes\n6 - Back");
+            String input = sc.nextLine();
+            switch (input) {
+            case ONE:
                 addRecipeToWeeklyPlan(sc, uc, recipe, dbq);
                 break;
-            case 2:
-                // System.out.println("Adding recipe to Recipe List...");
+            case TWO:
                 addRecipeToRecipeList(sc, uc, recipe, dbq);
                 break;
-            case 3:
-                //System.out.println("Adding recipe to liked recipes...");
+            case THREE:
                 uc.getUser().addToFavoriteRecipes(recipe);
                 break;
-            case 4:
-                // System.out.println("Sharing recipe...");
+            case FOUR:
                 userRecipeShare(sc, recipe, uc.getUser());
                 break;
-            case 5:
-                // System.out.println("Changing recipe serving sizes...");
+            case FIVE:
                 changeRecipeServingSize(recipe, sc, uc);
-                break; //TODO add back option
+                break;
+            case SIX:
+                done = true;
+                break;
             default:
                 System.out.println(INVALID_SELECT);
                 break;

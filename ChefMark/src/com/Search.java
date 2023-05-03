@@ -58,7 +58,7 @@ public class Search {
                 System.out.flush();
             }
             pageList.add(pageResult);
-            status = true;
+            if(pageResult.getNextPage() != null) status = true;
         }else System.out.println("No results for that search.");
         filters.clear();
         return status;
