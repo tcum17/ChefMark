@@ -19,12 +19,13 @@ public class App {
     private static final String DELETE = "delete";
     private static final String QUIT = "quit";
     private static final String SELECTION = "\n==== Enter your selection ====\n1 - Search\n2 - Create\n3 - Delete\n4 - View\n5 - quit\n";
-    private static final String SEARCH_PROMPT = "1 - By Keyword\n2 - By Ingredient\n3 - By Pantry\n4 - By Calories\n5 - Random\n6 - Back";
+    private static final String SEARCH_PROMPT = "=== SEARCH===\n1 - By Keyword\n2 - By Ingredient\n3 - By Pantry\n4 - By Calories\n5 - Random\n6 - Back";
     private static final String SEARCH_AGAIN = "Do you want to search for another recipe?\n1 - Yes\n2 - No";
     private static final String INGREDIENT_SEARCH_PROMPT = "Please enter the ingredients you would like to use in a recipe:\nEnter \"Remove\" to remove the previous ingredient\nEnter \"Stop\" to stop";
     private static final String CREATE_PROMPT = "1 - Recipe\n2 - Ingredient\n3 - WeeklyPlan\n4 - RecipeList\n5 - Back";
     private static final String VIEW_PROMPT = "\n==== Enter your selection ====\n1 - Recipe List\n2 - Pantry\n3 - Weekly Plan\n4 - History\n5 - Custom Recipes\n6 - Back";
-    private static final String VIEW_RECIPE_OPTIONS = "What do you want to do with this recipe: \n1 - Add to recipe List\n2- Add to weekly plan\n3 - Share the recipe\n4 - Back";
+    private static final String VIEW_RECIPE_OPTIONS = "What do you want to do with this recipe:\n1 - Add to weekly plan"+
+    "\n2 - Add to Recipe List\n3 - Add to favorite recipes\n4 - Share\n5 - Change recipe serving sizes\n6 - Back";
     private static final String ONE = "1", TWO = "2", THREE = "3", FOUR = "4", FIVE = "5", SIX = "6";
     private static final String INVALID_SELECT = "Please enter a valid choice\n";
     private static final String STOP = "Stop", REMOVE = "Remove", BACK = "back";
@@ -289,33 +290,9 @@ public class App {
                 int size = uc.getUser().getFavoriteRecipes().size();
                 if(size != 0)
                 {
-                int ranRecipe = (int) Math.random() * size;
-                Recipe ranRec = uc.getUser().getFavoriteRecipes().get(ranRecipe);
-                System.out.println(ranRec.getName());
-                System.out.println(VIEW_RECIPE_OPTIONS);
-                randomInput = sc.nextLine();
-                    while(randomInput !=FOUR)
-                    {
-                        if(randomInput.equals(ONE))
-                        {
-                            addRecipeToRecipeList(sc, uc, ranRec, dbq);
-                        }
-                        else if(randomInput.equals(TWO))
-                        {
-                            addRecipeToWeeklyPlan(sc, uc, ranRec, dbq);
-                        }
-                        else if(randomInput.equals(THREE))
-                        {
-                            userRecipeShare(sc, ranRec, uc.getUser());
-                        }
-                        else if(randomInput.equals(FOUR))
-                        {
-                            randomInput = FOUR;
-                        }
-                        else{
-                            System.out.println(RETRY);
-                        }
-                    }
+                    int ranRecipe = (int) Math.random() * size;
+                    Recipe ranRec = uc.getUser().getFavoriteRecipes().get(ranRecipe);
+                    viewRecipe(ranRec, sc, uc, dbq);
                 }
                 else{
                     System.out.println("You have no liked recipes to choose from!");
@@ -352,9 +329,11 @@ public class App {
             String searchPageInput = sc.nextLine();
             switch (searchPageInput) {
                 case ONE:
+                    System.out.printf(".....");
                     Search.previousPage();
                     break;
                 case TWO:
+                    System.out.printf(".....");
                     Search.nextPage();
                     break;
                 case THREE:
@@ -389,23 +368,27 @@ public class App {
                 switch (input) {
                     case ONE:
                         if(curRecipe != null){
-                            addRecipe(sc, uc, curRecipe, dbq);
-                        }else System.err.println("Error converting JSON to recipe, recipe=null");
-                        return;
-                    case TWO:
-                        if(curRecipe != null){
                             addRecipeToWeeklyPlan(sc, uc, curRecipe, dbq);
                         }else System.err.println("Error converting JSON to recipe, recipe=null");
                         break;
+                    case TWO:
+                        if(curRecipe != null){
+                            addRecipeToRecipeList(sc, uc, curRecipe, dbq);
+                        }else System.err.println("Error converting JSON to recipe, recipe=null");
+                        break;
                     case THREE:
+                        uc.getUser().addToFavoriteRecipes(curRecipe);
+                        break;
+                    case FOUR:
                         if(curRecipe != null){
                             userRecipeShare(sc, curRecipe, curUser);
                         }else System.err.println("Error converting JSON to recipe, recipe=null");
-                        //curUser.getRecipeLists().addRecipeToRecipeList(curRecipe);
                         break;
-                    case FOUR:
+                    case FIVE:
+                        changeRecipeServingSize(curRecipe, sc, uc);
+                        break;
+                    case SIX:
                         viewingRecipe=false;
-                        //Search.displayCurrentPage();
                         break;
                     default:
                         System.out.println(INVALID_SELECT);
@@ -676,6 +659,7 @@ public class App {
 
                 System.out.println("1-View Recipe, 2-Delete Recipe, 3-back");
                 String input = sc.nextLine();
+                System.out.println();
                 if(input.equals(ONE))
                 {
                     System.out.println("Type the number of the recipe you want to view");
@@ -692,7 +676,8 @@ public class App {
                     }
                     else
                     {
-                        System.out.println(recipes.get(recipeNum-1).printRecipe());
+                        Recipe recipe = recipes.get(recipeNum-1);
+                        viewRecipe(recipe, sc, uc, dbq);
                     }
 
                 }
@@ -1214,9 +1199,7 @@ public class App {
                             else{
                                 System.out.println(RETRY);
                             }
-                        }
-
-                        
+                        } 
                     }
                     else if(historyInput.equalsIgnoreCase(TWO))
                     {
@@ -1260,9 +1243,8 @@ public class App {
         while(!done)
         {
             uc.getUser().addToRecipeHistory(recipe);
-            System.out.println(recipe.printRecipe());
-            System.out.println("What do you want to do with this recipe:\n1 - Add to weekly plan"+
-                "\n2 - Add to Recipe List\n3 - Add to liked recipes\n4 - Share\n5 - Change recipe serving sizes\n6 - Back");
+            System.out.println("=== Viewed Recipe ===\n"+recipe.printRecipe());
+            System.out.println(VIEW_RECIPE_OPTIONS);
             String input = sc.nextLine();
             switch (input) {
             case ONE:

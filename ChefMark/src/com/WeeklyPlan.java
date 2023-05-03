@@ -47,7 +47,7 @@ public class WeeklyPlan {
     public boolean addRecipeToWeeklyPlan(Recipe recipe, String day) {
         if (this.weeklyPlan.containsKey(day)) {
             this.weeklyPlan.get(day).add(recipe);
-            System.out.println("Added " + recipe.getName() + " to " + this.name);
+            System.out.println("Added " + recipe.getName() + " to " + this.name + "on " + day);
             return true;
         }
         return false;
