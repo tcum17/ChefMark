@@ -674,7 +674,7 @@ public class App {
                     }
                     else
                     {
-                        Recipe recipe = recipes.get(recipeNum);
+                        Recipe recipe = recipes.get(recipeNum-1);
                         viewRecipe(recipe, sc, uc, dbq);
                     }
 
@@ -1241,9 +1241,8 @@ public class App {
         while(!done)
         {
             uc.getUser().addToRecipeHistory(recipe);
-            System.out.println(recipe.printRecipe());
-            System.out.println("What do you want to do with this recipe:\n1 - Add to weekly plan"+
-                "\n2 - Add to Recipe List\n3 - Add to favorite recipes\n4 - Share\n5 - Change recipe serving sizes\n6 - Back");
+            System.out.println("=== Viewed Recipe ===\n"+recipe.printRecipe());
+            System.out.println(VIEW_RECIPE_OPTIONS);
             String input = sc.nextLine();
             switch (input) {
             case ONE:
