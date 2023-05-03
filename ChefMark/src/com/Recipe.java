@@ -38,6 +38,7 @@ public class Recipe {
 //select distinct recipeName, url, source, ingredients, dietLabels, healthLabels, calories, instructions, cautions, recipe.username from recipe,weeklyplan,weeklyplanitem where recipe.username=weeklyplan.username and weeklyplan.weeklyPlanid=weeklyplanitem.weeklyplanid and recipe.username='" + user.getUsername() + "' and dayOfWeek='" + day + "' and recipe.recipeID=weeklyplanitem.recipeid and weeklyPlan.name='" + weeklyPlan.getName() + "'
     public Recipe(String recipeName, String url, String source, ArrayList<Ingredient> ingredients, NutritionalFacts nutritionalFacts, Instructions instructions) {
         this.name=recipeName;
+        this.url=url;
         this.source=source;
         this.ingredients=ingredients;
         this.nutritionalFacts=nutritionalFacts;
@@ -260,22 +261,6 @@ public class Recipe {
         return result;
     }
 
-    @Override
-    public String toString() {
-        String str = name + ":\n";
-        if (source != null) {
-            str += "source: " + source + "\n";
-        }
-        if (url != null) {
-            str += "url: " + url + "\n";
-        }
-        str += "Ingredients: \n";
-        for (int i = 0; i < ingredients.size(); i++) {
-            str += "\t" + ingredients.get(i).toString() + "\n";
-        }
-        return str;
-    }
-
     public String printRecipe()
     {
         String result = "";
@@ -294,7 +279,7 @@ public class Recipe {
             result += "\nRating: " + returnRate + " stars\n";
         }
         Instructions instruct = this.getInstructions();
-        if (this.url!=null && instruct.getInstructions().equals(null))
+        if (this.url!=null)
             instruct.getInstructions().add(url);
         if(instruct != null) result += "\n" + instruct.toString();
         return result;

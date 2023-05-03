@@ -69,31 +69,31 @@ public class WeeklyPlan {
         String str = "";
         str += "Monday: ";
         for (int i = 0; i < weeklyPlan.get("Monday").size(); i++) {
-            str += "\n" + weeklyPlan.get("Monday").get(i) + "\n";
+            str += "\n" + weeklyPlan.get("Monday").get(i).getName() + "\n";
         }
         str += "\nTuesday: ";
         for (int i = 0; i < weeklyPlan.get("Tuesday").size(); i++) {
-            str += "\n" + weeklyPlan.get("Tuesday").get(i) + "\n";
+            str += "\n" + weeklyPlan.get("Tuesday").get(i).getName() + "\n";
         }
         str += "\nWednesday: ";
         for (int i = 0; i < weeklyPlan.get("Wednesday").size(); i++) {
-            str += "\n" + weeklyPlan.get("Wednesday").get(i) + "\n";
+            str += "\n" + weeklyPlan.get("Wednesday").get(i).getName() + "\n";
         }
         str += "\nThursday: ";
         for (int i = 0; i < weeklyPlan.get("Thursday").size(); i++) {
-            str += "\n" + weeklyPlan.get("Thursday").get(i) + "\n";
+            str += "\n" + weeklyPlan.get("Thursday").get(i).getName() + "\n";
         }
         str += "\nFriday: ";
         for (int i = 0; i < weeklyPlan.get("Friday").size(); i++) {
-            str += "\n" + weeklyPlan.get("Friday").get(i) + "\n";
+            str += "\n" + weeklyPlan.get("Friday").get(i).getName() + "\n";
         }
         str += "\nSaturday: ";
         for (int i = 0; i < weeklyPlan.get("Saturday").size(); i++) {
-            str += "\n" + weeklyPlan.get("Saturday").get(i) + "\n";
+            str += "\n" + weeklyPlan.get("Saturday").get(i).getName() + "\n";
         }
         str += "\nSunday: ";
         for (int i = 0; i < weeklyPlan.get("Sunday").size(); i++) {
-            str += "\n" + weeklyPlan.get("Sunday").get(i) + "\n";
+            str += "\n" + weeklyPlan.get("Sunday").get(i).getName() + "\n";
         }
         str = str.replaceAll("Ingredients", "Ingredients:");
 

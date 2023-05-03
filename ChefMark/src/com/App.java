@@ -636,7 +636,7 @@ public class App {
         }
     }
     
-    public static void viewCustomRecipes(Scanner sc, UserController uc)
+    public static void viewCustomRecipes(Scanner sc, UserController uc, DBQuery dbq) throws SQLException
     {
        ArrayList<Recipe> recipes = uc.getUser().getCustomRecipeList();
         if(recipes.size() == 0)
@@ -704,6 +704,7 @@ public class App {
                     }
                     else
                     {
+                        dbq.delete(recipes.get(recipeNum-1), uc.getUser());
                         recipes.remove(recipeNum-1);
                     }
                 }
@@ -810,7 +811,7 @@ public class App {
         }
     }
 
-    public static void createRecipe(Scanner sc, UserController uc, RecipeController RC)
+    public static void createRecipe(Scanner sc, UserController uc, RecipeController RC, DBQuery dbq) throws SQLException
     {
         System.out.println("\nWelcome to create a recipe:\n");
         System.out.println("Please enter a name for your recipe or type back to cancel: ");
@@ -818,7 +819,7 @@ public class App {
         if(recipeName.equals(BACK)){
           return;
         } else {
-            uc.getUser().addCustomRecipe(RC.createRecipe(recipeName, sc));
+            uc.getUser().addCustomRecipe(RC.createRecipe(recipeName, sc, uc, dbq));
         }
     }
 
@@ -901,7 +902,7 @@ public class App {
         }
     }
 
-     public static void createRecipeList(Scanner sc, UserController uc, RecipeController RC)
+    public static void createRecipeList(Scanner sc, UserController uc, RecipeController RC)
     {
         String backRecipeList = "";
         while (!backRecipeList.equals(BACK)) {
@@ -916,6 +917,7 @@ public class App {
                 newRecipeList.setName(recipeListName);
                 uc.getUser().addListOfRecipies(newRecipeList);
                 System.out.println("Your weekly plan called " + recipeListName + " has been created");
+                //db write
                 backRecipeList = BACK;
             }
         }
@@ -928,7 +930,7 @@ public class App {
             createInput = sc.nextLine();
             if (createInput.equals(ONE)) 
             {
-                createRecipe(sc, uc, RC);
+                createRecipe(sc, uc, RC, dbq);
             } 
             else if (createInput.equals(TWO)) 
             {
@@ -1216,7 +1218,7 @@ public class App {
                     }
                 }   
             } else if (viewInput.equals(FIVE)) {
-                viewCustomRecipes(sc, uc);
+                viewCustomRecipes(sc, uc, dbq);
             } else if (viewInput.equals(SIX)) {
                 viewInput.equals(SIX);
             }
