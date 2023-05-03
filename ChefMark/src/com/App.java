@@ -829,7 +829,7 @@ public class App {
     // }
     
     
-    public static void createCustomRecipe(Scanner sc, UserController uc, RecipeController RC, DBQuery dbq)
+    public static void createCustomIngredient(Scanner sc, UserController uc, RecipeController RC, DBQuery dbq)
     {
         String backIngredient = "";
                             
@@ -928,7 +928,7 @@ public class App {
             } 
             else if (createInput.equals(TWO)) 
             {
-                createCustomRecipe(sc, uc, RC, dbq);
+                createCustomIngredient(sc, uc, RC, dbq);
             }
             else if (createInput.equals(THREE)) 
             {
