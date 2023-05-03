@@ -133,28 +133,4 @@ public class RecipeController {
 
         return newRecipe;
     }
-
-    public boolean updateRecipe(Recipe recipe)
-    {
-        return true;
-    }
-    public boolean deleteRecipe(String recipeName)
-    {
-        return true;
-    }
-
-    public boolean shareRecipe(Recipe recipe)
-    {
-        return true;
-    }
-
-    public ArrayList<Recipe> viewRecipeHistory()
-    {
-        return null;
-    }
-
-    public Recipe generateRandomRecipe()
-    {
-        return null;
-    }
 }
