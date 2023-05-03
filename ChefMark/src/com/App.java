@@ -676,6 +676,7 @@ public class App {
 
                 System.out.println("1-View Recipe, 2-Delete Recipe, 3-back");
                 String input = sc.nextLine();
+                System.out.println();
                 if(input.equals(ONE))
                 {
                     System.out.println("Type the number of the recipe you want to view");
