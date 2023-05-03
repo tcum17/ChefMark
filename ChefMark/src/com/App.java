@@ -24,7 +24,8 @@ public class App {
     private static final String INGREDIENT_SEARCH_PROMPT = "Please enter the ingredients you would like to use in a recipe:\nEnter \"Remove\" to remove the previous ingredient\nEnter \"Stop\" to stop";
     private static final String CREATE_PROMPT = "1 - Recipe\n2 - Ingredient\n3 - WeeklyPlan\n4 - RecipeList\n5 - Back";
     private static final String VIEW_PROMPT = "\n==== Enter your selection ====\n1 - Recipe List\n2 - Pantry\n3 - Weekly Plan\n4 - History\n5 - Custom Recipes\n6 - Back";
-    private static final String VIEW_RECIPE_OPTIONS = "What do you want to do with this recipe: \n1 - Add to recipe List\n2- Add to weekly plan\n3 - Share the recipe\n4 - Back";
+    private static final String VIEW_RECIPE_OPTIONS = "What do you want to do with this recipe:\n1 - Add to weekly plan"+
+    "\n2 - Add to Recipe List\n3 - Add to favorite recipes\n4 - Share\n5 - Change recipe serving sizes\n6 - Back";
     private static final String ONE = "1", TWO = "2", THREE = "3", FOUR = "4", FIVE = "5", SIX = "6";
     private static final String INVALID_SELECT = "Please enter a valid choice\n";
     private static final String STOP = "Stop", REMOVE = "Remove", BACK = "back";
@@ -365,23 +366,27 @@ public class App {
                 switch (input) {
                     case ONE:
                         if(curRecipe != null){
-                            addRecipe(sc, uc, curRecipe, dbq);
-                        }else System.err.println("Error converting JSON to recipe, recipe=null");
-                        return;
-                    case TWO:
-                        if(curRecipe != null){
                             addRecipeToWeeklyPlan(sc, uc, curRecipe, dbq);
                         }else System.err.println("Error converting JSON to recipe, recipe=null");
                         break;
+                    case TWO:
+                        if(curRecipe != null){
+                            addRecipeToRecipeList(sc, uc, curRecipe, dbq);
+                        }else System.err.println("Error converting JSON to recipe, recipe=null");
+                        break;
                     case THREE:
+                        uc.getUser().addToFavoriteRecipes(curRecipe);
+                        break;
+                    case FOUR:
                         if(curRecipe != null){
                             userRecipeShare(sc, curRecipe, curUser);
                         }else System.err.println("Error converting JSON to recipe, recipe=null");
-                        //curUser.getRecipeLists().addRecipeToRecipeList(curRecipe);
                         break;
-                    case FOUR:
+                    case FIVE:
+                        changeRecipeServingSize(curRecipe, sc, uc);
+                        break;
+                    case SIX:
                         viewingRecipe=false;
-                        //Search.displayCurrentPage();
                         break;
                     default:
                         System.out.println(INVALID_SELECT);
