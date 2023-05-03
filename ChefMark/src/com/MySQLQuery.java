@@ -1,5 +1,8 @@
 import java.sql.Connection;
 import java.sql.Statement;
+
+import com.mysql.cj.x.protobuf.MysqlxPrepare.Prepare;
+
 import java.sql.SQLException;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -152,7 +155,7 @@ public class MySQLQuery extends DBQuery{
                 }
             }
             //weeklyPlan.get -- ask group what we really want
-            statement.execute("UPDATE WEEKLYPLAN");
+            //statement.execute("UPDATE WEEKLYPLAN");
         }
     }
 
@@ -181,10 +184,11 @@ public class MySQLQuery extends DBQuery{
         double glycemicIndex = recipe.getNutritionalFacts().getGlycemicIndex();
         double recipeYield = recipe.getNutritionalFacts().getYeild();
         String instructions = RecipeController.arrayListToText(recipe.getInstructions().getInstructions());
+        //instructions = instructions.replaceAll("|", "");
         String cautions = RecipeController.arrayListToText(recipe.getInstructions().getCautions());
         ResultSet rs = statement.executeQuery("SELECT RECIPEID FROM RECIPE WHERE RECIPENAME='" + recipe.getName() + "'");
         if (!rs.next()) {
-            String query = "INSERT INTO RECIPE (recipeName, url, source, ingredients, totalWeight, dietLabels, healthLabels, calories, glycemicIndex, yield, instructions, cautions, username) values(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?";
+            String query = "INSERT INTO RECIPE (recipeName, url, source, ingredients, totalWeight, dietLabels, healthLabels, calories, glycemicIndex, yield, instructions, cautions, username) values(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
             PreparedStatement statement = connection.prepareStatement(query);
             statement.setString(1, recipe.getName());
             statement.setString(2, recipe.getURL());
@@ -234,7 +238,56 @@ public class MySQLQuery extends DBQuery{
         statement.setString(1, recipe.getName());
         statement.setString(2, user.getUsername());
         statement.execute();
+    }
+
+    public void create(RecipeList recipeList, User user) throws SQLException {
+        String query = "INSERT INTO RECIPELIST (RECIPELISTNAME, USERNAME) values(?, ?)";
+        PreparedStatement statement = connection.prepareStatement(query);
+        statement.setString(1, recipeList.getName());
+        statement.setString(2, user.getUsername());
+        statement.execute();
+    }
+
+    public ResultSet populateRecipeList(RecipeList recipeList, User user) throws SQLException {
+        //String query = "SELECT RECIPELISTNAME, recipeName, url, source, ingredients, totalWeight, dietLabels, healthLabels, calories, glycemicIndex, yield, instructions, cautions, username FROM RECIPELIST WHERE USERNAME=?";
+        String query = "SELECT RECIPELISTNAME FROM RECIPELIST WHERE USERNAME=?";
+        PreparedStatement statement = connection.prepareStatement(query);
+        statement.setString(1, user.getUsername());
+        return statement.executeQuery();
+    }
+
+    public ResultSet getRecipeLists(RecipeList recipeList, User user) throws SQLException {
+        //String query = "SELECT recipeName, url, source, ingredients, totalWeight, dietLabels, healthLabels, calories, glycemicIndex, yield, instructions, cautions, username FROM RECIPELIST,recipelistitem,recipe WHERE recipelist.username=? and recipelistitem.recipelistid=recipelist.recipelistid and recipelistitem.recipeid=recipe.recipeid and RECIPELISTNAME=?";
+        String query="select distinct recipeName, url, source, ingredients, dietLabels, healthLabels, calories, instructions, cautions, recipe.username FROM RECIPELIST,recipelistitem,recipe WHERE recipelist.username=? and recipelistitem.recipelistid=recipelist.recipelistid and recipelistitem.recipeid=recipe.recipeid and RECIPELISTNAME=?";
+        PreparedStatement statement = connection.prepareStatement(query);
+        statement.setString(1, user.getUsername());
+        statement.setString(2, recipeList.getName());
+        return statement.executeQuery();
+    }
+
+    public void create(RecipeList recipeList, Recipe recipe, User user) throws SQLException {
+        if (recipe.getSource().equals(null))
+            createCustomRecipe(recipe, user);
+        else {
+            recipe.getInstructions().getInstructions().add(recipe.getURL());
+            create(recipe, user);
         }
+        String query = "SELECT recipe.recipeid, recipelist.recipelistid from recipelist,recipe,user where user.username=? and user.username=recipe.username and recipelist.username=user.username and recipelist.recipelistname=? and recipe.recipename=?";
+        PreparedStatement statement = connection.prepareStatement(query);
+        statement.setString(1, user.getUsername());
+        statement.setString(2, recipeList.getName());
+        statement.setString(3, recipe.getName());
+        ResultSet rs = statement.executeQuery();
+        if (rs.next()) {
+            int recipeId = rs.getInt(1);
+            int recipeListId = rs.getInt(2);
+            query = "INSERT INTO RECIPELISTITEM (recipeid, recipelistid) values(?, ?)";
+            statement = connection.prepareStatement(query);
+            statement.setInt(1, recipeId);
+            statement.setInt(2, recipeListId);
+            statement.execute();
+        }
+    }
 
     // String query = "SELECT * FROM WEEKLYPLAN WHERE weeklyplan.USERNAME=?";
     // PreparedStatement statement = connection.prepareStatement(query);

@@ -76,7 +76,7 @@ public class App {
             if (homeInput.equals(ONE)) {
                 String searchInput = "";
                 while (!searchInput.equals(SIX)) {
-                    System.out.println(SEARCH_PROMPT);
+                    System.out.println(SEARCH_PROMPT); // search for a recipe
                     searchInput = sc.nextLine();
                     if (searchInput.equals(ONE)) {
                         keywordSearch(sc, uc, dbq);
@@ -298,7 +298,7 @@ public class App {
                     {
                         if(randomInput.equals(ONE))
                         {
-                            addRecipeToRecipeList(sc, uc, ranRec);
+                            addRecipeToRecipeList(sc, uc, ranRec, dbq);
                         }
                         else if(randomInput.equals(TWO))
                         {
@@ -564,7 +564,7 @@ public class App {
             if (location.equals(ONE)) {
                 addRecipeToWeeklyPlan(sc, uc, recipe, dbq);
             } else if (location.equals(TWO)) {
-                addRecipeToRecipeList(sc, uc, recipe);
+                addRecipeToRecipeList(sc, uc, recipe, dbq);
             } else if (location.equals(THREE)) {
 
             } else {
@@ -619,7 +619,7 @@ public class App {
         }
     }
 
-    public static void addRecipeToRecipeList(Scanner sc, UserController uc, Recipe recipe) {
+    public static void addRecipeToRecipeList(Scanner sc, UserController uc, Recipe recipe, DBQuery dbq) throws SQLException{
         boolean enteringList = true;
         while(enteringList){
             if (uc.getUser().getRecipeLists().size() != 0) {
@@ -633,6 +633,7 @@ public class App {
                 if (rl != null) {
                     enteringList = false;
                     rl.addRecipeToRecipeList(recipe);
+                    dbq.create(rl, recipe, uc.getUser());
                 } else {
                     System.out.println(list + " was not found in your Recipe Lists.\n");
                 }
@@ -909,7 +910,7 @@ public class App {
         }
     }
 
-    public static void createRecipeList(Scanner sc, UserController uc, RecipeController RC)
+    public static void createRecipeList(Scanner sc, UserController uc, RecipeController RC, DBQuery dbq) throws SQLException
     {
         String backRecipeList = "";
         while (!backRecipeList.equals(BACK)) {
@@ -923,8 +924,9 @@ public class App {
                 RecipeList newRecipeList = new RecipeList();
                 newRecipeList.setName(recipeListName);
                 uc.getUser().addListOfRecipies(newRecipeList);
-                System.out.println("Your weekly plan called " + recipeListName + " has been created");
+                System.out.println("Your recipe list called " + recipeListName + " has been created");
                 //db write
+                dbq.create(newRecipeList, uc.getUser());
                 backRecipeList = BACK;
             }
         }
@@ -949,7 +951,7 @@ public class App {
             } 
             else if (createInput.equals(FOUR)) 
             {
-                createRecipeList(sc, uc, RC);
+                createRecipeList(sc, uc, RC, dbq);
             } 
             else if (createInput.equals(FIVE)) 
             {
@@ -1257,8 +1259,8 @@ public class App {
         boolean done =false;
         while(!done)
         {
-            uc.getUser().addToRecipeHistory(recipe); 
-            System.out.println(recipe.toString());
+            uc.getUser().addToRecipeHistory(recipe);
+            System.out.println(recipe.printRecipe());
             System.out.println("What do you want to do with this recipe:\n1 - Add to weekly plan\n2 - Add to Recipe List\n3 - Add to liked recipes\n4 - Share\n5 - Change recipe serving sizes");
             String line = sc.nextLine();
             int option = Integer.parseInt(line);
@@ -1269,7 +1271,7 @@ public class App {
                 break;
             case 2:
                 // System.out.println("Adding recipe to Recipe List...");
-                addRecipeToRecipeList(sc, uc, recipe);
+                addRecipeToRecipeList(sc, uc, recipe, dbq);
                 break;
             case 3:
                 //System.out.println("Adding recipe to liked recipes...");

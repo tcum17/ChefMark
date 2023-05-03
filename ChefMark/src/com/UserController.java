@@ -34,10 +34,26 @@ private static Pattern passwordRegex = Pattern
             user.getCustomRecipeList().add(new Recipe(rs.getString(1), rs.getString(2), rs.getString(3), RecipeController.textToIngredientList(rs.getString(4)), new NutritionalFacts(RecipeController.textToArrayList(rs.getString(5)), RecipeController.textToArrayList(rs.getString(6)), rs.getInt(7)), new Instructions(RecipeController.textToArrayList(rs.getString(8)), RecipeController.textToArrayList(rs.getString(9)))));
         }
     }
+    //String query = "SELECT recipeName, url, source, ingredients,                                                                                                                                                                                                        totalWeight, dietLabels, healthLabels, calories, glycemicIndex, yield, instructions, cautions, username FROM RECIPELIST WHERE USERNAME=?";
+        
+    public void initializeRecipeLists(DBQuery dbq) throws SQLException {
+        ResultSet rs = dbq.populateRecipeList(new RecipeList(), this.user);
+        while (rs.next()) {
+            user.getRecipeLists().add(new RecipeList(rs.getString(1)));
+        }
+
+        for (int i = 0; i < user.getRecipeLists().size(); i++) {
+            rs = dbq.getRecipeLists(user.getRecipeLists().get(i), user);
+            RecipeList recipeList = user.getRecipeLists().get(i);
+            while (rs.next()) {
+                recipeList.addRecipeToRecipeList(new Recipe(rs.getString(1), rs.getString(2), rs.getString(3), RecipeController.textToIngredientList(rs.getString(4)), new NutritionalFacts(RecipeController.textToArrayList(rs.getString(5)), RecipeController.textToArrayList(rs.getString(6)), rs.getInt(7)), new Instructions(RecipeController.textToArrayList(rs.getString(8)), RecipeController.textToArrayList(rs.getString(9)))));
+            }
+        }
+    }
 
     public void initializeWeeklyPlans(DBQuery dbq) throws SQLException {
         ResultSet rs = dbq.populateWeeklyPlan(new WeeklyPlan(), this.user);
-        if (rs.next())
+        while (rs.next())
         {
             String weeklyPlanName = rs.getString(2);
             String[] daysOfWeek = {"Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"};
@@ -185,6 +201,7 @@ private static Pattern passwordRegex = Pattern
                 initializePantry(dbq);
                 initializeWeeklyPlans(dbq);
                 initializeCustomRecipes(dbq);
+                initializeRecipeLists(dbq);
                 return true;
             }
             else {
