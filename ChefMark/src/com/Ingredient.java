@@ -75,7 +75,9 @@ public class Ingredient {
     public String toString()
     {
         String result = "";
-        result += quantity + " " + measure + " " + ingredientName;
+        if(quantity > 0) result += quantity + " ";
+        if(measure != null) result += measure + " ";
+        if(ingredientName != null) result += ingredientName + " ";
        
         return result;
     }
