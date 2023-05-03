@@ -41,7 +41,7 @@ public class App {
 
         System.out.println("Type \"Exit\" to quit the program");
         dbq.connect();
-
+        
         boolean signedIn = false;
         String choice = "";
         while (!choice.equalsIgnoreCase(QUIT)) {
@@ -110,10 +110,6 @@ public class App {
                 view(sc, uc, dbq);
 
             }  else if (homeInput.equals(FIVE)){
-                // Ingredient i = new Ingredient("Salt", "", 2.5f, "cups", 2.5f, "salty");
-                // uc.getUser().getPantry().addIngredient(i);
-                // dbq.create(uc.getUser().getPantry(), uc.getUser());
-                // dbq.update(uc.getUser().getPantry(), i, uc.getUser());
                 choice = QUIT;
             } 
             else {
