@@ -76,7 +76,20 @@ public class RecipeController {
                 Ingredient ingredient = new Ingredient();
                 ingredient.setIngredientName(ingredientName);
                 System.out.println("Please give the ingredient a quantity(number only)");
-                float quantity = Float.parseFloat(sc.nextLine());
+                float quantity = -1;
+                boolean goodInput = false;
+                while(!goodInput)
+                {
+                    try{
+                    quantity = Float.parseFloat(sc.nextLine());
+                    goodInput = true;
+                    }
+                    catch(NumberFormatException e)
+                    {
+                        System.out.println("Invalid input please try again");
+                        
+                    }
+                }
                 ingredient.setQuantity(quantity);
                 System.out.println("Please give the ingredient measure(Cups, Grams, ect...)");
                 String measure = sc.nextLine();
