@@ -1,3 +1,14 @@
 {
+<<<<<<< HEAD
     "java.configuration.updateBuildConfiguration": "interactive"
+=======
+    "java.project.referencedLibraries": [
+        "lib/**/*.jar",
+        "ChefMark/lib/mysql-connector-j-8.0.32.jar",
+        "ChefMark/lib/javax.mail.jar",
+        "ChefMark/lib/activation.jar",
+        "ChefMark/lib/javax.mail-api-1.6.2.jar",
+        "ChefMark/lib/json-simple-1.1.1.jar"
+    ]
+>>>>>>> 39cb0c308ecca8da01c6b7ef1d0463ff820016ca
 }
