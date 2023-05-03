@@ -1,6 +1,9 @@
 
 import java.util.Scanner;
 import org.json.simple.JSONObject;
+import org.json.simple.parser.ParseException;
+
+import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -118,7 +121,7 @@ public class App {
         }
     }
 
-    private static void keywordSearch(Scanner sc, UserController uc, DBQuery dbq) throws SQLException{
+    private static void keywordSearch(Scanner sc, UserController uc, DBQuery dbq) throws SQLException, ParseException, IOException{
         boolean searchAgain = true;
         final String KEYWORD_SEARCH_PROMPT = "Please enter the keyword(s) you would like to search by: ";
         while(searchAgain)
@@ -137,7 +140,7 @@ public class App {
         }
     }
 
-    private static void ingredientSearch(Scanner sc, UserController uc, DBQuery dbq) throws SQLException{
+    private static void ingredientSearch(Scanner sc, UserController uc, DBQuery dbq) throws SQLException, ParseException, IOException{
         boolean searchAgain = true;
         
         while(searchAgain)
@@ -173,7 +176,7 @@ public class App {
         }
     }
 
-    private static void pantrySearch(Scanner sc, UserController uc, DBQuery dbq) throws SQLException{
+    private static void pantrySearch(Scanner sc, UserController uc, DBQuery dbq) throws SQLException, ParseException, IOException{
         boolean searchAgain = true;
         while(searchAgain)
         {
@@ -212,7 +215,7 @@ public class App {
         }          
     }
 
-    private static void calorieSearch(Scanner sc, UserController uc, DBQuery dbq) throws SQLException{
+    private static void calorieSearch(Scanner sc, UserController uc, DBQuery dbq) throws SQLException, ParseException, IOException{
         boolean searchAgain = true;
         while(searchAgain)
         {
@@ -275,7 +278,7 @@ public class App {
         }
     }
 
-    private static void randomSearch(Scanner sc, UserController uc, DBQuery dbq) throws SQLException{
+    private static void randomSearch(Scanner sc, UserController uc, DBQuery dbq) throws SQLException, ParseException, IOException{
         boolean searchAgain = true;
         while(searchAgain)
         {
@@ -321,8 +324,12 @@ public class App {
             else if(randomInput.equals(TWO))
             {
                 //grab random recipe
-                boolean searchSuccess = Search.randomSearch();
-                if(searchSuccess) searchLoop(sc, uc, dbq);
+                JSONObject JSONRecipe = Search.randomSearch(); //Changed to get single recipe
+
+                if(JSONRecipe != null){
+                    Recipe ranRec = Recipe.JSONToRecipe(JSONRecipe);
+                    viewRecipe(ranRec, sc, uc, dbq);
+                } 
             }
             else
             {
@@ -1275,7 +1282,7 @@ public class App {
             case 5:
                 // System.out.println("Changing recipe serving sizes...");
                 changeRecipeServingSize(recipe, sc, uc);
-                break;
+                break; //TODO add back option
             default:
                 System.out.println(INVALID_SELECT);
                 break;
