@@ -147,17 +147,19 @@ public class Search {
         String result = "";
         if(currentPage+1 == pageList.size()){
             try {
-                URL url = new URL(pageList.get(currentPage).getNextPage());
-                HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-                conn.setRequestMethod("GET");
-                conn.connect();
-                ResultPage pageResult = getPageResponse(url);
-                pageList.add(pageResult);
-                result = pageResult.getPageResult();
-                currentPage++;
-                conn.disconnect();
+                String nextPage = pageList.get(currentPage).getNextPage();
+                if(nextPage != null){
+                    URL url = new URL(nextPage);
+                    HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+                    conn.setRequestMethod("GET");
+                    conn.connect();
+                    ResultPage pageResult = getPageResponse(url);
+                    pageList.add(pageResult);
+                    result = pageResult.getPageResult();
+                    currentPage++;
+                    conn.disconnect();
+                }else System.out.println("There are no more pages.\n");
             } catch (Exception e) {
-                // TODO Auto-generated catch block
                 e.printStackTrace();
             }      
         }else{
@@ -236,7 +238,6 @@ public class Search {
     
                     conn.disconnect();    
                 } catch (Exception e) {
-                    // TODO: handle exception
                 }
             }else resultString = "No hit at that index";
         }else{
