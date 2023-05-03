@@ -934,6 +934,7 @@ public class App {
 
     private static void viewPantry(Scanner sc, UserController uc, DBQuery dbq) throws SQLException{
         String pantryInput ="";
+        boolean check= false;
         while(!(pantryInput.equals(FOUR)))
         {
             
@@ -949,6 +950,7 @@ public class App {
                 {
                     case ONE:
                     addIngredientToPantry(uc, dbq, sc);
+                    check = true;
                     case TWO:
                     pantryInput = FOUR;
                     break;
@@ -956,7 +958,8 @@ public class App {
                     System.out.println("Not a valid input");
                 }
             }
-            else
+            
+            if(uc.getUser().getPantry().ingredientListLength()!=0 || check)
             {
                 System.out.println(uc.getUser().getPantry().toString());
                 System.out.println("\nWhat would you like to do in the pantry?\n1 - Add Ingredient\n2 - Delete Ingredient\n3 - Update Ingredient\n4 - Back");
