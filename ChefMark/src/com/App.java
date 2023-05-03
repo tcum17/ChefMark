@@ -1010,10 +1010,11 @@ public class App {
                     System.out.println(ingredientName + " does not exist!");
                 }
                 
-                System.out.println("Do you want to delete something again?\n1 - Yes\n2 - No");
-                String tryAgainInput = sc.nextLine();
+                String tryAgainInput = "";
                 while(!tryAgainInput.equals(ONE))
                 {
+                    System.out.println("Do you want to delete something again?\n1 - Yes\n2 - No");
+                    tryAgainInput = sc.nextLine();
                     if(tryAgainInput.equals(TWO))
                     {
                         deleteAgain =false;
