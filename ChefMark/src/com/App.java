@@ -978,7 +978,7 @@ public class App {
                     case ONE:
                     addIngredientToPantry(uc, dbq, sc);
                     case TWO:
-                    deleteIngredientFromPantry(uc, sc, dbq);//TODO deleting ingredient cause infinite loop
+                    deleteIngredientFromPantry(uc, sc, dbq);
                     case THREE:
                     updateIngredientInPantry(uc, sc, dbq);
                     case FOUR:
