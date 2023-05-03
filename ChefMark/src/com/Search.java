@@ -166,7 +166,7 @@ public class Search {
             currentPage++;
             result = pageList.get(currentPage).getPageResult();
         }
-        System.out.println(result);
+        System.out.println("\n"+result);
         System.out.flush();
     }
 
@@ -178,7 +178,7 @@ public class Search {
             currentPage--;
             result = pageList.get(currentPage).getPageResult();
         }
-        System.out.println(result);
+        System.out.println("\n"+result);
         System.out.flush();
     }
 

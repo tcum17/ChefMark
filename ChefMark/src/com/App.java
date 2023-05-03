@@ -329,9 +329,11 @@ public class App {
             String searchPageInput = sc.nextLine();
             switch (searchPageInput) {
                 case ONE:
+                    System.out.printf(".....");
                     Search.previousPage();
                     break;
                 case TWO:
+                    System.out.printf(".....");
                     Search.nextPage();
                     break;
                 case THREE:
