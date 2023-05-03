@@ -1,6 +1,9 @@
 
 import java.util.Scanner;
 import org.json.simple.JSONObject;
+import org.json.simple.parser.ParseException;
+
+import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -73,7 +76,7 @@ public class App {
             if (homeInput.equals(ONE)) {
                 String searchInput = "";
                 while (!searchInput.equals(SIX)) {
-                    System.out.println(SEARCH_PROMPT);
+                    System.out.println(SEARCH_PROMPT); // search for a recipe
                     searchInput = sc.nextLine();
                     if (searchInput.equals(ONE)) {
                         keywordSearch(sc, uc, dbq);
@@ -118,7 +121,7 @@ public class App {
         }
     }
 
-    private static void keywordSearch(Scanner sc, UserController uc, DBQuery dbq) throws SQLException{
+    private static void keywordSearch(Scanner sc, UserController uc, DBQuery dbq) throws SQLException, ParseException, IOException{
         boolean searchAgain = true;
         final String KEYWORD_SEARCH_PROMPT = "Please enter the keyword(s) you would like to search by: ";
         while(searchAgain)
@@ -137,7 +140,7 @@ public class App {
         }
     }
 
-    private static void ingredientSearch(Scanner sc, UserController uc, DBQuery dbq) throws SQLException{
+    private static void ingredientSearch(Scanner sc, UserController uc, DBQuery dbq) throws SQLException, ParseException, IOException{
         boolean searchAgain = true;
         
         while(searchAgain)
@@ -173,7 +176,7 @@ public class App {
         }
     }
 
-    private static void pantrySearch(Scanner sc, UserController uc, DBQuery dbq) throws SQLException{
+    private static void pantrySearch(Scanner sc, UserController uc, DBQuery dbq) throws SQLException, ParseException, IOException{
         boolean searchAgain = true;
         while(searchAgain)
         {
@@ -212,7 +215,7 @@ public class App {
         }          
     }
 
-    private static void calorieSearch(Scanner sc, UserController uc, DBQuery dbq) throws SQLException{
+    private static void calorieSearch(Scanner sc, UserController uc, DBQuery dbq) throws SQLException, ParseException, IOException{
         boolean searchAgain = true;
         while(searchAgain)
         {
@@ -275,7 +278,7 @@ public class App {
         }
     }
 
-    private static void randomSearch(Scanner sc, UserController uc, DBQuery dbq) throws SQLException{
+    private static void randomSearch(Scanner sc, UserController uc, DBQuery dbq) throws SQLException, ParseException, IOException{
         boolean searchAgain = true;
         while(searchAgain)
         {
@@ -295,7 +298,7 @@ public class App {
                     {
                         if(randomInput.equals(ONE))
                         {
-                            addRecipeToRecipeList(sc, uc, ranRec);
+                            addRecipeToRecipeList(sc, uc, ranRec, dbq);
                         }
                         else if(randomInput.equals(TWO))
                         {
@@ -321,8 +324,12 @@ public class App {
             else if(randomInput.equals(TWO))
             {
                 //grab random recipe
-                boolean searchSuccess = Search.randomSearch();
-                if(searchSuccess) searchLoop(sc, uc, dbq);
+                JSONObject JSONRecipe = Search.randomSearch(); //Changed to get single recipe
+
+                if(JSONRecipe != null){
+                    Recipe ranRec = Recipe.JSONToRecipe(JSONRecipe);
+                    viewRecipe(ranRec, sc, uc, dbq);
+                } 
             }
             else
             {
@@ -557,7 +564,7 @@ public class App {
             if (location.equals(ONE)) {
                 addRecipeToWeeklyPlan(sc, uc, recipe, dbq);
             } else if (location.equals(TWO)) {
-                addRecipeToRecipeList(sc, uc, recipe);
+                addRecipeToRecipeList(sc, uc, recipe, dbq);
             } else if (location.equals(THREE)) {
 
             } else {
@@ -612,7 +619,7 @@ public class App {
         }
     }
 
-    public static void addRecipeToRecipeList(Scanner sc, UserController uc, Recipe recipe) {
+    public static void addRecipeToRecipeList(Scanner sc, UserController uc, Recipe recipe, DBQuery dbq) throws SQLException{
         boolean enteringList = true;
         while(enteringList){
             if (uc.getUser().getRecipeLists().size() != 0) {
@@ -626,6 +633,7 @@ public class App {
                 if (rl != null) {
                     enteringList = false;
                     rl.addRecipeToRecipeList(recipe);
+                    dbq.create(rl, recipe, uc.getUser());
                 } else {
                     System.out.println(list + " was not found in your Recipe Lists.\n");
                 }
@@ -636,7 +644,7 @@ public class App {
         }
     }
     
-    public static void viewCustomRecipes(Scanner sc, UserController uc)
+    public static void viewCustomRecipes(Scanner sc, UserController uc, DBQuery dbq) throws SQLException
     {
        ArrayList<Recipe> recipes = uc.getUser().getCustomRecipeList();
         if(recipes.size() == 0)
@@ -704,6 +712,7 @@ public class App {
                     }
                     else
                     {
+                        dbq.delete(recipes.get(recipeNum-1), uc.getUser());
                         recipes.remove(recipeNum-1);
                     }
                 }
@@ -783,7 +792,11 @@ public class App {
                     System.out.println("Which recipe would you like to view?");
                     String sRecipe = sc.nextLine();
                     Recipe recipe = plan.getRecipeByName(sRecipe);
-                    System.out.println(recipe.printRecipe());
+                    if (!recipe.equals(null))
+                        System.out.println(recipe.printRecipe());
+                    else {
+                        System.out.println("It looks like this recipe does not exist.");
+                    }
                     //viewRecipe(recipe, sc, uc, dbq);
                     back = BACK;
                 }
@@ -806,7 +819,7 @@ public class App {
         }
     }
 
-    public static void createRecipe(Scanner sc, UserController uc, RecipeController RC)
+    public static void createRecipe(Scanner sc, UserController uc, RecipeController RC, DBQuery dbq) throws SQLException
     {
         System.out.println("\nWelcome to create a recipe:\n");
         System.out.println("Please enter a name for your recipe or type back to cancel: ");
@@ -814,7 +827,7 @@ public class App {
         if(recipeName.equals(BACK)){
           return;
         } else {
-            uc.getUser().addCustomRecipe(RC.createRecipe(recipeName, sc));
+            uc.getUser().addCustomRecipe(RC.createRecipe(recipeName, sc, uc, dbq));
         }
     }
 
@@ -897,7 +910,7 @@ public class App {
         }
     }
 
-     public static void createRecipeList(Scanner sc, UserController uc, RecipeController RC)
+    public static void createRecipeList(Scanner sc, UserController uc, RecipeController RC, DBQuery dbq) throws SQLException
     {
         String backRecipeList = "";
         while (!backRecipeList.equals(BACK)) {
@@ -911,7 +924,9 @@ public class App {
                 RecipeList newRecipeList = new RecipeList();
                 newRecipeList.setName(recipeListName);
                 uc.getUser().addListOfRecipies(newRecipeList);
-                System.out.println("Your weekly plan called " + recipeListName + " has been created");
+                System.out.println("Your recipe list called " + recipeListName + " has been created");
+                //db write
+                dbq.create(newRecipeList, uc.getUser());
                 backRecipeList = BACK;
             }
         }
@@ -924,7 +939,7 @@ public class App {
             createInput = sc.nextLine();
             if (createInput.equals(ONE)) 
             {
-                createRecipe(sc, uc, RC);
+                createRecipe(sc, uc, RC, dbq);
             } 
             else if (createInput.equals(TWO)) 
             {
@@ -936,7 +951,7 @@ public class App {
             } 
             else if (createInput.equals(FOUR)) 
             {
-                createRecipeList(sc, uc, RC);
+                createRecipeList(sc, uc, RC, dbq);
             } 
             else if (createInput.equals(FIVE)) 
             {
@@ -1212,7 +1227,7 @@ public class App {
                     }
                 }   
             } else if (viewInput.equals(FIVE)) {
-                viewCustomRecipes(sc, uc);
+                viewCustomRecipes(sc, uc, dbq);
             } else if (viewInput.equals(SIX)) {
                 viewInput.equals(SIX);
             }
@@ -1244,31 +1259,29 @@ public class App {
         boolean done =false;
         while(!done)
         {
-            uc.getUser().addToRecipeHistory(recipe); 
-            System.out.println(recipe.toString());
-            System.out.println("What do you want to do with this recipe:\n1 - Add to weekly plan\n2 - Add to Recipe List\n3 - Add to liked recipes\n4 - Share\n5 - Change recipe serving sizes");
-            String line = sc.nextLine();
-            int option = Integer.parseInt(line);
-            switch (option) {
-            case 1:
-                // System.out.println("Adding recipe to weekly plan...");
+            uc.getUser().addToRecipeHistory(recipe);
+            System.out.println(recipe.printRecipe());
+            System.out.println("What do you want to do with this recipe:\n1 - Add to weekly plan"+
+                "\n2 - Add to Recipe List\n3 - Add to liked recipes\n4 - Share\n5 - Change recipe serving sizes\n6 - Back");
+            String input = sc.nextLine();
+            switch (input) {
+            case ONE:
                 addRecipeToWeeklyPlan(sc, uc, recipe, dbq);
                 break;
-            case 2:
-                // System.out.println("Adding recipe to Recipe List...");
-                addRecipeToRecipeList(sc, uc, recipe);
+            case TWO:
+                addRecipeToRecipeList(sc, uc, recipe, dbq);
                 break;
-            case 3:
-                //System.out.println("Adding recipe to liked recipes...");
+            case THREE:
                 uc.getUser().addToFavoriteRecipes(recipe);
                 break;
-            case 4:
-                // System.out.println("Sharing recipe...");
+            case FOUR:
                 userRecipeShare(sc, recipe, uc.getUser());
                 break;
-            case 5:
-                // System.out.println("Changing recipe serving sizes...");
+            case FIVE:
                 changeRecipeServingSize(recipe, sc, uc);
+                break;
+            case SIX:
+                done = true;
                 break;
             default:
                 System.out.println(INVALID_SELECT);

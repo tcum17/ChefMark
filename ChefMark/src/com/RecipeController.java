@@ -1,5 +1,7 @@
 
 
+import java.sql.SQLClientInfoException;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -52,7 +54,7 @@ public class RecipeController {
         return returnList;
     }
 
-    public Recipe createRecipe(String recipeName, Scanner sc)
+    public Recipe createRecipe(String recipeName, Scanner sc, UserController uc, DBQuery dbq) throws SQLException
     {
         Recipe newRecipe = new Recipe();
         ArrayList<Ingredient> ingredientList = new ArrayList<>();
@@ -130,31 +132,7 @@ public class RecipeController {
                 System.out.println("That is not an option");
             }
         }
-
+        dbq.createCustomRecipe(newRecipe, uc.getUser());
         return newRecipe;
-    }
-
-    public boolean updateRecipe(Recipe recipe)
-    {
-        return true;
-    }
-    public boolean deleteRecipe(String recipeName)
-    {
-        return true;
-    }
-
-    public boolean shareRecipe(Recipe recipe)
-    {
-        return true;
-    }
-
-    public ArrayList<Recipe> viewRecipeHistory()
-    {
-        return null;
-    }
-
-    public Recipe generateRandomRecipe()
-    {
-        return null;
     }
 }

@@ -8,6 +8,11 @@ public class RecipeList {
         this.recipeList = new ArrayList<Recipe>();
     }
 
+    public RecipeList(String name) {
+        this.name=name;
+        this.recipeList = new ArrayList<Recipe>();
+    }
+
     public RecipeList(ArrayList<Recipe> recipeList) {
         this.recipeList = recipeList;
     }
