@@ -515,17 +515,24 @@ public class App {
 
                     } 
                     else if (choice.equals(THREE)) {
-                        Boolean enteringName = true;
-                        while(enteringName){
-                            System.out.println("Enter the name of the recipe you want to view:");
-                            String rName = sc.nextLine();
-                            Recipe recipe = rlist.getRecipeByName(rName);
-                            if (recipe == null) {
-                                System.out.println("The recipe you entered could not be found in the Recipe List");
-                            } else {
-                                enteringName = false;
-                                viewRecipe(recipe, sc, uc, dbq);
+                        if(rlist.getRecipeList().size() != 0)
+                        {
+                            Boolean enteringName = true;
+                            while(enteringName){
+                                System.out.println("Enter the name of the recipe you want to view:");
+                                String rName = sc.nextLine();
+                                Recipe recipe = rlist.getRecipeByName(rName);
+                                if (recipe == null) {
+                                    System.out.println("The recipe you entered could not be found in the Recipe List");
+                                } else {
+                                    enteringName = false;
+                                    viewRecipe(recipe, sc, uc, dbq);
+                                }
                             }
+                        }
+                        else
+                        {
+                            System.out.println("There are no recipes in the list to view");
                         }
                     }
                 }
@@ -833,7 +840,7 @@ public class App {
                     quantity = Float.parseFloat(sc.nextLine());
                     again=false;
                 }
-                catch (InputMismatchException e) {
+                catch (NumberFormatException e) {
                     System.out.println("Invalid input. Please enter a numerical value");
                 }
             }
