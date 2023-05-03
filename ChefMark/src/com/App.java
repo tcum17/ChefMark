@@ -1007,6 +1007,8 @@ public class App {
                     if(tryAgainInput.equals(TWO))
                     {
                         deleteAgain =false;
+                        tryAgainInput = ONE;
+                        deleteAgain = false;
                     }
                     else{
                         System.out.println(RETRY);
