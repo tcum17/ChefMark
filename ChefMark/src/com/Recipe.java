@@ -294,6 +294,8 @@ public class Recipe {
             result += "\nRating: " + returnRate + " stars\n";
         }
         Instructions instruct = this.getInstructions();
+        if (this.url!=null && instruct.getInstructions().equals(null))
+            instruct.getInstructions().add(url);
         if(instruct != null) result += "\n" + instruct.toString();
         return result;
     }

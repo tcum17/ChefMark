@@ -790,7 +790,11 @@ public class App {
                     System.out.println("Which recipe would you like to view?");
                     String sRecipe = sc.nextLine();
                     Recipe recipe = plan.getRecipeByName(sRecipe);
-                    System.out.println(recipe.printRecipe());
+                    if (!recipe.equals(null))
+                        System.out.println(recipe.printRecipe());
+                    else {
+                        System.out.println("It looks like this recipe does not exist.");
+                    }
                     //viewRecipe(recipe, sc, uc, dbq);
                     back = BACK;
                 }
