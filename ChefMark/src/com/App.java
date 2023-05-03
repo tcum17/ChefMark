@@ -825,7 +825,7 @@ public class App {
     // }
     
     
-    public static void createCustomIngredient(Scanner sc, UserController uc, RecipeController RC, DBQuery dbq)
+    public static void createCustomIngredient(Scanner sc, UserController uc, RecipeController RC, DBQuery dbq) throws SQLException
     {
         String backIngredient = "";
                             
@@ -862,7 +862,7 @@ public class App {
             temp.setIngredientName(ingredientName);
             temp.setQuantity(quantity);
             temp.setMeasure(measure);
-            //dbq.create(temp, uc.getUser());
+            dbq.create(uc.getUser().getPantry(), temp, uc.getUser());
             uc.getUser().getPantry().addIngredient(temp);
             System.out.println(ingredientName + " has been added to the pantry");
             backIngredient = BACK;
