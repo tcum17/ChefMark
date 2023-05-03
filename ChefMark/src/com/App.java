@@ -872,7 +872,7 @@ public class App {
                     quantity = Float.parseFloat(sc.nextLine());
                     again=false;
                 }
-                catch (InputMismatchException e) {
+                catch (NumberFormatException e) {
                     System.out.println("Invalid input. Please enter a numerical value");
                 }
             }
