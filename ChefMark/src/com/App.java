@@ -1103,13 +1103,14 @@ public class App {
                             {
                                 quantity = Float.parseFloat(input);
                                 hasFloat = true;
+                                temp.setQuantity(quantity);
                             }
                             catch(NumberFormatException e)
                             {
                                 System.out.println(RETRY);
                             }
                             
-                            temp.setQuantity(quantity);
+                            
                         }
                     }
                     System.out.println("The Ingredient's current units are \"" + temp.getMeasure() + "\"\nEnter a new unit or \"Next\" to keep the old one");
