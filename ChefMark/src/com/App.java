@@ -1173,11 +1173,11 @@ public class App {
                 if(recipeHis.size() == 0){
                     System.out.println("\nYou have no recipe history\n");
                 }else{
-                    int counter = 0;
-                    for(Recipe x : recipeHis)
+                    
+                    for(int i = recipeHis.size()-1; i >=0; i-- )
                     {
-                        counter++;
-                        System.out.println(counter + " " + x.getName()); 
+                        
+                        System.out.println(i + 1 + " " + recipeHis.get(i).getName()); 
                     }
                     System.out.println("What do you want to do?\n1 - View Recipe\n2 - back");
                     String historyInput = "";
