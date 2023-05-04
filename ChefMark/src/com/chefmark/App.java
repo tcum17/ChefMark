@@ -1,4 +1,4 @@
-
+package chefmark;
 import java.util.Scanner;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.ParseException;
@@ -40,7 +40,7 @@ public class App {
         UserController uc = new UserController();
         RecipeController RC = new RecipeController();
 
-        System.out.println("Type \"Exit\" to quit the program");
+        System.out.println("Type \"Exssit\" to quit the program");
         dbq.connect();
         
         boolean signedIn = false;

@@ -1,9 +1,11 @@
+package chefmark;
+
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.sql.SQLException;
 
-abstract class DBQuery {
+public abstract class DBQuery {
     private DBConnection dbConnection;
     private Connection connection;
     private Statement statement;

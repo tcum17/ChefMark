@@ -1,4 +1,6 @@
 //package chefmark;
+package chefmark;
+
 import java.util.Properties;
 import java.util.ArrayList;
 import javax.mail.Message;
