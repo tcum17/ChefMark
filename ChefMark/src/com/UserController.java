@@ -185,6 +185,50 @@ private static Pattern passwordRegex = Pattern
         return this.user;
     }
 
+    public boolean updateUser(DBQuery dbq, Scanner sc) throws SQLException {
+        System.out.println("Enter your username: ");
+
+        String username = validateUsername(sc);
+
+        System.out.println("Enter your password: ");
+
+        String password = validatePassword(sc);
+        String email = "";
+        ResultSet rs = dbq.read(new User(username, password, ""));
+        if (rs.next()) {
+            if (rs.getString(1).equals(username) && rs.getString(2).equals(password)) {
+                createUser(username, password, rs.getString(3));
+                email = rs.getString(3);
+                if (email==null)
+                    email = "";
+                System.out.println("Do you want to update your password? (type no if not changing)");
+                String input = sc.nextLine();
+                if (input.equalsIgnoreCase("no")) {
+                    
+                }
+                else {
+                    System.out.println("Enter your new password");
+                    password = validatePassword(sc);
+                }
+                System.out.println("Do you want to update your email? (type no if not changing)");
+                input = sc.nextLine();
+                if (input.equalsIgnoreCase("no")) {
+                    
+                }
+                else {
+                    System.out.println("Enter your new email");
+                    email = sc.nextLine();
+                }
+                user.setEmail(email);
+                user.setPassword(password);
+                dbq.update(user);
+            }
+        } else {
+            return false;
+        }
+        return true;
+    }
+
     public boolean login(DBQuery dbq, Scanner sc) throws SQLException {
         System.out.println("Enter your username: ");
 

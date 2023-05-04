@@ -4,7 +4,7 @@ import java.util.ArrayList;
 public class User {
     private String username;
     private String password;
-    private String email;
+    private String email = "";
     private ArrayList<Recipe> favoriteRecipes = new ArrayList<>();
     private ArrayList<Recipe> recipeHistory = new ArrayList<>();
     private Pantry pantry = new Pantry();

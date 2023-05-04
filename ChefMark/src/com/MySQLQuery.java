@@ -48,7 +48,28 @@ public class MySQLQuery extends DBQuery{
     }
 
     public void update(User user) throws SQLException {
-        statement.execute("UPDATE USER SET userPassword = '" + user.getPassword() + "', email = '" + user.getEmail() + "' WHERE USERNAME = '" + user.getUsername() + "'");
+        String query = "UPDATE USER SET userPassword=?, EMAIL=?";
+        PreparedStatement statement = connection.prepareStatement(query);
+        statement.setString(1, user.getPassword());
+        statement.setString(2, user.getEmail());
+        statement.execute();
+    }
+
+    public ResultSet getRecipeListId(RecipeList recipeList, User user) throws SQLException {
+        String query="SELECT RECIPELISTID FROM RECIPELIST,USER WHERE RECIPELIST.USERNAME=USER.USERNAME AND RECIPELIST.USERNAME=? AND RECIPELISTNAME=?";
+        PreparedStatement statement = connection.prepareStatement(query);
+        statement.setString(1, user.getUsername());
+        statement.setString(2, recipeList.getName());
+        return statement.executeQuery();
+    }
+
+    public void update(RecipeList recipeList, User user, int recipeListId) throws SQLException {
+        String query = "UPDATE RECIPELIST,USER SET RECIPELISTNAME=? WHERE RECIPELIST.USERNAME=USER.USERNAME AND USER.USERNAME=? AND RECIPELISTID=?";
+        PreparedStatement statement = connection.prepareStatement(query);
+        statement.setString(1, recipeList.getName());
+        statement.setString(2, user.getUsername());
+        statement.setInt(3, recipeListId);
+        statement.execute();
     }
 
     public void delete(User user) throws SQLException {

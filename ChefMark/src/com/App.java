@@ -12,13 +12,14 @@ import java.util.InputMismatchException;
 public class App {
     //Reusable output strings
     private static final String RETRY = "Your answer did not match any of our options. Please reenter";
-    private static final String WELCOME = "==== Welcome to ChefMark! ====\nEnter your choice:\nlogin\nsignup\ndelete\nquit\n";
+    private static final String WELCOME = "==== Welcome to ChefMark! ====\nEnter your choice:\nlogin\nsignup\ndelete\nupdate\nquit\n";
     private static final String GOODBYE = "Thanks for using ChefMark! We'll see you soon!";
     private static final String LOGIN = "login";
     private static final String SIGNUP = "signup";
     private static final String DELETE = "delete";
+    private static final String UPDATE = "update";
     private static final String QUIT = "quit";
-    private static final String SELECTION = "\n==== Enter your selection ====\n1 - Search\n2 - Create\n3 - Delete\n4 - View\n5 - quit\n";
+    private static final String SELECTION = "\n==== Enter your selection ====\n1 - Search\n2 - Create\n3 - Delete\n4 - View\n5 - quit";
     private static final String SEARCH_PROMPT = "=== SEARCH===\n1 - By Keyword\n2 - By Ingredient\n3 - By Pantry\n4 - By Calories\n5 - Random\n6 - Back";
     private static final String SEARCH_AGAIN = "Do you want to search for another recipe?\n1 - Yes\n2 - No";
     private static final String INGREDIENT_SEARCH_PROMPT = "Please enter the ingredients you would like to use in a recipe:\nEnter \"Remove\" to remove the previous ingredient\nEnter \"Stop\" to stop";
@@ -59,6 +60,8 @@ public class App {
                     System.exit(0);
                 } else if (startScreenInput.equalsIgnoreCase(DELETE)) {
                     signedIn = uc.deleteUser(dbq, sc);
+                } else if (startScreenInput.equalsIgnoreCase(UPDATE)) {
+                    uc.updateUser(dbq, sc);
                 }
                 else {
                     System.out.println(RETRY);
@@ -496,22 +499,32 @@ public class App {
                         System.out.println("Enter a new name for the recipe list:");
                         String newName = sc.nextLine();
                         
-                        rlist.setName(newName);
-                        uc.getUser().getRecipeLists().set(index, rlist);
+                        ResultSet rs = dbq.getRecipeListId(rlist, uc.getUser());
+                        if (rs.next()) {
+                            rlist.setName(newName);
+                            dbq.update(rlist, uc.getUser(), rs.getInt(1));
+                            uc.getUser().getRecipeLists().set(index, rlist);
+                        } else {
+                            System.out.println("Recipe List name could not be updated");
+                        }
 
                     } 
                     else if (choice.equals(TWO)) {
-                        System.out.println("Which recipe would you like to delete?");
-                        String rName = sc.nextLine();
-                        Recipe recipe = rlist.getRecipeByName(rName);
+                        if (!rlist.getRecipeList().isEmpty()) {
+                            System.out.println("Which recipe would you like to delete?");
+                            String rName = sc.nextLine();
+                            Recipe recipe = rlist.getRecipeByName(rName);
 
-                        if (recipe == null) {
-                            System.out.println("The recipe you entered could not be found in the Recipe List");
+                            if (recipe == null) {
+                                System.out.println("The recipe you entered could not be found in the Recipe List");
+                            } else {
+                                dbq.deleteRecipeListItem(rlist, recipe, uc.getUser());
+                                System.out.println("Deleted " + rName + " from " + rlist.getName() + ".");
+                                rlist.removeRecipeFromRecipeList(recipe);
+                                uc.getUser().getRecipeLists().set(index, rlist);
+                            }
                         } else {
-                            dbq.deleteRecipeListItem(rlist, recipe, uc.getUser());
-                            System.out.println("Deleted " + rName + " from " + rlist.getName() + ".");
-                            rlist.removeRecipeFromRecipeList(recipe);
-                            uc.getUser().getRecipeLists().set(index, rlist);
+                            System.out.println("You don't have any recipes to delete");
                         }
 
                     } 
