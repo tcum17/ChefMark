@@ -725,85 +725,89 @@ public class App {
             System.out.println("Which Weekly plan would you like to view?");
             String weeklyPlanName = sc.nextLine();
             WeeklyPlan plan = uc.getUser().getWeeklyPlanByName(weeklyPlanName);
-            System.out.println(plan.info());
-            String back="";
-            while(!back.equals(BACK))
-            {
-                System.out.println("Please choose an option");
-                System.out.println("1 - Update Weekly Plan Info, 2 - View Recipe, 3 - Share Weekly Plan, 4 - Convert to Shopping List, 5 - Back");
-                String option = sc.nextLine();
-                if(option.equals(ONE))
+            if (plan==null)
+                System.out.println("This plan does not exist");
+            else {
+                System.out.println(plan.info());
+                String back="";
+                while(!back.equals(BACK))
                 {
-                    boolean done = false;
-                    while(!done)
+                    System.out.println("Please choose an option");
+                    System.out.println("1 - Update Weekly Plan Info, 2 - View Recipe, 3 - Share Weekly Plan, 4 - Convert to Shopping List, 5 - Back");
+                    String option = sc.nextLine();
+                    if(option.equals(ONE))
                     {
-                        System.out.println("Welcome to Update Weekly Plan ");
-                        System.out.println();
-                        System.out.println("1-Change Weekly Plan Name\n2-Delete Recipe\n3-Back");
-                        
-                        String input = sc.nextLine();
-                        switch(input) {
-                            case ONE:
-                                System.out.println("Type back to get return or type in a new name for the weekly plan");
-                                String line = sc.nextLine();
-                                if(!line.equals(BACK))
-                                {
-                                    plan.setName(line);
-                                    System.out.println("The plan name has been changed");
-                                }
-                                break;
-                            case TWO:
-                                System.out.println("Which recipe would you like to delete?");
-                                String sRecipe = sc.nextLine();
-                                System.out.println("Which day is that recipe on?");
-                                String day = sc.nextLine();
-                                Recipe recipe = plan.getRecipeByName(sRecipe);
-                                if(plan.removeRecipeFromWeeklyPlan(recipe, day))
-                                {
-                                    System.out.println("The recipe has been removed from " + day);
-                                }
-                                else{
-                                    System.out.println("Either the recipe does not exist or its not on that day of the week");
-                                }
-                                break;
-                            case THREE:
-                                done = true;
-                                break;
-                                
-                            default:
-                                System.out.println(RETRY);
-                        }
+                        boolean done = false;
+                        while(!done)
+                        {
+                            System.out.println("Welcome to Update Weekly Plan ");
+                            System.out.println();
+                            System.out.println("1-Change Weekly Plan Name\n2-Delete Recipe\n3-Back");
+                            
+                            String input = sc.nextLine();
+                            switch(input) {
+                                case ONE:
+                                    System.out.println("Type back to get return or type in a new name for the weekly plan");
+                                    String line = sc.nextLine();
+                                    if(!line.equals(BACK))
+                                    {
+                                        plan.setName(line);
+                                        System.out.println("The plan name has been changed");
+                                    }
+                                    break;
+                                case TWO:
+                                    System.out.println("Which recipe would you like to delete?");
+                                    String sRecipe = sc.nextLine();
+                                    System.out.println("Which day is that recipe on?");
+                                    String day = sc.nextLine();
+                                    Recipe recipe = plan.getRecipeByName(sRecipe);
+                                    if(plan.removeRecipeFromWeeklyPlan(recipe, day))
+                                    {
+                                        System.out.println("The recipe has been removed from " + day);
+                                    }
+                                    else{
+                                        System.out.println("Either the recipe does not exist or its not on that day of the week");
+                                    }
+                                    break;
+                                case THREE:
+                                    done = true;
+                                    break;
+                                    
+                                default:
+                                    System.out.println(RETRY);
+                            }
 
-                        
+                            
+                        }
                     }
-                }
-                else if(option.equals(TWO))
-                {
-                    System.out.println("Which recipe would you like to view?");
-                    String sRecipe = sc.nextLine();
-                    Recipe recipe = plan.getRecipeByName(sRecipe);
-                    if (!recipe.equals(null))
-                        System.out.println(recipe.printRecipe());
-                    else {
-                        System.out.println("It looks like this recipe does not exist.");
+                    else if(option.equals(TWO))
+                    {
+                        System.out.println("Which recipe would you like to view?");
+                        String sRecipe = sc.nextLine();
+                        Recipe recipe = plan.getRecipeByName(sRecipe);
+                        if (!recipe.equals(null))
+                            System.out.println(recipe.printRecipe());
+                        else {
+                            System.out.println("It looks like this recipe does not exist.");
+                        }
+                        //viewRecipe(recipe, sc, uc, dbq);
+                        back = BACK;
                     }
-                    //viewRecipe(recipe, sc, uc, dbq);
-                    back = BACK;
-                }
-                else if(option.equals(THREE))
-                {
-                    userWeeklyPlanShare(sc, plan, uc.getUser());
-                    back = BACK; 
-                }
-                else if(option.equals(FOUR)){
-                    ShoppingListConverter.convertToShoppingList(plan, uc.getUser().getPantry());
-                }
-                else if (option.equals(FIVE)) {
-                    back = BACK;
-                }
-                else
-                {
-                    System.out.println(INVALID_SELECT);
+                    else if(option.equals(THREE))
+                    {
+                        userWeeklyPlanShare(sc, plan, uc.getUser());
+                        back = BACK; 
+                    }
+                    else if(option.equals(FOUR)){
+                        ShoppingListConverter.convertToShoppingList(plan, uc.getUser().getPantry());
+                    }
+                    else if (option.equals(FIVE)) {
+                        back = BACK;
+                    }
+                    else
+                    {
+                        System.out.println(INVALID_SELECT);
+                    }
                 }
             }
         }
@@ -1325,6 +1329,7 @@ public class App {
                     if (temp != null) {
                         boolean delres = uc.getUser().removeWeeklyPlan(temp);
                         if (delres) {
+                            dbq.deleteWeeklyPlan(temp, uc.getUser());
                             System.out.println("Deleted weekly plan.");
                         }
                     }

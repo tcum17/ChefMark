@@ -28,6 +28,7 @@ abstract class DBQuery {
     public void delete(Recipe recipe, User user) throws SQLException {}
     public void create(WeeklyPlan weeklyPlan, Recipe recipe, User user, String day) throws SQLException {}
     public void create(RecipeList recipeList, User user) throws SQLException {}
+    public void deleteWeeklyPlan(WeeklyPlan weeklyPlan, User user) throws SQLException {}
     public void createCustomRecipe(Recipe recipe, User user) throws SQLException {}
     public void create(RecipeList recipeList, Recipe recipe, User user) throws SQLException {}
     public void deleteRecipeList(RecipeList recipeList, User user) throws SQLException {}
