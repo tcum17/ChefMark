@@ -439,6 +439,8 @@ public class App {
         } 
     }
 
+
+
     private static void userWeeklyPlanShare(Scanner sc, WeeklyPlan planIn, User curUser){
         Email emailShare = new Email();
         boolean quitSharing = false;
