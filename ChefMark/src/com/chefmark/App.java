@@ -1092,6 +1092,7 @@ public class App {
                     input = sc.nextLine();
                     if(input.equalsIgnoreCase("Next"))
                     {
+                        updateAgain = false;
                         continue;
                     }
                     else{
@@ -1108,7 +1109,9 @@ public class App {
                             catch(NumberFormatException e)
                             {
                                 System.out.println(RETRY);
+                                input = sc.nextLine();
                             }
+                            
                             
                         }
                     }
