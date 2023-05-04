@@ -4,8 +4,10 @@ import java.util.ArrayList;
 import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.PasswordAuthentication;
+import javax.mail.SendFailedException;
 import javax.mail.Session;
 import javax.mail.Transport;
+import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
@@ -78,7 +80,11 @@ public class Email extends CommunicationsProvider{
             // Send message
             Transport.send(message);
             System.out.println("Recipe shared successfully!");
-        } catch (MessagingException mex) {
+        }
+        catch (SendFailedException sfe) {
+            System.out.println("Not a valid email address\n");
+        }
+        catch (MessagingException mex) {
             mex.printStackTrace();
         }
 	}
@@ -112,7 +118,11 @@ public class Email extends CommunicationsProvider{
             // Send message
             Transport.send(message);
             System.out.println("Weekly plan shared successfully!");
-        } catch (MessagingException mex) {
+        } 
+        catch (SendFailedException sfe) {
+            System.out.println("Not a valid email address\n");
+        }
+        catch (MessagingException mex) {
             mex.printStackTrace();
         }
 	}

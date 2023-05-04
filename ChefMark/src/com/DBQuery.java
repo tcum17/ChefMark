@@ -25,7 +25,24 @@ abstract class DBQuery {
     public void delete(Ingredient ingredient, User user) throws SQLException {}
     public void create(WeeklyPlan weeklyPlan, User user) throws SQLException {}
     public void create(Recipe recipe, User user) throws SQLException {}
+    public void delete(Recipe recipe, User user) throws SQLException {}
     public void create(WeeklyPlan weeklyPlan, Recipe recipe, User user, String day) throws SQLException {}
+    public void create(RecipeList recipeList, User user) throws SQLException {}
+    public void deleteWeeklyPlan(WeeklyPlan weeklyPlan, User user) throws SQLException {}
+    public void createCustomRecipe(Recipe recipe, User user) throws SQLException {}
+    public void create(RecipeList recipeList, Recipe recipe, User user) throws SQLException {}
+    public void deleteRecipeList(RecipeList recipeList, User user) throws SQLException {}
+    public void deleteAllRecipe(Recipe recipe, User user) throws SQLException {}
+    public void deleteRecipeListItem(RecipeList recipeList, Recipe recipe, User user) throws SQLException {}
+    public void delete(RecipeList recipeList, User user) throws SQLException {}
+    public ResultSet getRecipeLists(RecipeList recipeList, User user) throws SQLException {
+        ResultSet rs = null;
+        return rs;
+    }
+    public ResultSet populateRecipeList(RecipeList recipeList, User user) throws SQLException {
+        ResultSet rs = null;
+        return rs;
+    }
     public ResultSet populateCustomRecipe(Recipe recipe, User user) throws SQLException {
         ResultSet rs = null;
         return rs;

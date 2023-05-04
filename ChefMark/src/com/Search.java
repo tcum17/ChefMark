@@ -2,6 +2,7 @@
 
 import java.net.URL;
 import java.net.HttpURLConnection;
+import java.net.ProtocolException;
 import java.util.ArrayList;
 import java.util.Scanner;
 import java.io.IOException;
@@ -21,14 +22,14 @@ public class Search {
     private static ArrayList<String> filters = new ArrayList<>();
     private static JSONObject currentRecipe = null;
 
-    public static boolean basicSearch()
+    public static boolean basicSearch(boolean displayResults) throws ParseException, IOException
     {
         boolean status = false;
         jsonPageList.clear();
         pageList.clear();
         currentPage = 0;
 
-        String urlString = (edamamAPI+"?type=public&app_id="+appid+"&app_key="+appkey/*+"&field=uri&field=label&field=source&field=url&field=yield&field=cautions&field=ingredientLines&field=calories"*/);
+        String urlString = (edamamAPI+"?type=public&app_id="+appid+"&app_key="+appkey);
         urlString += String.join("",filters);
         ResultPage pageResult = null;
         try {
@@ -47,47 +48,52 @@ public class Search {
 
                 conn.disconnect();
             }
-        } catch (Exception e) {
+        } catch (ProtocolException e) {
             // e.printStackTrace();
             // System.err.println("Bad search! Search string:\n"+urlString);
         }
         if(pageResult != null){
-            System.out.println(pageResult.getPageResult());
-            System.out.flush();
+            if(displayResults){
+                System.out.println(pageResult.getPageResult());
+                System.out.flush();
+            }
             pageList.add(pageResult);
-            status = true;
+            if(pageResult.getNextPage() != null) status = true;
         }else System.out.println("No results for that search.");
         filters.clear();
         return status;
     }
 
-    public static boolean keywordSearch(String keyword){
+    public static boolean keywordSearch(String keyword) throws ParseException, IOException{
         boolean status = false;
         keyword = keyword.replaceAll("\\s+", "%20");
         keyword = keyword.replaceAll(",", "%2C");
         String keywordFilter = "&q="+keyword;
         filters.add(keywordFilter);
-        status = basicSearch();
+        status = basicSearch(true);
         return status;
     }
 
 
-    public static boolean calorieSearch(int min, int max){
+    public static boolean calorieSearch(int min, int max) throws ParseException, IOException{
         boolean status = false;
         String calorieFilter = "&calories="+min+"-"+max;
         filters.add(calorieFilter);
-        status = basicSearch();
+        status = basicSearch(true);
         return status;
     }
 
-    public static boolean randomSearch(){
-        boolean status = false;
-        String calorieFilter = "&calories="+0+"+";
-        filters.add(calorieFilter);
-        String randomFilter = "&random=true";
+    public static JSONObject randomSearch() throws ParseException, IOException{
+        JSONObject recipe = null;
+        String randomFilter = "&calories=0%2B&random=true";
         filters.add(randomFilter);
-        status = basicSearch();
-        return status;
+        basicSearch(false);
+        JSONObject pageObject = jsonPageList.get(currentPage);
+        JSONArray hits = null;
+        hits = (JSONArray) pageObject.get("hits");
+        JSONObject jsonHit = (JSONObject) hits.get(0);
+        recipe = (JSONObject) jsonHit.get("recipe");
+        return recipe;
     }
 
     private static ResultPage getPageResponse(URL url) throws ParseException, IOException
@@ -109,9 +115,9 @@ public class Search {
         JSONObject links = null;
         JSONObject next = null;
         String nextPage = null;
-        if(jsonresult.containsKey("_links")) links = (JSONObject) jsonresult.get("_links");
-        if(links.containsKey("next") && links != null) next = (JSONObject) links.get("next");
-        if(next.containsKey("href") && next != null) nextPage = (String) next.get("href");
+        if(jsonresult != null && jsonresult.containsKey("_links")) links = (JSONObject) jsonresult.get("_links");
+        if(links != null && links.containsKey("next") && links != null) next = (JSONObject) links.get("next");
+        if(next != null && next.containsKey("href") && next != null) nextPage = (String) next.get("href");
 
         String resultString = "";
         JSONArray searchHits = null;
@@ -141,24 +147,26 @@ public class Search {
         String result = "";
         if(currentPage+1 == pageList.size()){
             try {
-                URL url = new URL(pageList.get(currentPage).getNextPage());
-                HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-                conn.setRequestMethod("GET");
-                conn.connect();
-                ResultPage pageResult = getPageResponse(url);
-                pageList.add(pageResult);
-                result = pageResult.getPageResult();
-                currentPage++;
-                conn.disconnect();
+                String nextPage = pageList.get(currentPage).getNextPage();
+                if(nextPage != null){
+                    URL url = new URL(nextPage);
+                    HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+                    conn.setRequestMethod("GET");
+                    conn.connect();
+                    ResultPage pageResult = getPageResponse(url);
+                    pageList.add(pageResult);
+                    result = pageResult.getPageResult();
+                    currentPage++;
+                    conn.disconnect();
+                }else System.out.println("There are no more pages.\n");
             } catch (Exception e) {
-                // TODO Auto-generated catch block
                 e.printStackTrace();
             }      
         }else{
             currentPage++;
             result = pageList.get(currentPage).getPageResult();
         }
-        System.out.println(result);
+        System.out.println("\n"+result);
         System.out.flush();
     }
 
@@ -170,7 +178,7 @@ public class Search {
             currentPage--;
             result = pageList.get(currentPage).getPageResult();
         }
-        System.out.println(result);
+        System.out.println("\n"+result);
         System.out.flush();
     }
 
@@ -230,7 +238,6 @@ public class Search {
     
                     conn.disconnect();    
                 } catch (Exception e) {
-                    // TODO: handle exception
                 }
             }else resultString = "No hit at that index";
         }else{

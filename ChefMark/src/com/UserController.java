@@ -34,65 +34,84 @@ private static Pattern passwordRegex = Pattern
             user.getCustomRecipeList().add(new Recipe(rs.getString(1), rs.getString(2), rs.getString(3), RecipeController.textToIngredientList(rs.getString(4)), new NutritionalFacts(RecipeController.textToArrayList(rs.getString(5)), RecipeController.textToArrayList(rs.getString(6)), rs.getInt(7)), new Instructions(RecipeController.textToArrayList(rs.getString(8)), RecipeController.textToArrayList(rs.getString(9)))));
         }
     }
+    //String query = "SELECT recipeName, url, source, ingredients,                                                                                                                                                                                                        totalWeight, dietLabels, healthLabels, calories, glycemicIndex, yield, instructions, cautions, username FROM RECIPELIST WHERE USERNAME=?";
+        
+    public void initializeRecipeLists(DBQuery dbq) throws SQLException {
+        ResultSet rs = dbq.populateRecipeList(new RecipeList(), this.user);
+        while (rs.next()) {
+            user.getRecipeLists().add(new RecipeList(rs.getString(1)));
+        }
+
+        for (int i = 0; i < user.getRecipeLists().size(); i++) {
+            rs = dbq.getRecipeLists(user.getRecipeLists().get(i), user);
+            RecipeList recipeList = user.getRecipeLists().get(i);
+            while (rs.next()) {
+                recipeList.addRecipeToRecipeList(new Recipe(rs.getString(1), rs.getString(2), rs.getString(3), RecipeController.textToIngredientList(rs.getString(4)), new NutritionalFacts(RecipeController.textToArrayList(rs.getString(5)), RecipeController.textToArrayList(rs.getString(6)), rs.getInt(7)), new Instructions(RecipeController.textToArrayList(rs.getString(8)), RecipeController.textToArrayList(rs.getString(9)))));
+            }
+        }
+    }
 
     public void initializeWeeklyPlans(DBQuery dbq) throws SQLException {
         ResultSet rs = dbq.populateWeeklyPlan(new WeeklyPlan(), this.user);
-        String weeklyPlanName = rs.getString(2);
-        String[] daysOfWeek = {"Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"};
-        while (weeklyPlanName!=null) {
-            this.user.addWeeklyPlan(new WeeklyPlan(weeklyPlanName));
-            if (rs.next()) {
-                weeklyPlanName=rs.getString(2);
-            } else {
-                weeklyPlanName=null;
+        while (rs.next())
+        {
+            String weeklyPlanName = rs.getString(2);
+            String[] daysOfWeek = {"Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"};
+            while (weeklyPlanName!=null) {
+                this.user.addWeeklyPlan(new WeeklyPlan(weeklyPlanName));
+                if (rs.next()) {
+                    weeklyPlanName=rs.getString(2);
+                } else {
+                    weeklyPlanName=null;
+                }
             }
-        }
 
-        // public Recipe(String recipeName, String url, String source, ArrayList<Ingredient> ingredients, NutritionalFacts nutritionalFacts, Instructions instructions) {
-        //     this.name=recipeName;
-        //     this.source=source;
-        //     this.ingredients=ingredients;
-        //     this.nutritionalFacts=nutritionalFacts;
-        //     this.instructions=instructions;
-        // }
-        //select distinct recipeName, url, source, ingredients, dietLabels, healthLabels, calories, instructions, cautions, recipe.username from recipe,weeklyplan,weeklyplanitem where recipe.username=weeklyplan.username and weeklyplan.weeklyPlanid=weeklyplanitem.weeklyplanid and recipe.username='" + user.getUsername() + "' and dayOfWeek='" + day + "' and recipe.recipeID=weeklyplanitem.recipeid and weeklyPlan.name='" + weeklyPlan.getName() + "'
+            // public Recipe(String recipeName, String url, String source, ArrayList<Ingredient> ingredients, NutritionalFacts nutritionalFacts, Instructions instructions) {
+            //     this.name=recipeName;
+            //     this.source=source;
+            //     this.ingredients=ingredients;
+            //     this.nutritionalFacts=nutritionalFacts;
+            //     this.instructions=instructions;
+            // }
+            //select distinct recipeName, url, source, ingredients, dietLabels, healthLabels, calories, instructions, cautions, recipe.username from recipe,weeklyplan,weeklyplanitem where recipe.username=weeklyplan.username and weeklyplan.weeklyPlanid=weeklyplanitem.weeklyplanid and recipe.username='" + user.getUsername() + "' and dayOfWeek='" + day + "' and recipe.recipeID=weeklyplanitem.recipeid and weeklyPlan.name='" + weeklyPlan.getName() + "'
 
-        for (int i = 0; i < this.user.getWeeklyPlans().size(); i++) {
-            rs = dbq.read(this.user.getWeeklyPlans().get(i), this.user, daysOfWeek[6]);
-            WeeklyPlan wp = this.user.getWeeklyPlans().get(i);
-            while (rs.next()) {
-                //WeeklyPlan wp = this.user.getWeeklyPlans().get(i);
-                wp.addRecipeToWeeklyPlan(new Recipe(rs.getString(1), rs.getString(2), rs.getString(3), RecipeController.textToIngredientList(rs.getString(4)), new NutritionalFacts(RecipeController.textToArrayList(rs.getString(5)), RecipeController.textToArrayList(rs.getString(6)), rs.getInt(7)), new Instructions(RecipeController.textToArrayList(rs.getString(8)), RecipeController.textToArrayList(rs.getString(9)))), daysOfWeek[6]);
-            }
-            rs = dbq.read(this.user.getWeeklyPlans().get(i), this.user, daysOfWeek[0]);
-            while (rs.next()) {
-                //WeeklyPlan wp = this.user.getWeeklyPlans().get(i);
-                wp.addRecipeToWeeklyPlan(new Recipe(rs.getString(1), rs.getString(2), rs.getString(3), RecipeController.textToIngredientList(rs.getString(4)), new NutritionalFacts(RecipeController.textToArrayList(rs.getString(5)), RecipeController.textToArrayList(rs.getString(6)), rs.getInt(7)), new Instructions(RecipeController.textToArrayList(rs.getString(8)), RecipeController.textToArrayList(rs.getString(9)))), daysOfWeek[0]);
-            }
-            rs = dbq.read(this.user.getWeeklyPlans().get(i), this.user, daysOfWeek[1]);
-            while (rs.next()) {
-                //WeeklyPlan wp = this.user.getWeeklyPlans().get(i);
-                wp.addRecipeToWeeklyPlan(new Recipe(rs.getString(1), rs.getString(2), rs.getString(3), RecipeController.textToIngredientList(rs.getString(4)), new NutritionalFacts(RecipeController.textToArrayList(rs.getString(5)), RecipeController.textToArrayList(rs.getString(6)), rs.getInt(7)), new Instructions(RecipeController.textToArrayList(rs.getString(8)), RecipeController.textToArrayList(rs.getString(9)))), daysOfWeek[1]);
-            }
-            rs = dbq.read(this.user.getWeeklyPlans().get(i), this.user, daysOfWeek[2]);
-            while (rs.next()) {
-                //WeeklyPlan wp = this.user.getWeeklyPlans().get(i);
-                wp.addRecipeToWeeklyPlan(new Recipe(rs.getString(1), rs.getString(2), rs.getString(3), RecipeController.textToIngredientList(rs.getString(4)), new NutritionalFacts(RecipeController.textToArrayList(rs.getString(5)), RecipeController.textToArrayList(rs.getString(6)), rs.getInt(7)), new Instructions(RecipeController.textToArrayList(rs.getString(8)), RecipeController.textToArrayList(rs.getString(9)))), daysOfWeek[2]);
-            }
-            rs = dbq.read(this.user.getWeeklyPlans().get(i), this.user, daysOfWeek[3]);
-            while (rs.next()) {
-                //WeeklyPlan wp = this.user.getWeeklyPlans().get(i);
-                wp.addRecipeToWeeklyPlan(new Recipe(rs.getString(1), rs.getString(2), rs.getString(3), RecipeController.textToIngredientList(rs.getString(4)), new NutritionalFacts(RecipeController.textToArrayList(rs.getString(5)), RecipeController.textToArrayList(rs.getString(6)), rs.getInt(7)), new Instructions(RecipeController.textToArrayList(rs.getString(8)), RecipeController.textToArrayList(rs.getString(9)))), daysOfWeek[3]);
-            }
-            rs = dbq.read(this.user.getWeeklyPlans().get(i), this.user, daysOfWeek[4]);
-            while (rs.next()) {
-                //WeeklyPlan wp = this.user.getWeeklyPlans().get(i);
-                wp.addRecipeToWeeklyPlan(new Recipe(rs.getString(1), rs.getString(2), rs.getString(3), RecipeController.textToIngredientList(rs.getString(4)), new NutritionalFacts(RecipeController.textToArrayList(rs.getString(5)), RecipeController.textToArrayList(rs.getString(6)), rs.getInt(7)), new Instructions(RecipeController.textToArrayList(rs.getString(8)), RecipeController.textToArrayList(rs.getString(9)))), daysOfWeek[4]);
-            }
-            rs = dbq.read(this.user.getWeeklyPlans().get(i), this.user, daysOfWeek[5]);
-            while (rs.next()) {
-                //WeeklyPlan wp = this.user.getWeeklyPlans().get(i);
-                wp.addRecipeToWeeklyPlan(new Recipe(rs.getString(1), rs.getString(2), rs.getString(3), RecipeController.textToIngredientList(rs.getString(4)), new NutritionalFacts(RecipeController.textToArrayList(rs.getString(5)), RecipeController.textToArrayList(rs.getString(6)), rs.getInt(7)), new Instructions(RecipeController.textToArrayList(rs.getString(8)), RecipeController.textToArrayList(rs.getString(9)))), daysOfWeek[5]);
+            for (int i = 0; i < this.user.getWeeklyPlans().size(); i++) {
+                rs = dbq.read(this.user.getWeeklyPlans().get(i), this.user, daysOfWeek[6]);
+                WeeklyPlan wp = this.user.getWeeklyPlans().get(i);
+                while (rs.next()) {
+                    //WeeklyPlan wp = this.user.getWeeklyPlans().get(i);
+                    wp.addRecipeToWeeklyPlan(new Recipe(rs.getString(1), rs.getString(2), rs.getString(3), RecipeController.textToIngredientList(rs.getString(4)), new NutritionalFacts(RecipeController.textToArrayList(rs.getString(5)), RecipeController.textToArrayList(rs.getString(6)), rs.getInt(7)), new Instructions(RecipeController.textToArrayList(rs.getString(8)), RecipeController.textToArrayList(rs.getString(9)))), daysOfWeek[6]);
+                }
+                rs = dbq.read(this.user.getWeeklyPlans().get(i), this.user, daysOfWeek[0]);
+                while (rs.next()) {
+                    //WeeklyPlan wp = this.user.getWeeklyPlans().get(i);
+                    wp.addRecipeToWeeklyPlan(new Recipe(rs.getString(1), rs.getString(2), rs.getString(3), RecipeController.textToIngredientList(rs.getString(4)), new NutritionalFacts(RecipeController.textToArrayList(rs.getString(5)), RecipeController.textToArrayList(rs.getString(6)), rs.getInt(7)), new Instructions(RecipeController.textToArrayList(rs.getString(8)), RecipeController.textToArrayList(rs.getString(9)))), daysOfWeek[0]);
+                }
+                rs = dbq.read(this.user.getWeeklyPlans().get(i), this.user, daysOfWeek[1]);
+                while (rs.next()) {
+                    //WeeklyPlan wp = this.user.getWeeklyPlans().get(i);
+                    wp.addRecipeToWeeklyPlan(new Recipe(rs.getString(1), rs.getString(2), rs.getString(3), RecipeController.textToIngredientList(rs.getString(4)), new NutritionalFacts(RecipeController.textToArrayList(rs.getString(5)), RecipeController.textToArrayList(rs.getString(6)), rs.getInt(7)), new Instructions(RecipeController.textToArrayList(rs.getString(8)), RecipeController.textToArrayList(rs.getString(9)))), daysOfWeek[1]);
+                }
+                rs = dbq.read(this.user.getWeeklyPlans().get(i), this.user, daysOfWeek[2]);
+                while (rs.next()) {
+                    //WeeklyPlan wp = this.user.getWeeklyPlans().get(i);
+                    wp.addRecipeToWeeklyPlan(new Recipe(rs.getString(1), rs.getString(2), rs.getString(3), RecipeController.textToIngredientList(rs.getString(4)), new NutritionalFacts(RecipeController.textToArrayList(rs.getString(5)), RecipeController.textToArrayList(rs.getString(6)), rs.getInt(7)), new Instructions(RecipeController.textToArrayList(rs.getString(8)), RecipeController.textToArrayList(rs.getString(9)))), daysOfWeek[2]);
+                }
+                rs = dbq.read(this.user.getWeeklyPlans().get(i), this.user, daysOfWeek[3]);
+                while (rs.next()) {
+                    //WeeklyPlan wp = this.user.getWeeklyPlans().get(i);
+                    wp.addRecipeToWeeklyPlan(new Recipe(rs.getString(1), rs.getString(2), rs.getString(3), RecipeController.textToIngredientList(rs.getString(4)), new NutritionalFacts(RecipeController.textToArrayList(rs.getString(5)), RecipeController.textToArrayList(rs.getString(6)), rs.getInt(7)), new Instructions(RecipeController.textToArrayList(rs.getString(8)), RecipeController.textToArrayList(rs.getString(9)))), daysOfWeek[3]);
+                }
+                rs = dbq.read(this.user.getWeeklyPlans().get(i), this.user, daysOfWeek[4]);
+                while (rs.next()) {
+                    //WeeklyPlan wp = this.user.getWeeklyPlans().get(i);
+                    wp.addRecipeToWeeklyPlan(new Recipe(rs.getString(1), rs.getString(2), rs.getString(3), RecipeController.textToIngredientList(rs.getString(4)), new NutritionalFacts(RecipeController.textToArrayList(rs.getString(5)), RecipeController.textToArrayList(rs.getString(6)), rs.getInt(7)), new Instructions(RecipeController.textToArrayList(rs.getString(8)), RecipeController.textToArrayList(rs.getString(9)))), daysOfWeek[4]);
+                }
+                rs = dbq.read(this.user.getWeeklyPlans().get(i), this.user, daysOfWeek[5]);
+                while (rs.next()) {
+                    //WeeklyPlan wp = this.user.getWeeklyPlans().get(i);
+                    wp.addRecipeToWeeklyPlan(new Recipe(rs.getString(1), rs.getString(2), rs.getString(3), RecipeController.textToIngredientList(rs.getString(4)), new NutritionalFacts(RecipeController.textToArrayList(rs.getString(5)), RecipeController.textToArrayList(rs.getString(6)), rs.getInt(7)), new Instructions(RecipeController.textToArrayList(rs.getString(8)), RecipeController.textToArrayList(rs.getString(9)))), daysOfWeek[5]);
+                }
             }
         }
     }
@@ -182,6 +201,7 @@ private static Pattern passwordRegex = Pattern
                 initializePantry(dbq);
                 initializeWeeklyPlans(dbq);
                 initializeCustomRecipes(dbq);
+                initializeRecipeLists(dbq);
                 return true;
             }
             else {

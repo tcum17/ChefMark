@@ -1,5 +1,7 @@
 
 
+import java.sql.SQLClientInfoException;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -52,7 +54,7 @@ public class RecipeController {
         return returnList;
     }
 
-    public Recipe createRecipe(String recipeName, Scanner sc)
+    public Recipe createRecipe(String recipeName, Scanner sc, UserController uc, DBQuery dbq) throws SQLException
     {
         Recipe newRecipe = new Recipe();
         ArrayList<Ingredient> ingredientList = new ArrayList<>();
@@ -74,7 +76,20 @@ public class RecipeController {
                 Ingredient ingredient = new Ingredient();
                 ingredient.setIngredientName(ingredientName);
                 System.out.println("Please give the ingredient a quantity(number only)");
-                float quantity = Float.parseFloat(sc.nextLine());
+                float quantity = -1;
+                boolean goodInput = false;
+                while(!goodInput)
+                {
+                    try{
+                    quantity = Float.parseFloat(sc.nextLine());
+                    goodInput = true;
+                    }
+                    catch(NumberFormatException e)
+                    {
+                        System.out.println("Invalid input please try again");
+                        
+                    }
+                }
                 ingredient.setQuantity(quantity);
                 System.out.println("Please give the ingredient measure(Cups, Grams, ect...)");
                 String measure = sc.nextLine();
@@ -130,31 +145,7 @@ public class RecipeController {
                 System.out.println("That is not an option");
             }
         }
-
+        dbq.createCustomRecipe(newRecipe, uc.getUser());
         return newRecipe;
-    }
-
-    public boolean updateRecipe(Recipe recipe)
-    {
-        return true;
-    }
-    public boolean deleteRecipe(String recipeName)
-    {
-        return true;
-    }
-
-    public boolean shareRecipe(Recipe recipe)
-    {
-        return true;
-    }
-
-    public ArrayList<Recipe> viewRecipeHistory()
-    {
-        return null;
-    }
-
-    public Recipe generateRandomRecipe()
-    {
-        return null;
     }
 }
