@@ -1,3 +1,4 @@
+import java.net.ConnectException;
 import java.sql.Connection;
 import java.sql.Statement;
 
@@ -51,7 +52,69 @@ public class MySQLQuery extends DBQuery{
     }
 
     public void delete(User user) throws SQLException {
-        statement.execute("DELETE FROM USER WHERE USERNAME = '" + user.getUsername() + "' AND USERPASSWORD = '" + user.getPassword() + "'"); // handles foreign keys
+        delete(user.getPantry(), user);
+        //for (int i = 0; i < user.getWeeklyPlans().size(); i++) {
+        delete(new WeeklyPlan(), user);
+        //}
+
+        delete(new RecipeList(), user);
+        deleteAllRecipe(new Recipe(), user);
+
+        String query = "DELETE FROM USER WHERE USERNAME=?";
+        PreparedStatement statement = connection.prepareStatement(query);
+        statement.setString(1, user.getUsername());
+        statement.execute();
+    }
+
+    public void delete(RecipeList recipeList, User user) throws SQLException {
+        String query = "DELETE FROM recipelistitem WHERE recipelistid IN (SELECT recipelistid FROM recipelist WHERE username=?)";
+        PreparedStatement statement = connection.prepareStatement(query);
+        statement.setString(1, user.getUsername());
+        statement.execute();
+        query = "DELETE FROM recipelist WHERE username=?";
+        statement = connection.prepareStatement(query);
+        statement.setString(1, user.getUsername());
+        statement.execute();
+    }
+
+    public void deleteRecipeList(RecipeList recipeList, User user) throws SQLException {
+        String query = "DELETE FROM recipelistitem WHERE recipelistid IN (SELECT recipelistid FROM recipelist WHERE username=?)";
+        PreparedStatement statement = connection.prepareStatement(query);
+        statement.setString(1, user.getUsername());
+        statement.execute();
+        query = "DELETE FROM recipelist WHERE username=? and recipelistname=?";
+        statement = connection.prepareStatement(query);
+        statement.setString(1, user.getUsername());
+        statement.setString(2, recipeList.getName());
+        statement.execute();
+    }
+
+    public void deleteRecipeListItem(RecipeList recipeList, Recipe recipe, User user) throws SQLException {
+        String query = "DELETE FROM recipelistitem WHERE recipeid IN (SELECT recipeid FROM recipe WHERE recipename = ? AND username = ?) AND recipelistid IN (SELECT recipelistid FROM recipelist WHERE recipelistname = ? AND username = ?)";
+        PreparedStatement statement = connection.prepareStatement(query);
+        statement.setString(1, recipe.getName());
+        statement.setString(2, user.getUsername());
+        statement.setString(3, recipeList.getName());
+        statement.setString(4, user.getUsername());
+        statement.execute();
+    }
+
+    public void deleteAllRecipe(Recipe recipe, User user) throws SQLException {
+        String query = "DELETE FROM RECIPE WHERE USERNAME=?";
+        PreparedStatement statement = connection.prepareStatement(query);
+        statement.setString(1, user.getUsername());
+        statement.execute();
+    }
+
+    public void delete(WeeklyPlan weeklyPlan, User user) throws SQLException{
+        String query = "DELETE FROM weeklyplanitem WHERE weeklyplanid IN (SELECT weeklyplanid FROM weeklyplan WHERE username = ?)";
+        PreparedStatement statement = connection.prepareStatement(query);
+        statement.setString(1, user.getUsername());
+        statement.execute();
+        query = "DELETE FROM WEEKLYPLAN WHERE WEEKLYPLAN.USERNAME=?";
+        statement = connection.prepareStatement(query);
+        statement.setString(1, user.getUsername());
+        statement.execute();
     }
 
     public void create(Pantry pantry, User user) throws SQLException {
@@ -266,7 +329,8 @@ public class MySQLQuery extends DBQuery{
     }
 
     public void create(RecipeList recipeList, Recipe recipe, User user) throws SQLException {
-        if (recipe.getSource().equals(null))
+
+        if (recipe.getSource()==null)
             createCustomRecipe(recipe, user);
         else {
             recipe.getInstructions().getInstructions().add(recipe.getURL());
@@ -304,17 +368,25 @@ public class MySQLQuery extends DBQuery{
 
 
     public void delete(Pantry pantry, User user) throws SQLException {
-        String username = user.getUsername();
-        ResultSet rs = statement.executeQuery("select pantry.pantryID from pantry,user where pantry.username=user.username='" + username + "'");
-        String pantryID = "";
-        if (rs.next()) {
-            pantryID = rs.getString(1);
-            statement.execute("DELETE FROM INGREDIENT WHERE PANTRYID = " + pantryID + "");
-            statement.execute("DELETE FROM PANTRY WHERE PANTRYID = " + pantryID + "");
-        }
-        else {
-            System.out.println("You don't have a pantry");
-        }
+        // String username = user.getUsername();
+        // ResultSet rs = statement.executeQuery("select pantry.pantryID from pantry,user where pantry.username=user.username='" + username + "'");
+        // String pantryID = "";
+        String query = "DELETE FROM ingredient WHERE pantryid IN (SELECT pantryid FROM pantry WHERE username=?)";
+        PreparedStatement statement = connection.prepareStatement(query);
+        statement.setString(1, user.getUsername());
+        statement.execute();
+        query = "DELETE FROM PANTRY WHERE USERNAME=?";
+        statement = connection.prepareStatement(query);
+        statement.setString(1, user.getUsername());
+        statement.execute();
+        // if (rs.next()) {
+        //     pantryID = rs.getString(1);
+        //     statement.execute("DELETE FROM INGREDIENT WHERE PANTRYID = " + pantryID + "");
+        //     statement.execute("DELETE FROM PANTRY WHERE PANTRYID = " + pantryID + "");
+        // }
+        // else {
+        //     System.out.println("You don't have a pantry");
+        // }
     }
 
     //need to make an update

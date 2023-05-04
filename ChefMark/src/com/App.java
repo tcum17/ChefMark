@@ -103,7 +103,7 @@ public class App {
             
             } else if (homeInput.equals(THREE)) {
 
-                delete(sc, uc);
+                delete(sc, uc, dbq);
 
             } else if (homeInput.equals(FOUR)) {
 
@@ -508,6 +508,7 @@ public class App {
                         if (recipe == null) {
                             System.out.println("The recipe you entered could not be found in the Recipe List");
                         } else {
+                            dbq.deleteRecipeListItem(rlist, recipe, uc.getUser());
                             System.out.println("Deleted " + rName + " from " + rlist.getName() + ".");
                             rlist.removeRecipeFromRecipeList(recipe);
                             uc.getUser().getRecipeLists().set(index, rlist);
@@ -579,8 +580,9 @@ public class App {
                         if(day.equals("Monday") || day.equals("Tuesday") || day.equals("Wednesday") || day.equals("Thursday") || day.equals("Friday") || day.equals("Saturday") || day.equals("Sunday"))
                         {
                             wp.addRecipeToWeeklyPlan(recipe, day);
-                            dbq.create(recipe, uc.getUser());
-                            dbq.create(wp, recipe, uc.getUser(), day);
+                            if (recipe.getSource()!=null)
+                                dbq.create(recipe, uc.getUser()); // from api
+                            dbq.create(wp, recipe, uc.getUser(), day); // every recipe
                             back = true;
                         }
                         else
@@ -1295,7 +1297,7 @@ public class App {
         }
     }
 
-    private static void delete(Scanner sc, UserController uc){
+    private static void delete(Scanner sc, UserController uc, DBQuery dbq) throws SQLException{
         String deleteInput = "";
         while (!deleteInput.equals(THREE)) {
             System.out.println("Type:\n1 - Weekly Plan\n2 - Recipe List\n3 - Back\n");
@@ -1323,6 +1325,7 @@ public class App {
                     String list = sc.nextLine();
                     RecipeList temp = uc.getUser().getRecipeListByName(list);
                     if (temp != null) {
+                        dbq.deleteRecipeList(temp, uc.getUser());
                         boolean delres = uc.getUser().removeRecipeList(temp);
                         if (delres) {
                             System.out.println("Deleted recipe list.");
