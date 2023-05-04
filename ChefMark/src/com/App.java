@@ -1102,12 +1102,13 @@ public class App {
                             try
                             {
                                 quantity = Float.parseFloat(input);
+                                hasFloat = true;
                             }
                             catch(NumberFormatException e)
                             {
                                 System.out.println(RETRY);
                             }
-                            hasFloat = true;
+                            
                             temp.setQuantity(quantity);
                         }
                     }
