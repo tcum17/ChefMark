@@ -2,7 +2,7 @@ package chefmark;
 
 //import java.sql.*;
 
-abstract class DBConnection {
+public abstract class DBConnection {
 
     public DBConnection(){}
 
