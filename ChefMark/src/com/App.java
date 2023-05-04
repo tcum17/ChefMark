@@ -516,17 +516,24 @@ public class App {
 
                     } 
                     else if (choice.equals(THREE)) {
-                        Boolean enteringName = true;
-                        while(enteringName){
-                            System.out.println("Enter the name of the recipe you want to view:");
-                            String rName = sc.nextLine();
-                            Recipe recipe = rlist.getRecipeByName(rName);
-                            if (recipe == null) {
-                                System.out.println("The recipe you entered could not be found in the Recipe List");
-                            } else {
-                                enteringName = false;
-                                viewRecipe(recipe, sc, uc, dbq);
+                        if(rlist.getRecipeList().size() != 0)
+                        {
+                            Boolean enteringName = true;
+                            while(enteringName){
+                                System.out.println("Enter the name of the recipe you want to view:");
+                                String rName = sc.nextLine();
+                                Recipe recipe = rlist.getRecipeByName(rName);
+                                if (recipe == null) {
+                                    System.out.println("The recipe you entered could not be found in the Recipe List");
+                                } else {
+                                    enteringName = false;
+                                    viewRecipe(recipe, sc, uc, dbq);
+                                }
                             }
+                        }
+                        else
+                        {
+                            System.out.println("There are no recipes in the list to view");
                         }
                     }
                 }
@@ -835,7 +842,7 @@ public class App {
                     quantity = Float.parseFloat(sc.nextLine());
                     again=false;
                 }
-                catch (InputMismatchException e) {
+                catch (NumberFormatException e) {
                     System.out.println("Invalid input. Please enter a numerical value");
                 }
             }
@@ -936,6 +943,7 @@ public class App {
 
     private static void viewPantry(Scanner sc, UserController uc, DBQuery dbq) throws SQLException{
         String pantryInput ="";
+        boolean check= false;
         while(!(pantryInput.equals(FOUR)))
         {
             
@@ -951,6 +959,7 @@ public class App {
                 {
                     case ONE:
                     addIngredientToPantry(uc, dbq, sc);
+                    check = true;
                     case TWO:
                     pantryInput = FOUR;
                     break;
@@ -958,7 +967,8 @@ public class App {
                     System.out.println("Not a valid input");
                 }
             }
-            else
+            
+            if(uc.getUser().getPantry().ingredientListLength()!=0 || check)
             {
                 System.out.println(uc.getUser().getPantry().toString());
                 System.out.println("\nWhat would you like to do in the pantry?\n1 - Add Ingredient\n2 - Delete Ingredient\n3 - Update Ingredient\n4 - Back");
@@ -970,7 +980,7 @@ public class App {
                     case ONE:
                     addIngredientToPantry(uc, dbq, sc);
                     case TWO:
-                    deleteIngredientFromPantry(uc, sc, dbq);//TODO deleting ingredient cause infinite loop
+                    deleteIngredientFromPantry(uc, sc, dbq);
                     case THREE:
                     updateIngredientInPantry(uc, sc, dbq);
                     case FOUR:
@@ -1002,13 +1012,16 @@ public class App {
                     System.out.println(ingredientName + " does not exist!");
                 }
                 
-                System.out.println("Do you want to delete something again?\n1 - Yes\n2 - No");
-                String tryAgainInput = sc.nextLine();
+                String tryAgainInput = "";
                 while(!tryAgainInput.equals(ONE))
                 {
+                    System.out.println("Do you want to delete something again?\n1 - Yes\n2 - No");
+                    tryAgainInput = sc.nextLine();
                     if(tryAgainInput.equals(TWO))
                     {
                         deleteAgain =false;
+                        tryAgainInput = ONE;
+                        deleteAgain = false;
                     }
                     else{
                         System.out.println(RETRY);
@@ -1140,7 +1153,8 @@ public class App {
                         if(historyInput.equalsIgnoreCase(ONE))
                         {
                             historyInput ="";
-                            boolean goodInput2 = true;
+                            goodInput = true;
+                            boolean goodInput2 = false;
                             int num = -1;
                             while(!goodInput2)
                             {
@@ -1204,10 +1218,10 @@ public class App {
     
     private static void viewRecipe(Recipe recipe, Scanner sc, UserController uc, DBQuery dbq) throws SQLException
     {
+        uc.getUser().addToRecipeHistory(recipe);
         boolean done =false;
         while(!done)
         {
-            uc.getUser().addToRecipeHistory(recipe);
             System.out.println("=== Viewed Recipe ===\n"+recipe.printRecipe());
             System.out.println(VIEW_RECIPE_OPTIONS);
             String input = sc.nextLine();
