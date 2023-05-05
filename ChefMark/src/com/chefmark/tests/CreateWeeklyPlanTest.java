@@ -9,6 +9,7 @@ import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.sql.SQLException;
 import java.util.Scanner;
+import java.sql.ResultSet;
 
 import chefmark.*;
 
@@ -50,7 +51,7 @@ class CreateWeeklyPlanTest
         DBConnection dbc = DBConnFactory.getDBConnection(DBConnFactory.DBConnType.MYSQL);
         DBQuery dbq = new MySQLQuery(dbc); // MySQL DBQuery implementation using MySQL Database
         dbq.connect();
-        String input = "Plan\n";
+        String input = "Plan 1\n";
         InputStream in = new ByteArrayInputStream(input.getBytes());
         
         Scanner scanner = new Scanner(in);
@@ -61,16 +62,18 @@ class CreateWeeklyPlanTest
         
         CreateRecipeListTest.createRecipeList(scanner, uc, rc, dbq);
 
-        RecipeList myList = uc.getUser().getRecipeListByName("recipe list 1");
+        WeeklyPlan myPlan = uc.getUser().getWeeklyPlanByName("Plan 1");
 
         boolean result =false;
-        ResultSet rs = dbq.read(myList, uc.getUser());
+        ResultSet rs = dbq.read(myPlan, uc.getUser());
+        
+        
         if (rs.next())
             result = true;
-        if (myList==null)
+        if (myPlan==null)
             result =false;
 
-        dbq.delete(myList, uc.getUser());
+        dbq.deleteWeeklyPlan(myPlan, uc.getUser());
 
         dbq.disconnect();
         assert(result==true);
@@ -82,7 +85,7 @@ class CreateWeeklyPlanTest
         DBConnection dbc = DBConnFactory.getDBConnection(DBConnFactory.DBConnType.MYSQL);
         DBQuery dbq = new MySQLQuery(dbc); // MySQL DBQuery implementation using MySQL Database
         dbq.connect();
-        String input = "recipe list 1\n";
+        String input = "\nMy Plan";
         InputStream in = new ByteArrayInputStream(input.getBytes());
         
         Scanner scanner = new Scanner(in);
@@ -93,20 +96,57 @@ class CreateWeeklyPlanTest
         
         CreateRecipeListTest.createRecipeList(scanner, uc, rc, dbq);
 
-        RecipeList myList = uc.getUser().getRecipeListByName("recipe list 1");
+        WeeklyPlan myPlan = uc.getUser().getWeeklyPlanByName("Plan 1");
 
         boolean result =false;
-        ResultSet rs = dbq.read(myList, uc.getUser());
+        ResultSet rs = dbq.read(myPlan, uc.getUser());
+        
+        
         if (rs.next())
             result = true;
-        if (myList==null)
+        if (myPlan==null)
             result =false;
 
-        dbq.delete(myList, uc.getUser());
+        dbq.deleteWeeklyPlan(myPlan, uc.getUser());
 
         dbq.disconnect();
         assert(result==true);
+    } 
 
+    @Test
+    public void createWeeklyPlanDupName() throws SQLException {
+        DBConnection dbc = DBConnFactory.getDBConnection(DBConnFactory.DBConnType.MYSQL);
+        DBQuery dbq = new MySQLQuery(dbc); // MySQL DBQuery implementation using MySQL Database
+        dbq.connect();
+        String input = "dupPlan\nnotDupPlan\n";
+        InputStream in = new ByteArrayInputStream(input.getBytes());
+        
+        Scanner scanner = new Scanner(in);
+        UserController uc = new UserController();
+        uc.createUser("newuser1", "Create1@1", "");
 
+        WeeklyPlan plan1 = new WeeklyPlan("dupPlan");
+        uc.getUser().addWeeklyPlan(plan1);
+
+        RecipeController rc = new RecipeController();
+        
+        CreateRecipeListTest.createRecipeList(scanner, uc, rc, dbq);
+
+        WeeklyPlan myPlan = uc.getUser().getWeeklyPlanByName("notDupPlan");
+
+        boolean result =false;
+        ResultSet rs = dbq.read(myPlan, uc.getUser());
+        
+        
+        if (rs.next())
+            result = true;
+        if (myPlan==null)
+            result =false;
+
+        dbq.deleteWeeklyPlan(myPlan, uc.getUser());
+        dbq.deleteWeeklyPlan(plan1, uc.getUser());
+
+        dbq.disconnect();
+        assert(result==true);
     } 
 }

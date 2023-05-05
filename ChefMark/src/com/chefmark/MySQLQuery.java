@@ -41,8 +41,12 @@ public class MySQLQuery extends DBQuery{
     }
 
     public ResultSet read(User user) throws SQLException {
-        String username = user.getUsername();
-        return executeQuery("SELECT * FROM USER WHERE USERNAME = '" + username + "'");
+        String query = "SELECT * FROM USER WHERE USERNAME=?";
+        PreparedStatement statement = connection.prepareStatement(query);
+        statement.setString(1, user.getUsername());
+        return statement.executeQuery();
+        // String username = user.getUsername();
+        // return executeQuery("SELECT * FROM USER WHERE USERNAME = '" + username + "'");
     }
 
     public void update(User user) throws SQLException {
