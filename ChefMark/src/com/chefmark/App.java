@@ -918,9 +918,18 @@ public class App {
             else{
                 WeeklyPlan newWeeklyPlan = new WeeklyPlan();
                 newWeeklyPlan.setName(weeklyPlanName);
-                uc.getUser().addWeeklyPlan(newWeeklyPlan);
-                System.out.println("Your weekly plan called " + weeklyPlanName + " has been created");
-                dbq.create(newWeeklyPlan, uc.getUser());
+                boolean continueOn = true;
+                for (int i = 0; i < uc.getUser().getWeeklyPlans().size(); i++) {
+                    if (uc.getUser().getWeeklyPlans().get(i).getName().equals(newWeeklyPlan.getName())) {
+                        continueOn=false;
+                        System.out.println("You already have a weekly plan of the same name");
+                    }
+                }
+                if (continueOn==true) {
+                    uc.getUser().addWeeklyPlan(newWeeklyPlan);
+                    System.out.println("Your weekly plan called " + weeklyPlanName + " has been created");
+                    dbq.create(newWeeklyPlan, uc.getUser());
+                }
                 backWeeklyPlan = BACK;
             }
         }

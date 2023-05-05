@@ -183,16 +183,24 @@ public class MySQLQuery extends DBQuery{
         statement.execute();
     }
 
+
     public void deleteWeeklyPlan(WeeklyPlan weeklyPlan, User user) throws SQLException {
-        String query = "DELETE FROM weeklyplanitem WHERE weeklyplanid IN (SELECT weeklyplanid FROM weeklyplan WHERE username = ?)";
+        String query = "select weeklyplan.weeklyplanid from weeklyplanitem,weeklyplan where weeklyplan.weeklyplanid=weeklyplanitem.weeklyplanid and username=? and name=?";
         PreparedStatement statement = connection.prepareStatement(query);
         statement.setString(1, user.getUsername());
+        statement.setString(2, weeklyPlan.getName());
+        ResultSet rs = statement.executeQuery();
+        if (rs.next()) {
+        query = "DELETE FROM WEEKLYPLANITEM WHERE WEEKLYPLANID =?";
+        statement = connection.prepareStatement(query);
+        statement.setInt(1, rs.getInt(1));
         statement.execute();
         query = "DELETE FROM WEEKLYPLAN WHERE USERNAME=? AND NAME=?";
         statement = connection.prepareStatement(query);
         statement.setString(1, user.getUsername());
         statement.setString(2, weeklyPlan.getName());
         statement.execute();
+        }
     }
 
     public void create(Pantry pantry, User user) throws SQLException {
