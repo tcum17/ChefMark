@@ -5,7 +5,7 @@ import java.util.Map;
 import java.util.HashMap;
 
 public class ShoppingListConverter {
-    public static void convertToShoppingList(WeeklyPlan plan, Pantry pantry) {
+    public static ArrayList<String> convertToShoppingList(WeeklyPlan plan, Pantry pantry) {
         ArrayList<String> shoppingList = new ArrayList<>();
         HashMap<String, ArrayList<Recipe>> wp = plan.getWeeklyPlan();
         ArrayList<Recipe> wpRecipes = new ArrayList<>();
@@ -36,5 +36,7 @@ public class ShoppingListConverter {
         }
         System.out.println("==============================");
         System.out.println();
+
+        return shoppingList;
     }
 }
