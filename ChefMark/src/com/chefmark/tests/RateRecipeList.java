@@ -11,7 +11,7 @@ import static org.junit.Assert.*;
 
 import chefmark.*;
 
-public class rateRecipeList.java {
+public class RateRecipeTest {
     
     
 }
