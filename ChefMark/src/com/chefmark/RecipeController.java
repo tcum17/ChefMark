@@ -71,6 +71,11 @@ public class RecipeController {
             {
                 done = true;
             }
+            else if(ingredientName.equals(""))
+            {
+                System.out.println("You did not enter a name for the ingredient");
+                System.out.println();
+            }
             else
             {
                 Ingredient ingredient = new Ingredient();
@@ -91,9 +96,24 @@ public class RecipeController {
                     }
                 }
                 ingredient.setQuantity(quantity);
-                System.out.println("Please give the ingredient measure(Cups, Grams, ect...)");
-                String measure = sc.nextLine();
-                ingredient.setMeasure(measure);
+                goodInput = false;
+                while(!goodInput)
+                {
+                    System.out.println("Please give the ingredient measure(Cups, Grams, ect...)");
+                    String measure = sc.nextLine();
+
+                    if(measure.equals(""))
+                    {
+                        System.out.println("You did not enter anything for the measure");
+                        System.out.println();
+                    }
+                    else
+                    {
+                        goodInput = true;
+                        ingredient.setMeasure(measure);
+                    }
+                }
+                
                 ingredientList.add(ingredient);      
                 newRecipe.setIngredientList(ingredientList);
             }
@@ -110,6 +130,11 @@ public class RecipeController {
                     if(instruction.equals("done"))
                     {
                         done2 = true;
+                    }
+                    else if(instruction.equals(""))
+                    {
+                        System.out.println("You didnt input anything for the instruction");
+                        System.out.println();
                     }
                     else
                     {

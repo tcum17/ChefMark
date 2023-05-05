@@ -857,13 +857,25 @@ public class App {
     private static void createRecipe(Scanner sc, UserController uc, RecipeController RC, DBQuery dbq) throws SQLException
     {
         System.out.println("\nWelcome to create a recipe:\n");
-        System.out.println("Please enter a name for your recipe or type back to cancel: ");
-        String recipeName = sc.nextLine();
-        if(recipeName.equals(BACK)){
-          return;
-        }
-        else {
-            uc.getUser().addCustomRecipe(RC.createRecipe(recipeName, sc, uc, dbq));
+        
+        boolean out = false;
+        
+        while(!out)
+        {
+            System.out.println("Please enter a name for your recipe or type back to cancel: ");
+            String recipeName = sc.nextLine();
+
+            if(recipeName.equals(BACK)){
+            out = true;
+            }
+            else if(recipeName.equals(""))
+            {
+                System.out.println("You didnt enter anything for the recipe name");
+                System.out.println();
+            }
+            else {
+                uc.getUser().addCustomRecipe(RC.createRecipe(recipeName, sc, uc, dbq));
+            }
         }
     } 
     
