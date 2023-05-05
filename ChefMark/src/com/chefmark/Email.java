@@ -59,7 +59,10 @@ public class Email extends CommunicationsProvider{
             //Prepare message contents
             String messageContent = "Recipe : " + recipeIn.getName() + "\n";
 
-            if(recipeIn.getRating().getRating() != 0){
+            if(recipeIn.getRating().getRating() != -1 || recipeIn.getRating()!=null){
+                String rating = "";
+                if (recipeIn.getRating().getRating()==0)
+
                 messageContent += "\tRating : " + recipeIn.getRating() + "/5\n" ;
                 
             }

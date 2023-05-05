@@ -46,14 +46,14 @@ public class CreateCustomRecipeTest {
     }
 
     @Test
-    public void createCustomRecipeNotEnteringANumber() throws SQLException {
+    public void createCustomRecipeWrongInputs() throws SQLException {
         DBConnection dbc = DBConnFactory.getDBConnection(DBConnFactory.DBConnType.MYSQL);
         DBQuery dbq = new MySQLQuery(dbc); // MySQL DBQuery implementation using MySQL Database
         dbq.connect();
         // Create a fake input stream with username and password
         //String input = "testuser\nCreate1@1\n";
         //InputStream in = new ByteArrayInputStream(input.getBytes());
-        String input = "water\ntwo\n5\ncups\nchicken\n2\npounds\ndone\nmix the chicken and water\nheat in the microwave\ndone\n2\n";
+        String input = "\nchicken\n\nfive\n5\n\ncups\ndone\n\ncook chicken\ndone\nfive\n5\n1\n";
         InputStream in = new ByteArrayInputStream(input.getBytes());
         // Create a scanner to read from the fake input stream
         Scanner scanner = new Scanner(in);
