@@ -15,6 +15,15 @@ public class UpdateWeeklyPlanTest{
 
     @Test
     public void updateTestReg(){
-        
+        String listName = "TestList";
+        DBConnection dbc = DBConnFactory.getDBConnection(DBConnFactory.DBConnType.MYSQL);
+        DBQuery dbq = new MySQLQuery(dbc); // MySQL DBQuery implementation using MySQL Database
+        dbq.connect();
+        // Create a fake input stream with username and password
+        String input = "testuser\nCreate1@1\n";
+        InputStream in = new ByteArrayInputStream(input.getBytes());
+
+        // Create a scanner to read from the fake input stream
+        Scanner scanner = new Scanner(in);
     }
 }
