@@ -49,8 +49,6 @@ public class Search {
                 conn.disconnect();
             }
         } catch (ProtocolException e) {
-            // e.printStackTrace();
-            // System.err.println("Bad search! Search string:\n"+urlString);
         }
         if(pageResult != null){
             if(displayResults){
@@ -122,7 +120,6 @@ public class Search {
         String resultString = "";
         JSONArray searchHits = null;
         if(jsonresult.containsKey("hits")) searchHits = (JSONArray) jsonresult.get("hits");
-        long resultNumber = (long) jsonresult.get("from");
         int pageIndex = 1;
         for(Object hit : searchHits){
             JSONObject jsonHit = (JSONObject) hit;
@@ -132,7 +129,6 @@ public class Search {
             String recipeUrl = (String) recipe.get("url");
             resultString += pageIndex+" " + recipeName + "\n";
             resultString += "\tFor instructions and more information, view the original recipe here at " + recipeSource + "\n\t\t" + recipeUrl + "\n";
-            resultNumber++; 
             pageIndex++;
         }
         // resultString += "\nNext page link: \n" + nextPage + "\n";
