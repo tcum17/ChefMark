@@ -8,5 +8,6 @@
     "ChefMark/lib/json-simple-1.1.1.jar",
     "ChefMark/lib/hamcrest-core-1.3.jar",
     "ChefMark/lib/junit-4.13.2.jar"
-  ]
+],
+"java.debug.settings.onBuildFailureProceed": true
 }

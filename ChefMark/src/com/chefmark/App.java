@@ -1,6 +1,5 @@
 package chefmark;
 import java.util.Scanner;
-import org.json.simple.JSONObject;
 import org.json.simple.parser.ParseException;
 
 import java.io.IOException;
@@ -21,6 +20,7 @@ public class App {
     private static final String SELECTION = "\n==== Enter your selection ====\n1 - Search\n2 - Create\n3 - Delete\n4 - View\n5 - quit";
     private static final String SEARCH_PROMPT = "=== SEARCH===\n1 - By Keyword\n2 - By Ingredient\n3 - By Pantry\n4 - By Calories\n5 - Random\n6 - Back";
     private static final String SEARCH_AGAIN = "Do you want to search for another recipe?\n1 - Yes\n2 - No";
+    private static final String SEARCH_PAGE_OPTIONS ="Search Options:\tPrevious page: 1\tNext page: 2\tView a recipe: 3\tQuit searching: 4";
     private static final String INGREDIENT_SEARCH_PROMPT = "Please enter the ingredients you would like to use in a recipe:\nEnter \"Remove\" to remove the previous ingredient\nEnter \"Stop\" to stop";
     private static final String CREATE_PROMPT = "\n==== What do you want to create? ====\n1 - Recipe\n2 - Ingredient\n3 - WeeklyPlan\n4 - RecipeList\n5 - Back";
     private static final String VIEW_PROMPT = "\n==== Enter your View selection ====\n1 - Recipe List\n2 - Pantry\n3 - Weekly Plan\n4 - History\n5 - Custom Recipes\n6 - Back";
@@ -39,7 +39,8 @@ public class App {
         UserController uc = new UserController();
         RecipeController RC = new RecipeController();
 
-        System.out.println("Type \"Exit\" to quit the program");
+        Search searchAPI = new EdamamSearch();
+
         dbq.connect();
         
         boolean signedIn = false;
@@ -82,15 +83,15 @@ public class App {
                     System.out.println(SEARCH_PROMPT); // search for a recipe
                     searchInput = sc.nextLine();
                     if (searchInput.equals(ONE)) {
-                        keywordSearch(sc, uc, dbq);
+                        keywordSearch(searchAPI,sc, uc, dbq);
                     } else if (searchInput.equals(TWO)) {
-                        ingredientSearch(sc, uc, dbq);
+                        ingredientSearch(searchAPI,sc, uc, dbq);
                     } else if (searchInput.equals(THREE)) {
-                        pantrySearch(sc, uc, dbq);
+                        pantrySearch(searchAPI,sc, uc, dbq);
                     } else if (searchInput.equals(FOUR)) {
-                        calorieSearch(sc, uc, dbq);
+                        calorieSearch(searchAPI,sc, uc, dbq);
                     } else if (searchInput.equals(FIVE)) {
-                        randomSearch(sc, uc, dbq);
+                        randomSearch(searchAPI,sc, uc, dbq);
                     } else if (searchInput.equals(SIX)) {
                         searchInput = SIX;
                     } else {
@@ -120,15 +121,16 @@ public class App {
         }
     }
 
-    private static void keywordSearch(Scanner sc, UserController uc, DBQuery dbq) throws SQLException, ParseException, IOException{
+    private static void keywordSearch(Search searchAPI, Scanner sc, UserController uc, DBQuery dbq) throws SQLException, ParseException, IOException{
         boolean searchAgain = true;
         final String KEYWORD_SEARCH_PROMPT = "Please enter the keyword(s) you would like to search by: ";
         while(searchAgain)
         {
             System.out.printf(KEYWORD_SEARCH_PROMPT);
             String searchInput = sc.nextLine();
-            boolean searchSuccess = Search.keywordSearch(searchInput);
-            if(searchSuccess) searchLoop(sc,uc,dbq);
+            searchAPI.keywordSearch(searchInput);
+            boolean searchSuccess = searchAPI.hasNextPage();
+            if(searchSuccess) searchLoop(searchAPI, sc,uc,dbq);
             
             System.out.println(SEARCH_AGAIN);
             String researchInput = sc.nextLine();
@@ -139,7 +141,7 @@ public class App {
         }
     }
 
-    private static void ingredientSearch(Scanner sc, UserController uc, DBQuery dbq) throws SQLException, ParseException, IOException{
+    private static void ingredientSearch(Search searchAPI, Scanner sc, UserController uc, DBQuery dbq) throws SQLException, ParseException, IOException{
         boolean searchAgain = true;
         
         while(searchAgain)
@@ -163,8 +165,9 @@ public class App {
             //search based on ingredients input
             String searchString = ingredients.toString(); //convert list to string
             searchString = searchString.substring(1, searchString.length()-1); //trim brackets off of the ressult
-            boolean searchSuccess = Search.keywordSearch(searchString);
-            if(searchSuccess) searchLoop(sc, uc, dbq);
+            searchAPI.keywordSearch(searchString);
+            boolean searchSuccess = searchAPI.hasNextPage();
+            if(searchSuccess) searchLoop(searchAPI, sc, uc, dbq);
             
             System.out.println(SEARCH_AGAIN);
             String researchInput = sc.nextLine();
@@ -175,7 +178,7 @@ public class App {
         }
     }
 
-    private static void pantrySearch(Scanner sc, UserController uc, DBQuery dbq) throws SQLException, ParseException, IOException{
+    private static void pantrySearch(Search searchAPI, Scanner sc, UserController uc, DBQuery dbq) throws SQLException, ParseException, IOException{
         boolean searchAgain = true;
         while(searchAgain)
         {
@@ -202,8 +205,9 @@ public class App {
             //search based on all ingredients inputted
             String searchString = pickedIngredients.toString(); //convert list to string
             searchString = searchString.substring(1, searchString.length()-1); //trim brackets off of the ressult
-            boolean searchSuccess = Search.keywordSearch(searchString);
-            if(searchSuccess) searchLoop(sc, uc, dbq);
+            searchAPI.keywordSearch(searchString);
+            boolean searchSuccess = searchAPI.hasNextPage();
+            if(searchSuccess) searchLoop(searchAPI, sc, uc, dbq);
             
             System.out.println(SEARCH_AGAIN);
             String researchInput = sc.nextLine();
@@ -214,7 +218,7 @@ public class App {
         }          
     }
 
-    private static void calorieSearch(Scanner sc, UserController uc, DBQuery dbq) throws SQLException, ParseException, IOException{
+    private static void calorieSearch(Search searchAPI, Scanner sc, UserController uc, DBQuery dbq) throws SQLException, ParseException, IOException{
         boolean searchAgain = true;
         while(searchAgain)
         {
@@ -265,8 +269,9 @@ public class App {
             }
             System.out.println("Your calorie range is " + calorieInputLow + " to " + calorieInputHigh);
             //search based on the calorie range
-            boolean searchSuccess = Search.calorieSearch(calorieInputLow, calorieInputHigh);
-            if(searchSuccess) searchLoop(sc, uc, dbq);
+            searchAPI.calorieSearch(calorieInputLow, calorieInputHigh);
+            boolean searchSuccess = searchAPI.hasNextPage();
+            if(searchSuccess) searchLoop(searchAPI, sc, uc, dbq);
 
             System.out.println(SEARCH_AGAIN);
             String researchInput = sc.nextLine();
@@ -277,7 +282,7 @@ public class App {
         }
     }
 
-    private static void randomSearch(Scanner sc, UserController uc, DBQuery dbq) throws SQLException, ParseException, IOException{
+    private static void randomSearch(Search searchAPI, Scanner sc, UserController uc, DBQuery dbq) throws SQLException, ParseException, IOException{
         boolean searchAgain = true;
         while(searchAgain)
         {
@@ -293,16 +298,15 @@ public class App {
                     viewRecipe(ranRec, sc, uc, dbq);
                 }
                 else{
-                    System.out.println("You have no liked recipes to choose from!");
+                    System.out.println("You have no custom recipes to choose from!");
                 }
             }
             else if(randomInput.equals(TWO))
             {
                 //grab random recipe
-                JSONObject JSONRecipe = Search.randomSearch(); //Changed to get single recipe
+                Recipe ranRec = searchAPI.randomSearch(); //Changed to get single recipe
 
-                if(JSONRecipe != null){
-                    Recipe ranRec = Recipe.JSONToRecipe(JSONRecipe);
+                if(ranRec != null){
                     viewRecipe(ranRec, sc, uc, dbq);
                 } 
             }
@@ -320,22 +324,22 @@ public class App {
         }
     }
     
-    private static void searchLoop(Scanner sc, UserController uc, DBQuery dbq) throws SQLException {
+    private static void searchLoop(Search searchAPI, Scanner sc, UserController uc, DBQuery dbq) throws SQLException {
         boolean searching = true;
         while (searching) {
-            System.out.println("Previous page: 1\tNext page: 2\tView a recipe: 3\tQuit searching: 4");
+            System.out.println(SEARCH_PAGE_OPTIONS);
             String searchPageInput = sc.nextLine();
             switch (searchPageInput) {
                 case ONE:
                     System.out.printf(".....");
-                    Search.previousPage();
+                    searchAPI.previousPage();
                     break;
                 case TWO:
                     System.out.printf(".....");
-                    Search.nextPage();
+                    searchAPI.nextPage();
                     break;
                 case THREE:
-                    viewRecipeFromSearch(sc, uc, dbq);
+                    viewRecipeFromSearch(searchAPI, sc, uc, dbq);
                     break;
                 case FOUR:
                     searching = false;
@@ -348,31 +352,32 @@ public class App {
         }
     }
     
-    private static void viewRecipeFromSearch(Scanner sc, UserController uc, DBQuery dbq) throws SQLException {
+    private static void viewRecipeFromSearch(Search searchAPI, Scanner sc, UserController uc, DBQuery dbq) throws SQLException {
         System.out.printf("Enter a recipe index to view the recipe with that index: ");
         String input = sc.nextLine();
         
         try {
             int pageIndex = Integer.parseInt(input);
-            Search.viewRecipe(pageIndex);
-            JSONObject recipeJSON = Search.getCurRecipe();
+            searchAPI.viewRecipe(pageIndex);
             boolean viewingRecipe = true;
             while (viewingRecipe) {
                 System.out.println(VIEW_RECIPE_OPTIONS);
                 input = sc.nextLine();
                 Recipe curRecipe = null;
-                curRecipe = Recipe.JSONToRecipe(recipeJSON);
-                curRecipe.setName(curRecipe.getName().replaceAll("'", ""));
+                curRecipe = searchAPI.getCurRecipe();
+                if(curRecipe != null) curRecipe.setName(curRecipe.getName().replaceAll("'", ""));
                 User curUser = uc.getUser();
                 switch (input) {
                     case ONE:
                         if(curRecipe != null){
+                            dbq.create(curRecipe, curUser);
                             curUser.addToRecipeHistory(curRecipe);
                             addRecipeToWeeklyPlan(sc, uc, curRecipe, dbq);
                         }else System.err.println("Error converting JSON to recipe, recipe=null");
                         break;
                     case TWO:
                         if(curRecipe != null){
+                            dbq.create(curRecipe, curUser);
                             curUser.addToRecipeHistory(curRecipe);
                             addRecipeToRecipeList(sc, uc, curRecipe, dbq);
                         }else System.err.println("Error converting JSON to recipe, recipe=null");
@@ -384,9 +389,14 @@ public class App {
                         }else System.err.println("Error converting JSON to recipe, recipe=null");
                         break;
                     case FOUR:
-                        curUser.addCustomRecipe(curRecipe);
-                        curUser.addToRecipeHistory(curRecipe);
-                        changeRecipeServingSize(curRecipe, sc, uc, dbq);
+                        if(curRecipe != null){
+                            dbq.create(curRecipe, curUser);
+                            curUser.addCustomRecipe(curRecipe);
+                            curUser.addToRecipeHistory(curRecipe);
+                            changeRecipeServingSize(curRecipe, sc, uc, dbq);
+                            viewRecipe(curRecipe, sc, uc, dbq);
+                            viewingRecipe=false;
+                        }else System.err.println("Error converting JSON to recipe, recipe=null");
                         break;
                     case FIVE:
                         viewingRecipe=false;
@@ -604,8 +614,6 @@ public class App {
                         if(day.equals("Monday") || day.equals("Tuesday") || day.equals("Wednesday") || day.equals("Thursday") || day.equals("Friday") || day.equals("Saturday") || day.equals("Sunday"))
                         {
                             wp.addRecipeToWeeklyPlan(recipe, day);
-                            if (recipe.getSource()!=null)
-                                dbq.create(recipe, uc.getUser()); // from api
                             dbq.create(wp, recipe, uc.getUser(), day); // every recipe
                             back = true;
                         }
@@ -1173,11 +1181,13 @@ public class App {
                 if(recipeHis.size() == 0){
                     System.out.println("\nYou have no recipe history\n");
                 }else{
+                    System.out.println("\n=== Recipe History ===\n");
                     for(int i = recipeHis.size()-1; i >=0; i-- )
                     {
                         
                         System.out.println(i+1 + " " + recipeHis.get(i).getName()); 
                     }
+                    System.out.println("\n===================\n");
                     System.out.println("What do you want to do?\n1 - View Recipe\n2 - back");
                     String historyInput = "";
                     boolean goodInput = false;
@@ -1242,7 +1252,9 @@ public class App {
             try {
                 double factor = Double.parseDouble(input);
                 recipe.changeServingSize(factor);
+                recipe.setCustom(1);
                 dbq.updateServingSize(recipe, uc.getUser());
+                dbq.updateIsCustomRecipe(recipe, uc.getUser());
                 System.out.println("Note that the recipe instructions will not contain updated ingredient amounts");
                 getInput = false;
             } catch (NumberFormatException e) {
@@ -1262,15 +1274,18 @@ public class App {
             String input = sc.nextLine();
             switch (input) {
             case ONE:
+                if(recipe.getIsCustom() != 1) dbq.create(recipe, uc.getUser());
                 addRecipeToWeeklyPlan(sc, uc, recipe, dbq);
                 break;
             case TWO:
+                if(recipe.getIsCustom() != 1) dbq.create(recipe, uc.getUser());
                 addRecipeToRecipeList(sc, uc, recipe, dbq);
                 break;
             case THREE:
                 userRecipeShare(sc, recipe, uc.getUser());
                 break;
             case FOUR:
+                if(recipe.getIsCustom() != 1){} dbq.create(recipe, uc.getUser());
                 changeRecipeServingSize(recipe, sc, uc, dbq);
                 break;
             case FIVE:

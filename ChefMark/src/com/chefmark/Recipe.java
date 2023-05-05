@@ -15,6 +15,7 @@ public class Recipe {
     Instructions instructions = new Instructions();
     NutritionalFacts nutritionalFacts;
     ArrayList<String> ingredientLines = new ArrayList<>();
+    int isCustom = 0;
 
     public Recipe(){
         
@@ -85,6 +86,10 @@ public class Recipe {
         return nutritionalFacts;
     }
 
+    public int getIsCustom() {
+        return isCustom;
+    }
+
     public void setUri(String uri)
     {
         this.uri = uri; 
@@ -137,6 +142,10 @@ public class Recipe {
         this.nutritionalFacts = nutritionalFacts;
     }
 
+    public void setCustom(int b){
+        this.isCustom = b;
+    }
+
     public void changeServingSize(double multiplier){
         this.totalWeight = this.totalWeight*multiplier;
         for(Ingredient ingredient : this.ingredients){
@@ -148,7 +157,7 @@ public class Recipe {
     public static Recipe JSONToRecipe(JSONObject recipeJSON){
         Recipe result = new Recipe();
         JSONObject recipe = recipeJSON;
-
+        if(recipeJSON == null) return null;
         String uri = (String) recipe.get("uri");
         result.setUri(uri);
         String recipeName = (String) recipe.get("label");
@@ -257,7 +266,7 @@ public class Recipe {
             }
             result.setIngredientLines(newIngredientLines);
         }
-        
+        result.setCustom(0);
         return result;
     }
 

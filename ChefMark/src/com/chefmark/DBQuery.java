@@ -27,6 +27,7 @@ public abstract class DBQuery {
     public void delete(Ingredient ingredient, User user) throws SQLException {}
     public void create(WeeklyPlan weeklyPlan, User user) throws SQLException {}
     public void create(Recipe recipe, User user) throws SQLException {}
+    public void update(Recipe recipe, User user) throws SQLException {}
     public void delete(Recipe recipe, User user) throws SQLException {}
     public void create(WeeklyPlan weeklyPlan, Recipe recipe, User user, String day) throws SQLException {}
     public void create(RecipeList recipeList, User user) throws SQLException {}
@@ -35,6 +36,7 @@ public abstract class DBQuery {
     public void deleteFromWeeklyPlan(WeeklyPlan weeklyPlan, Recipe recipe, User user, String day) throws SQLException {}
     public void createCustomRecipe(Recipe recipe, User user) throws SQLException {}
     public void updateServingSize(Recipe recipe, User user) throws SQLException {}
+    public void updateIsCustomRecipe(Recipe recipe, User user) throws SQLException {}
     public void create(RecipeList recipeList, Recipe recipe, User user) throws SQLException {}
     public void update (WeeklyPlan weeklyPlan, User user, int weeklyPlanId) throws SQLException {}
     public ResultSet getWeeklyPlanId(WeeklyPlan weeklyPlan, User user) throws SQLException {
