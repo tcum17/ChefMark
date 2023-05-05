@@ -915,6 +915,11 @@ public class App {
             if(weeklyPlanName.equals(BACK)){
                 backWeeklyPlan = weeklyPlanName;
             }
+            else if(weeklyPlanName.equals(""))
+            {
+                System.out.println("You did not enter a name for the weekly plan");
+                System.out.println();
+            }
             else{
                 WeeklyPlan newWeeklyPlan = new WeeklyPlan();
                 newWeeklyPlan.setName(weeklyPlanName);
