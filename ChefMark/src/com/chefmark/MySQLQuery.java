@@ -424,6 +424,14 @@ public class MySQLQuery extends DBQuery{
     
     }
 
+    public ResultSet read(RecipeList recipeList, User user) throws SQLException {
+        String query = "SELECT RECIPELISTID FROM RECIPELIST WHERE RECIPELISTNAME=? AND USERNAME=?";
+        PreparedStatement statement = connection.prepareStatement(query);
+        statement.setString(1, recipeList.getName());
+        statement.setString(2, user.getUsername());
+        return statement.executeQuery();
+    }
+
     public void delete(Recipe recipe, User user) throws SQLException {
         String query = "DELETE FROM RECIPE WHERE RECIPENAME=? AND USERNAME=?";
         PreparedStatement statement = connection.prepareStatement(query);

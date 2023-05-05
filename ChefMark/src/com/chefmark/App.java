@@ -568,7 +568,7 @@ public class App {
         }
     }
 
-    public static void addRecipe(Scanner sc, UserController uc, Recipe recipe, DBQuery dbq) throws SQLException {
+    private static void addRecipe(Scanner sc, UserController uc, Recipe recipe, DBQuery dbq) throws SQLException {
         System.out.println("\nWhere do you want to add the recipe?\n");
         String location = "";
         
@@ -587,7 +587,7 @@ public class App {
         }
     }
     
-    public static void addRecipeToWeeklyPlan(Scanner sc, UserController uc, Recipe recipe, DBQuery dbq) throws SQLException {
+    private static void addRecipeToWeeklyPlan(Scanner sc, UserController uc, Recipe recipe, DBQuery dbq) throws SQLException {
         boolean enteringPlan = true;
         // ResultSet rs = dbq.populateWeeklyPlan(new WeeklyPlan(), uc.getUser());
         // while (rs.next()) {
@@ -632,7 +632,7 @@ public class App {
         }
     }
 
-    public static void addRecipeToRecipeList(Scanner sc, UserController uc, Recipe recipe, DBQuery dbq) throws SQLException{
+    private static void addRecipeToRecipeList(Scanner sc, UserController uc, Recipe recipe, DBQuery dbq) throws SQLException{
         boolean enteringList = true;
         while(enteringList){
             if (uc.getUser().getRecipeLists().size() != 0) {
@@ -657,7 +657,7 @@ public class App {
         }
     }
     
-    public static void viewCustomRecipes(Scanner sc, UserController uc, DBQuery dbq) throws SQLException
+    private static void viewCustomRecipes(Scanner sc, UserController uc, DBQuery dbq) throws SQLException
     {
        ArrayList<Recipe> recipes = uc.getUser().getCustomRecipeList();
         if(recipes.size() == 0)
@@ -713,23 +713,7 @@ public class App {
                 }
                 else if(input.equals(TWO))
                 {
-                    System.out.println("Type the number of the recipe you want to delete");
-                    input = sc.nextLine();
-                    int recipeNum = 0;
-                    try {
-                        recipeNum= Integer.parseInt(input);
-                    } catch (NumberFormatException e) {
-                        //
-                    }
-                    if(recipeNum>counter || recipeNum == 0)
-                    {
-                        System.out.println("There is not a recipe number" + recipeNum);
-                    }
-                    else
-                    {
-                        dbq.delete(recipes.get(recipeNum-1), uc.getUser());
-                        recipes.remove(recipeNum-1);
-                    }
+                    deleteCustomRecipe(sc, uc, dbq);
                 }
                 else if(input.equals(THREE))
                 {
@@ -740,7 +724,30 @@ public class App {
                     System.out.println("That is not a valid input");
                 }
             }
-        } 
+        }
+    }
+
+    private static void deleteCustomRecipe(Scanner sc, UserController uc, DBQuery dbq) throws SQLException {
+        System.out.println("Type the number of the recipe you want to delete");
+        String input = sc.nextLine();
+        int recipeNum = 0;
+        
+        ArrayList<Recipe> recipes = uc.getUser().getCustomRecipeList();
+        int counter = recipes.size();
+        try {
+            recipeNum= Integer.parseInt(input);
+        } catch (NumberFormatException e) {
+            //
+        }
+        if(recipeNum>counter || recipeNum == 0)
+        {
+            System.out.println("There is not a recipe number" + recipeNum);
+        }
+        else
+        {
+            dbq.delete(recipes.get(recipeNum-1), uc.getUser());
+            recipes.remove(recipeNum-1);
+        }
     }
     
     public static void viewWeeklyPlans(Scanner sc, UserController uc, DBQuery dbq) throws SQLException
@@ -847,7 +854,7 @@ public class App {
         }
     }
 
-    public static void createRecipe(Scanner sc, UserController uc, RecipeController RC, DBQuery dbq) throws SQLException
+    private static void createRecipe(Scanner sc, UserController uc, RecipeController RC, DBQuery dbq) throws SQLException
     {
         System.out.println("\nWelcome to create a recipe:\n");
         System.out.println("Please enter a name for your recipe or type back to cancel: ");
@@ -860,7 +867,7 @@ public class App {
         }
     } 
     
-    public static void createCustomIngredient(Scanner sc, UserController uc, RecipeController RC, DBQuery dbq) throws SQLException
+    private static void createCustomIngredient(Scanner sc, UserController uc, RecipeController RC, DBQuery dbq) throws SQLException
     {
         String backIngredient = "";
                             
@@ -905,7 +912,7 @@ public class App {
         }
     }
 
-    public static void createWeeklyPlan(Scanner sc, UserController uc, RecipeController RC, DBQuery dbq) throws SQLException
+    private static void createWeeklyPlan(Scanner sc, UserController uc, RecipeController RC, DBQuery dbq) throws SQLException
     {
         String backWeeklyPlan = "";
         while (!backWeeklyPlan.equals(BACK)) {
@@ -935,7 +942,7 @@ public class App {
         }
     }
 
-    public static void createRecipeList(Scanner sc, UserController uc, RecipeController RC, DBQuery dbq) throws SQLException
+    private static void createRecipeList(Scanner sc, UserController uc, RecipeController RC, DBQuery dbq) throws SQLException
     {
         String backRecipeList = "";
         while (!backRecipeList.equals(BACK)) {

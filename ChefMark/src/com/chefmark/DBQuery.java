@@ -37,8 +37,13 @@ public abstract class DBQuery {
     public void createCustomRecipe(Recipe recipe, User user) throws SQLException {}
     public void updateServingSize(Recipe recipe, User user) throws SQLException {}
     public void updateIsCustomRecipe(Recipe recipe, User user) throws SQLException {}
+
     public void create(RecipeList recipeList, Recipe recipe, User user) throws SQLException {}
     public void update (WeeklyPlan weeklyPlan, User user, int weeklyPlanId) throws SQLException {}
+    public ResultSet read(RecipeList recipeList, User user) throws SQLException {
+        ResultSet rs = null;
+        return rs;
+    }
     public ResultSet getWeeklyPlanId(WeeklyPlan weeklyPlan, User user) throws SQLException {
         ResultSet rs = null;
         return rs;
