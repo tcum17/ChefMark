@@ -12,13 +12,15 @@ public abstract class Search {
 
     public abstract Recipe randomSearch();
 
-    public abstract void nextPage();
+    public abstract boolean nextPage();
 
-    public abstract void previousPage();
+    public abstract boolean previousPage();
 
-    public abstract void viewRecipe(int index);
+    public abstract boolean viewRecipe(int index);
 
-    public abstract void displayCurrentPage();
+    public abstract boolean displayCurrentPage();
 
     public abstract Recipe getCurRecipe();
+
+    public abstract boolean hasNextPage();
 }

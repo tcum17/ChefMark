@@ -55,7 +55,6 @@ public class EdamamSearch extends Search{
                 System.out.flush();
             }
             pageList.add(pageResult);
-            if(pageResult.getNextPage() != null) status = true;
         }else System.out.println("No results for that search.");
         filters.clear();
         return status;
@@ -138,7 +137,7 @@ public class EdamamSearch extends Search{
         return result;
     }
 
-    public void nextPage(){
+    public boolean nextPage(){
         String result = "";
         if(currentPage+1 == pageList.size()){
             try {
@@ -163,9 +162,10 @@ public class EdamamSearch extends Search{
         }
         System.out.println("\n"+result);
         System.out.flush();
+        return true;
     }
 
-    public void previousPage(){
+    public boolean previousPage(){
         String result = "";
         if(currentPage == 0){
             System.out.println("No previous page!");
@@ -175,6 +175,7 @@ public class EdamamSearch extends Search{
         }
         System.out.println("\n"+result);
         System.out.flush();
+        return true;
     }
 
     private static String getRecipeResponse(URL url) throws IOException, ParseException{
@@ -210,7 +211,7 @@ public class EdamamSearch extends Search{
         return fileResult;
     }
 
-    public void viewRecipe(int index){
+    public boolean viewRecipe(int index){
         String resultString = "";
         JSONObject resultRecipe = null;
         if(index < 21 && index > 0){
@@ -241,16 +242,23 @@ public class EdamamSearch extends Search{
         System.out.println(resultString);
         System.out.flush();
         currentRecipe = resultRecipe;
+        return true;
     }
 
-    public void displayCurrentPage(){
+    public boolean displayCurrentPage(){
         String result;
         result = pageList.get(currentPage).getPageResult();
         System.out.println(result);
         System.out.flush();
+        return true;
     }
 
     public Recipe getCurRecipe(){
         return Recipe.JSONToRecipe(currentRecipe);
+    }
+
+    public boolean hasNextPage(){
+        if(pageList.get(currentPage).getNextPage()!=null) return true;
+        else return false;
     }
 }

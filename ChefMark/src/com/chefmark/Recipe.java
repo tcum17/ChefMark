@@ -148,7 +148,7 @@ public class Recipe {
     public static Recipe JSONToRecipe(JSONObject recipeJSON){
         Recipe result = new Recipe();
         JSONObject recipe = recipeJSON;
-
+        if(recipeJSON == null) return null;
         String uri = (String) recipe.get("uri");
         result.setUri(uri);
         String recipeName = (String) recipe.get("label");

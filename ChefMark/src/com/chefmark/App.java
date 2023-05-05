@@ -128,7 +128,8 @@ public class App {
         {
             System.out.printf(KEYWORD_SEARCH_PROMPT);
             String searchInput = sc.nextLine();
-            boolean searchSuccess = searchAPI.keywordSearch(searchInput);
+            searchAPI.keywordSearch(searchInput);
+            boolean searchSuccess = searchAPI.hasNextPage();
             if(searchSuccess) searchLoop(searchAPI, sc,uc,dbq);
             
             System.out.println(SEARCH_AGAIN);
@@ -164,7 +165,8 @@ public class App {
             //search based on ingredients input
             String searchString = ingredients.toString(); //convert list to string
             searchString = searchString.substring(1, searchString.length()-1); //trim brackets off of the ressult
-            boolean searchSuccess = searchAPI.keywordSearch(searchString);
+            searchAPI.keywordSearch(searchString);
+            boolean searchSuccess = searchAPI.hasNextPage();
             if(searchSuccess) searchLoop(searchAPI, sc, uc, dbq);
             
             System.out.println(SEARCH_AGAIN);
@@ -203,7 +205,8 @@ public class App {
             //search based on all ingredients inputted
             String searchString = pickedIngredients.toString(); //convert list to string
             searchString = searchString.substring(1, searchString.length()-1); //trim brackets off of the ressult
-            boolean searchSuccess = searchAPI.keywordSearch(searchString);
+            searchAPI.keywordSearch(searchString);
+            boolean searchSuccess = searchAPI.hasNextPage();
             if(searchSuccess) searchLoop(searchAPI, sc, uc, dbq);
             
             System.out.println(SEARCH_AGAIN);
@@ -266,7 +269,8 @@ public class App {
             }
             System.out.println("Your calorie range is " + calorieInputLow + " to " + calorieInputHigh);
             //search based on the calorie range
-            boolean searchSuccess = searchAPI.calorieSearch(calorieInputLow, calorieInputHigh);
+            searchAPI.calorieSearch(calorieInputLow, calorieInputHigh);
+            boolean searchSuccess = searchAPI.hasNextPage();
             if(searchSuccess) searchLoop(searchAPI, sc, uc, dbq);
 
             System.out.println(SEARCH_AGAIN);
