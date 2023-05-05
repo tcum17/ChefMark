@@ -55,6 +55,7 @@ public class EdamamSearch extends Search{
                 System.out.flush();
             }
             pageList.add(pageResult);
+            status = true;
         }else System.out.println("No results for that search.");
         filters.clear();
         return status;
@@ -62,6 +63,7 @@ public class EdamamSearch extends Search{
 
     public boolean keywordSearch(String keyword){
         boolean status = false;
+        if(keyword == null) return status;
         keyword = keyword.replaceAll("\\s+", "%20");
         keyword = keyword.replaceAll(",", "%2C");
         String keywordFilter = "&q="+keyword;
@@ -139,6 +141,7 @@ public class EdamamSearch extends Search{
 
     public boolean nextPage(){
         String result = "";
+        if(pageList.size() == 0 || pageList.get(currentPage) == null) return false;
         if(currentPage+1 == pageList.size()){
             try {
                 String nextPage = pageList.get(currentPage).getNextPage();
@@ -167,6 +170,7 @@ public class EdamamSearch extends Search{
 
     public boolean previousPage(){
         String result = "";
+        if(pageList.size() == 0 || pageList.get(currentPage) == null) return false;
         if(currentPage == 0){
             System.out.println("No previous page!");
         }else{
@@ -214,6 +218,7 @@ public class EdamamSearch extends Search{
     public boolean viewRecipe(int index){
         String resultString = "";
         JSONObject resultRecipe = null;
+        if(pageList.size() == 0 || pageList.get(currentPage) == null) return false;
         if(index < 21 && index > 0){
             index -= 1;
             JSONObject pageObject = jsonPageList.get(currentPage);
@@ -247,6 +252,7 @@ public class EdamamSearch extends Search{
 
     public boolean displayCurrentPage(){
         String result;
+        if(pageList.size() == 0 || pageList.get(currentPage) == null) return false;
         result = pageList.get(currentPage).getPageResult();
         System.out.println(result);
         System.out.flush();
@@ -258,6 +264,7 @@ public class EdamamSearch extends Search{
     }
 
     public boolean hasNextPage(){
+        if(pageList.size() == 0 || pageList.get(currentPage) == null) return false;
         if(pageList.get(currentPage).getNextPage()!=null) return true;
         else return false;
     }
