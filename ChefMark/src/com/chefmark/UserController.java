@@ -2,7 +2,6 @@ package chefmark;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.Scanner;
 import java.util.regex.Pattern;
 import java.util.regex.Matcher;

@@ -1,10 +1,7 @@
 package chefmark;
 
-import java.net.ConnectException;
 import java.sql.Connection;
 import java.sql.Statement;
-
-import com.mysql.cj.x.protobuf.MysqlxPrepare.Prepare;
 
 import java.sql.SQLException;
 import java.sql.DriverManager;
@@ -16,8 +13,6 @@ public class MySQLQuery extends DBQuery{
     private DBConnection dbConnection;
     private Connection connection;
     private Statement statement;
-    private PreparedStatement preparedStatement;
-
 
     public MySQLQuery(DBConnection dbConnection) {
         this.dbConnection = dbConnection;
