@@ -62,8 +62,11 @@ public class Email extends CommunicationsProvider{
             if(recipeIn.getRating().getRating() != -1 || recipeIn.getRating()!=null){
                 String rating = "";
                 if (recipeIn.getRating().getRating()==0)
+                    rating="Negative";
+                else
+                    rating="Positive";
 
-                messageContent += "\tRating : " + recipeIn.getRating() + "/5\n" ;
+                messageContent += "\tRating : " + rating + "\n" ;
                 
             }
 

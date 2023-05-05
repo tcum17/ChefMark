@@ -57,6 +57,7 @@ public class App {
                     dbq.create(new Pantry(), uc.getUser()); // just initializes pantry in the database
                 } else if (startScreenInput.equalsIgnoreCase(QUIT)) {
                     System.out.println(GOODBYE);
+                    dbq.disconnect();
                     System.exit(0);
                 } else if (startScreenInput.equalsIgnoreCase(DELETE)) {
                     signedIn = uc.deleteUser(dbq, sc);
@@ -390,7 +391,10 @@ public class App {
                         break;
                     case FOUR:
                         if(curRecipe != null){
-                            dbq.create(curRecipe, curUser);
+                            if (curRecipe.getSource()==null)
+                                dbq.createCustomRecipe(curRecipe, curUser);
+                            else
+                                dbq.create(curRecipe, curUser);
                             curUser.addCustomRecipe(curRecipe);
                             curUser.addToRecipeHistory(curRecipe);
                             changeRecipeServingSize(curRecipe, sc, uc, dbq);
@@ -1060,10 +1064,13 @@ public class App {
                 {
                     case ONE:
                     addIngredientToPantry(uc, dbq, sc);
+                    break;
                     case TWO:
                     deleteIngredientFromPantry(uc, sc, dbq);
+                    break;
                     case THREE:
                     updateIngredientInPantry(uc, sc, dbq);
+                    break;
                     case FOUR:
                     pantryInput = FOUR;
                     break;

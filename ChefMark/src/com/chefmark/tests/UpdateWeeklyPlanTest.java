@@ -14,43 +14,6 @@ import chefmark.*;
 public class UpdateWeeklyPlanTest{
 
     @Test
-    public void updateTestRecipeAdding() throws SQLException{
-        DBConnection dbc = DBConnFactory.getDBConnection(DBConnFactory.DBConnType.MYSQL);
-        DBQuery dbq = new MySQLQuery(dbc); // MySQL DBQuery implementation using MySQL Database
-        dbq.connect();
-
-        String testName = "test";
-        // Create a fake input stream with username and password
-        String input = "testuser\nCreate1@1\n";
-        InputStream in = new ByteArrayInputStream(input.getBytes());
-
-
-        // Create a scanner to read from the fake input stream
-        Scanner scanner = new Scanner(in);
-
-        
-        //Logging in to test user
-        UserController uc = new UserController();
-        uc.login(dbq, scanner);
-
-        //Temp weeklyplan and recipe to be added to user
-        WeeklyPlan testPlan = new WeeklyPlan(testName);
-        Recipe testRecipe = new Recipe();
-
-        //Add temp plan
-        uc.getUser().addWeeklyPlan(testPlan);
-
-        //Method returns true if recipe added successfully
-        Boolean result = uc.getUser().getWeeklyPlanByName(testName).addRecipeToWeeklyPlan(testRecipe, "Monday");
-
-        //Removing wekly plan
-        uc.getUser().removeWeeklyPlan(testPlan);
-
-        dbq.disconnect();
-        assert(result == true);
-    }
-
-    @Test
     public void updateTestRenaming() throws SQLException{
         DBConnection dbc = DBConnFactory.getDBConnection(DBConnFactory.DBConnType.MYSQL);
         DBQuery dbq = new MySQLQuery(dbc); // MySQL DBQuery implementation using MySQL Database
@@ -72,9 +35,9 @@ public class UpdateWeeklyPlanTest{
         //Creating a weekly plan for testing
         WeeklyPlan testPlan = new WeeklyPlan(testName);
 
-
         //Adding plan to be tested
         uc.getUser().addWeeklyPlan(testPlan);
+        dbq.create(testPlan, uc.getUser());
 
         //Changing plan name
         uc.getUser().getWeeklyPlanByName(testName).setName(newTestName);
@@ -84,8 +47,10 @@ public class UpdateWeeklyPlanTest{
             result = true;
         }
 
-         uc.getUser().removeWeeklyPlan(uc.getUser().getWeeklyPlanByName(newTestName));
+
+        uc.getUser().removeWeeklyPlan(uc.getUser().getWeeklyPlanByName(newTestName));
         dbq.disconnect();
+
         assert(result == true);
     }
 

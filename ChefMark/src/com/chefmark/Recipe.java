@@ -285,7 +285,12 @@ public class Recipe {
         int returnRate = this.getRating().getRating();
         if(returnRate!=-1)
         {
-            result += "\nRating: " + returnRate + " stars\n";
+            String rating = "";
+            if (returnRate==0)
+                rating="Negative";
+            else
+                rating="Positive";
+            result += "\nRating: " + rating + "\n";
         }
         Instructions instruct = this.getInstructions();
         if (this.url!=null && !instruct.getInstructions().contains(this.url))

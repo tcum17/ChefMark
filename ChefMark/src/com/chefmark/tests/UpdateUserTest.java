@@ -12,5 +12,5 @@ import static org.junit.Assert.*;
 import chefmark.*;
 
 public class UpdateUserTest{
-
+    
 }

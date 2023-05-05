@@ -437,8 +437,34 @@ public class MySQLQuery extends DBQuery{
     }
 
     public void delete(Recipe recipe, User user) throws SQLException {
-        String query = "DELETE FROM RECIPE WHERE RECIPENAME=? AND USERNAME=?";
+        int weeklyPlanItemId = 0;
+        String query = "SELECT WEEKLYPLANITEMID FROM WEEKLYPLANITEM,RECIPE WHERE WEEKLYPLANITEM.RECIPEID=RECIPE.RECIPEID AND RECIPE.recipename=? AND USERNAME=?";
         PreparedStatement statement = connection.prepareStatement(query);
+        statement.setString(1, recipe.getName());
+        statement.setString(2, user.getUsername());
+        ResultSet rs = statement.executeQuery();
+        while (rs.next()) {
+            weeklyPlanItemId = rs.getInt(1);
+            query = "DELETE FROM WEEKLYPLANITEM WHERE WEEKLYPLANITEMID=?";
+            statement = connection.prepareStatement(query);
+            statement.setInt(1, weeklyPlanItemId);
+            statement.execute();
+        }
+        query = "SELECT RECIPELISTITEMID FROM RECIPELISTITEM,RECIPE WHERE RECIPELISTITEM.RECIPEID=RECIPE.RECIPEID AND RECIPE.recipename=? AND USERNAME=?";
+        statement = connection.prepareStatement(query);
+        statement.setString(1, recipe.getName());
+        statement.setString(2, user.getUsername());
+        int recipeListItemId = 0;
+        ResultSet rs2 = statement.executeQuery();
+        while (rs2.next()) {
+            recipeListItemId = rs2.getInt(1);
+            query = "DELETE FROM RECIPELISTITEM WHERE RECIPELISTITEMID=?";
+            statement = connection.prepareStatement(query);
+            statement.setInt(1, recipeListItemId);
+            statement.execute();
+        }
+        query = "DELETE FROM RECIPE WHERE RECIPENAME=? AND USERNAME=?";
+        statement = connection.prepareStatement(query);
         statement.setString(1, recipe.getName());
         statement.setString(2, user.getUsername());
         statement.execute();

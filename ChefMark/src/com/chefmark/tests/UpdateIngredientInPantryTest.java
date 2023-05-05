@@ -124,7 +124,8 @@ public class UpdateIngredientInPantryTest
         
         //Logging in to test user
         UserController uc = new UserController();
-        
+        uc.login(dbq, scanner);
+        scanner.close();
 
         //Temp weeklyplan and recipe to be added to user
         Ingredient testIngredient = new Ingredient();
@@ -133,7 +134,7 @@ public class UpdateIngredientInPantryTest
         testIngredient.setQuantity(4);
         
         uc.getUser().getPantry().addIngredient(testIngredient);
-        
+        dbq.create(uc.getUser().getPantry(), testIngredient, uc.getUser());
         
         
         boolean result = false;
@@ -142,6 +143,7 @@ public class UpdateIngredientInPantryTest
         scanner = new Scanner(in);
 
         updateIngredientInPantry(uc, scanner, dbq);
+        
 
         Ingredient newIngred = uc.getUser().getPantry().search("Carrots");
         
@@ -160,6 +162,7 @@ public class UpdateIngredientInPantryTest
         
         assert(result == true);
         uc.getUser().getPantry().removeIngredient(testIngredient.getIngredientName());
+        dbq.delete(newIngred,uc.getUser());
     }
 
     @Test
@@ -189,7 +192,7 @@ public class UpdateIngredientInPantryTest
         testIngredient.setQuantity(4);
         
         uc.getUser().getPantry().addIngredient(testIngredient);
-        
+        dbq.create(uc.getUser().getPantry(), testIngredient, uc.getUser());
         
         
         boolean result = false;
@@ -197,9 +200,11 @@ public class UpdateIngredientInPantryTest
         in = new ByteArrayInputStream(input.getBytes());
         scanner = new Scanner(in);
 
+        updateIngredientInPantry(uc, scanner, dbq);
+
         Ingredient newIngred = uc.getUser().getPantry().search("Cool Carrots");
 
-        updateIngredientInPantry(uc, scanner, dbq);
+        
         
         
         ResultSet rs = dbq.read(uc.getUser().getPantry(), uc.getUser());
@@ -215,6 +220,7 @@ public class UpdateIngredientInPantryTest
         }
         assert(result == true);
         uc.getUser().getPantry().removeIngredient(testIngredient.getIngredientName());
+        dbq.delete(newIngred,uc.getUser());
     }
 
     @Test
@@ -244,8 +250,9 @@ public class UpdateIngredientInPantryTest
         testIngredient.setQuantity(4);
         
         uc.getUser().getPantry().addIngredient(testIngredient);
+        dbq.create(uc.getUser().getPantry(), testIngredient, uc.getUser());
         
-        
+       
         
         boolean result = false;
         input = "Car\nCarrots\nCool Carrots\n2\nLBS\n2\n";
@@ -270,6 +277,7 @@ public class UpdateIngredientInPantryTest
         }
         assert(result == true);
         uc.getUser().getPantry().removeIngredient(testIngredient.getIngredientName());
+        dbq.delete(newIngred,uc.getUser());
     }
 
 
@@ -300,6 +308,8 @@ public class UpdateIngredientInPantryTest
         testIngredient.setQuantity(4);
         
         uc.getUser().getPantry().addIngredient(testIngredient);
+        dbq.create(uc.getUser().getPantry(), testIngredient, uc.getUser());
+        
         
         
         
@@ -326,6 +336,7 @@ public class UpdateIngredientInPantryTest
         }
         assert(result == true);
         uc.getUser().getPantry().removeIngredient(testIngredient.getIngredientName());
+        dbq.delete(newIngred,uc.getUser());
     }
 
 
