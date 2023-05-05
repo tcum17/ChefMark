@@ -11,11 +11,10 @@ import static org.junit.Assert.*;
 
 import chefmark.*;
 
-public class DeleteRecipeListTest{
+public class RemoveIngredientFromPantryTest{
 
     @Test
-    public void testRegDeletion() throws SQLException{
-        String listName = "TestList";
+    public void testRemoval() throws SQLException{
         DBConnection dbc = DBConnFactory.getDBConnection(DBConnFactory.DBConnType.MYSQL);
         DBQuery dbq = new MySQLQuery(dbc); // MySQL DBQuery implementation using MySQL Database
         dbq.connect();
@@ -26,26 +25,27 @@ public class DeleteRecipeListTest{
         // Create a scanner to read from the fake input stream
         Scanner scanner = new Scanner(in);
 
-        // Call the login method
+        // Call the login method and verify that it returns true
         UserController uc = new UserController();
         uc.login(dbq, scanner);
 
-        //Create temp testing list
-        RecipeList testList = new RecipeList(listName);
+        //Adding test ingredient
+        Ingredient testIngredient = new Ingredient("Cookies", "0001", 1, "whole cookies");
+        uc.getUser().getPantry().addIngredient(testIngredient);
 
-        //Add recipe to user list
-        uc.getUser().addListOfRecipies(testList);
+        //Removing ingredient
+        uc.getUser().getPantry().removeIngredient(testIngredient.getIngredientName());
 
-        //Attempt deletion of recipe list
-        Boolean testResult = uc.getUser().removeRecipeList(testList);
+        //Testing to see if ingredient is present
+        boolean result = uc.getUser().getPantry().hasIngredient(testIngredient.getIngredientName());
+
 
         dbq.disconnect();
-        assert(testResult == true);
+        assert(result == false);
     }
 
     @Test
-    public void testDeletionNoList() throws SQLException{
-        String listName = "TestList";
+    public void testRemovalNotPresent() throws SQLException{
         DBConnection dbc = DBConnFactory.getDBConnection(DBConnFactory.DBConnType.MYSQL);
         DBQuery dbq = new MySQLQuery(dbc); // MySQL DBQuery implementation using MySQL Database
         dbq.connect();
@@ -56,16 +56,18 @@ public class DeleteRecipeListTest{
         // Create a scanner to read from the fake input stream
         Scanner scanner = new Scanner(in);
 
-        // Call the login method
+        // Call the login method and verify that it returns true
         UserController uc = new UserController();
         uc.login(dbq, scanner);
 
-        //Create new test list to search for
-        RecipeList testList = new RecipeList(listName);
-        Boolean testResult = uc.getUser().removeRecipeList(testList);
+        //Creating test ingredient, but not adding it
+        Ingredient testIngredient = new Ingredient("Cookies", "0001", 1, "whole cookies");
+
+        //Removing ingredient
+        Boolean result = uc.getUser().getPantry().removeIngredient(testIngredient.getIngredientName());
+
 
         dbq.disconnect();
-        assert(testResult == false);
+        assert(result == false);
     }
-
 }
