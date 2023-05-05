@@ -15,6 +15,7 @@ public class Recipe {
     Instructions instructions = new Instructions();
     NutritionalFacts nutritionalFacts;
     ArrayList<String> ingredientLines = new ArrayList<>();
+    boolean isCustom = false;
 
     public Recipe(){
         
@@ -135,6 +136,10 @@ public class Recipe {
 
     public void setNutritionalFacts(NutritionalFacts nutritionalFacts){
         this.nutritionalFacts = nutritionalFacts;
+    }
+
+    public void setCustom(boolean b){
+        this.isCustom = b;
     }
 
     public void changeServingSize(double multiplier){
