@@ -36,8 +36,14 @@ public class DeleteWeeklyPlanTest {
         uc.getUser().addWeeklyPlan(wp);
 
         boolean result = uc.getUser().removeWeeklyPlan(wp);
-        assert (result == true);
+        if (result)
+            dbq.deleteWeeklyPlan(wp, uc.getUser());
+
+        ResultSet rs = dbq.read(wp, uc.getUser());
+
+        assert (rs.next() == false);
     }
+
     /**
      * 
      * This tests the attempt to delete a weekly plan that doesn't exist
@@ -57,6 +63,7 @@ public class DeleteWeeklyPlanTest {
         uc.login(dbq, scanner);
         WeeklyPlan test = new WeeklyPlan("testplan");
         boolean result = uc.getUser().removeWeeklyPlan(test);
-        assert(result == false);
+        assert (result == false);
     }
+
 }

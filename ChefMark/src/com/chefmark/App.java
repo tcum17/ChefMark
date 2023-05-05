@@ -886,14 +886,20 @@ public class App {
     private static void createCustomIngredient(Scanner sc, UserController uc, RecipeController RC, DBQuery dbq) throws SQLException
     {
         String backIngredient = "";
+        System.out.println("Create an Ingredient:\n");
                             
         while(!backIngredient.equals(BACK))
         {
-            System.out.println("Create an Ingredient:\n");
+            
             System.out.println("Please enter a Name for the ingredient or type back to return to the menu: ");
             String ingredientName = sc.nextLine();
             if(ingredientName.equals(BACK)){
                 backIngredient = ingredientName;
+            }
+            else if(ingredientName.equals(""))
+            {
+                System.out.println("You did not enter a name for the ingredient");
+                System.out.println();
             }
             else{
             System.out.println("Please enter a number quantity of your ingredient: ");
