@@ -6,7 +6,6 @@ public class User {
     private String username;
     private String password;
     private String email = "";
-    private ArrayList<Recipe> favoriteRecipes = new ArrayList<>();
     private ArrayList<Recipe> recipeHistory = new ArrayList<>();
     private Pantry pantry = new Pantry();
     private ArrayList<WeeklyPlan> weeklyPlans = new ArrayList<>();
@@ -31,10 +30,6 @@ public class User {
 
     public String getEmail() {
         return email;
-    }
-
-    public ArrayList<Recipe> getFavoriteRecipes() {
-        return favoriteRecipes;
     }
 
     public ArrayList<Recipe> getRecipeHistory() {
@@ -63,10 +58,6 @@ public class User {
 
     public void setUser(String username) {
         this.username = username;
-    }
-
-    public void setFavorites(ArrayList<Recipe> favoriteRecipes) {
-        this.favoriteRecipes = favoriteRecipes;
     }
 
     public void setWeeklyPlans(ArrayList<WeeklyPlan> weeklyPlans)
@@ -200,17 +191,5 @@ public class User {
                 recipeHistory.remove(recipeHistory.size()-1);
             }
         }
-    }
-
-    public void addToFavoriteRecipes(Recipe recipe){
-
-        for(int i = 0; i < favoriteRecipes.size(); i++)
-        {
-            if(recipe.name.equalsIgnoreCase(favoriteRecipes.get(i).getName()))
-            {
-                return;
-            }
-        }
-        favoriteRecipes.add(recipe);
     }
 }
