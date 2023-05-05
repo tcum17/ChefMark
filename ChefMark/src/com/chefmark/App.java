@@ -20,6 +20,7 @@ public class App {
     private static final String SELECTION = "\n==== Enter your selection ====\n1 - Search\n2 - Create\n3 - Delete\n4 - View\n5 - quit";
     private static final String SEARCH_PROMPT = "=== SEARCH===\n1 - By Keyword\n2 - By Ingredient\n3 - By Pantry\n4 - By Calories\n5 - Random\n6 - Back";
     private static final String SEARCH_AGAIN = "Do you want to search for another recipe?\n1 - Yes\n2 - No";
+    private static final String SEARCH_PAGE_OPTIONS ="Search Options:\tPrevious page: 1\tNext page: 2\tView a recipe: 3\tQuit searching: 4";
     private static final String INGREDIENT_SEARCH_PROMPT = "Please enter the ingredients you would like to use in a recipe:\nEnter \"Remove\" to remove the previous ingredient\nEnter \"Stop\" to stop";
     private static final String CREATE_PROMPT = "\n==== What do you want to create? ====\n1 - Recipe\n2 - Ingredient\n3 - WeeklyPlan\n4 - RecipeList\n5 - Back";
     private static final String VIEW_PROMPT = "\n==== Enter your View selection ====\n1 - Recipe List\n2 - Pantry\n3 - Weekly Plan\n4 - History\n5 - Custom Recipes\n6 - Back";
@@ -40,9 +41,6 @@ public class App {
 
         Search searchAPI = new EdamamSearch();
 
-        System.out.println("Type \"Exssit\" to quit the program");
-
-        System.out.println("Type \"Exit\" to quit the program");
         dbq.connect();
         
         boolean signedIn = false;
@@ -296,7 +294,7 @@ public class App {
                     viewRecipe(ranRec, sc, uc, dbq);
                 }
                 else{
-                    System.out.println("You have no liked recipes to choose from!");
+                    System.out.println("You have no custom recipes to choose from!");
                 }
             }
             else if(randomInput.equals(TWO))
@@ -325,7 +323,7 @@ public class App {
     private static void searchLoop(Search searchAPI, Scanner sc, UserController uc, DBQuery dbq) throws SQLException {
         boolean searching = true;
         while (searching) {
-            System.out.println("Previous page: 1\tNext page: 2\tView a recipe: 3\tQuit searching: 4");
+            System.out.println(SEARCH_PAGE_OPTIONS);
             String searchPageInput = sc.nextLine();
             switch (searchPageInput) {
                 case ONE:
@@ -368,12 +366,14 @@ public class App {
                 switch (input) {
                     case ONE:
                         if(curRecipe != null){
+                            dbq.create(curRecipe, curUser);
                             curUser.addToRecipeHistory(curRecipe);
                             addRecipeToWeeklyPlan(sc, uc, curRecipe, dbq);
                         }else System.err.println("Error converting JSON to recipe, recipe=null");
                         break;
                     case TWO:
                         if(curRecipe != null){
+                            dbq.create(curRecipe, curUser);
                             curUser.addToRecipeHistory(curRecipe);
                             addRecipeToRecipeList(sc, uc, curRecipe, dbq);
                         }else System.err.println("Error converting JSON to recipe, recipe=null");
@@ -385,9 +385,12 @@ public class App {
                         }else System.err.println("Error converting JSON to recipe, recipe=null");
                         break;
                     case FOUR:
+                        dbq.create(curRecipe, curUser);
                         curUser.addCustomRecipe(curRecipe);
                         curUser.addToRecipeHistory(curRecipe);
                         changeRecipeServingSize(curRecipe, sc, uc, dbq);
+                        viewRecipe(curRecipe, sc, uc, dbq);
+                        viewingRecipe=false;
                         break;
                     case FIVE:
                         viewingRecipe=false;
@@ -605,8 +608,6 @@ public class App {
                         if(day.equals("Monday") || day.equals("Tuesday") || day.equals("Wednesday") || day.equals("Thursday") || day.equals("Friday") || day.equals("Saturday") || day.equals("Sunday"))
                         {
                             wp.addRecipeToWeeklyPlan(recipe, day);
-                            if (recipe.getSource()!=null)
-                                dbq.create(recipe, uc.getUser()); // from api
                             dbq.create(wp, recipe, uc.getUser(), day); // every recipe
                             back = true;
                         }
@@ -1173,11 +1174,13 @@ public class App {
                 if(recipeHis.size() == 0){
                     System.out.println("\nYou have no recipe history\n");
                 }else{
+                    System.out.println("\n=== Recipe History ===\n");
                     for(int i = recipeHis.size()-1; i >=0; i-- )
                     {
                         
                         System.out.println(i+1 + " " + recipeHis.get(i).getName()); 
                     }
+                    System.out.println("\n===================\n");
                     System.out.println("What do you want to do?\n1 - View Recipe\n2 - back");
                     String historyInput = "";
                     boolean goodInput = false;
@@ -1262,15 +1265,18 @@ public class App {
             String input = sc.nextLine();
             switch (input) {
             case ONE:
+                if(recipe.getSource() != null) dbq.create(recipe, uc.getUser());
                 addRecipeToWeeklyPlan(sc, uc, recipe, dbq);
                 break;
             case TWO:
+                if(recipe.getSource() != null) dbq.create(recipe, uc.getUser());
                 addRecipeToRecipeList(sc, uc, recipe, dbq);
                 break;
             case THREE:
                 userRecipeShare(sc, recipe, uc.getUser());
                 break;
             case FOUR:
+                if(recipe.getSource() != null) dbq.create(recipe, uc.getUser());
                 changeRecipeServingSize(recipe, sc, uc, dbq);
                 break;
             case FIVE:
