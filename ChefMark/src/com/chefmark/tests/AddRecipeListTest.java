@@ -11,4 +11,6 @@ import static org.junit.Assert.*;
 
 import chefmark.*;
 
-public class create
+public class AddRecipeListTest{
+
+}

@@ -5,6 +5,7 @@ import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.NoSuchElementException;
 import java.util.Scanner;
 import static org.junit.Assert.*;
 
@@ -88,13 +89,13 @@ public class LoginTest {
         assert(result==false);
     }
 
-    @Test
-    public void testLoginInvalidPasswordFirstTime() throws SQLException {
+    @Test (expected = NoSuchElementException.class)
+    public void testLoginInvalidPasswordFirstTimeAndSecond() throws SQLException {
         DBConnection dbc = DBConnFactory.getDBConnection(DBConnFactory.DBConnType.MYSQL);
         DBQuery dbq = new MySQLQuery(dbc); // MySQL DBQuery implementation using MySQL Database
         dbq.connect();
         // Create a fake input stream with username and password
-        String input = "newuser1\nabc\nCreate1@2\n";
+        String input = "newuser1\nabc\nCreate1\n";
         InputStream in = new ByteArrayInputStream(input.getBytes());
 
         // Create a scanner to read from the fake input stream
@@ -105,5 +106,47 @@ public class LoginTest {
         boolean result = uc.login(dbq, scanner);
         dbq.disconnect();
         assert(result==false);
+    }
+
+    
+    @Test (expected = NoSuchElementException.class)
+    public void testLoginNoInput() throws SQLException {
+        DBConnection dbc = DBConnFactory.getDBConnection(DBConnFactory.DBConnType.MYSQL);
+        DBQuery dbq = new MySQLQuery(dbc); // MySQL DBQuery implementation using MySQL Database
+        dbq.connect();
+        // Create a fake input stream with username and password
+        String input = "\n\n\n";
+        InputStream in = new ByteArrayInputStream(input.getBytes());
+
+        // Create a scanner to read from the fake input stream
+        Scanner scanner = new Scanner(in);
+
+        // Call the login method and verify that it returns true
+        UserController uc = new UserController();
+        boolean result = uc.login(dbq, scanner);
+        dbq.disconnect();
+        assert(result==false);
+    }
+
+    @Test
+    public void testLoginNewAccountNoInformation() throws SQLException {
+        DBConnection dbc = DBConnFactory.getDBConnection(DBConnFactory.DBConnType.MYSQL);
+        DBQuery dbq = new MySQLQuery(dbc); // MySQL DBQuery implementation using MySQL Database
+        dbq.connect();
+        // Create a fake input stream with username and password
+        String input = "newuser4\nCreate1@1\n";
+        InputStream in = new ByteArrayInputStream(input.getBytes());
+
+        // Create a scanner to read from the fake input stream
+        Scanner scanner = new Scanner(in);
+
+        // Call the login method and verify that it returns true
+        UserController uc = new UserController();
+        boolean result = uc.login(dbq, scanner);
+        User user = uc.getUser();
+        if (user.getCustomRecipeList().equals(null) && user.getRecipeHistory().equals(null) && user.getWeeklyPlans().equals(null) && user.getRecipeLists().equals(null))
+            result=true;
+        dbq.disconnect();
+        assert(result==true);
     }
 }
