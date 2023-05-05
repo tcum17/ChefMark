@@ -393,6 +393,7 @@ public class App {
                         curUser.addCustomRecipe(curRecipe);
                         curUser.addToRecipeHistory(curRecipe);
                         changeRecipeServingSize(curRecipe, sc, uc, dbq);
+                        dbq.update(curUser);
                         viewRecipe(curRecipe, sc, uc, dbq);
                         viewingRecipe=false;
                         break;
@@ -1280,7 +1281,11 @@ public class App {
                 userRecipeShare(sc, recipe, uc.getUser());
                 break;
             case FOUR:
-                if(recipe.getSource() != null) dbq.create(recipe, uc.getUser());
+                if(recipe.getSource() != null){
+                    dbq.create(recipe, uc.getUser());
+                    uc.getUser().addCustomRecipe(recipe);
+                    dbq.update(uc.getUser());
+                } 
                 changeRecipeServingSize(recipe, sc, uc, dbq);
                 break;
             case FIVE:
