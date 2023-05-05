@@ -1,6 +1,5 @@
 package chefmark;
 import java.util.Scanner;
-import org.json.simple.JSONObject;
 import org.json.simple.parser.ParseException;
 
 import java.io.IOException;
@@ -38,6 +37,8 @@ public class App {
         
         UserController uc = new UserController();
         RecipeController RC = new RecipeController();
+
+        Search searchAPI = new EdamamSearch();
 
         System.out.println("Type \"Exssit\" to quit the program");
         dbq.connect();
@@ -82,15 +83,15 @@ public class App {
                     System.out.println(SEARCH_PROMPT); // search for a recipe
                     searchInput = sc.nextLine();
                     if (searchInput.equals(ONE)) {
-                        keywordSearch(sc, uc, dbq);
+                        keywordSearch(searchAPI,sc, uc, dbq);
                     } else if (searchInput.equals(TWO)) {
-                        ingredientSearch(sc, uc, dbq);
+                        ingredientSearch(searchAPI,sc, uc, dbq);
                     } else if (searchInput.equals(THREE)) {
-                        pantrySearch(sc, uc, dbq);
+                        pantrySearch(searchAPI,sc, uc, dbq);
                     } else if (searchInput.equals(FOUR)) {
-                        calorieSearch(sc, uc, dbq);
+                        calorieSearch(searchAPI,sc, uc, dbq);
                     } else if (searchInput.equals(FIVE)) {
-                        randomSearch(sc, uc, dbq);
+                        randomSearch(searchAPI,sc, uc, dbq);
                     } else if (searchInput.equals(SIX)) {
                         searchInput = SIX;
                     } else {
@@ -120,15 +121,15 @@ public class App {
         }
     }
 
-    private static void keywordSearch(Scanner sc, UserController uc, DBQuery dbq) throws SQLException, ParseException, IOException{
+    private static void keywordSearch(Search searchAPI, Scanner sc, UserController uc, DBQuery dbq) throws SQLException, ParseException, IOException{
         boolean searchAgain = true;
         final String KEYWORD_SEARCH_PROMPT = "Please enter the keyword(s) you would like to search by: ";
         while(searchAgain)
         {
             System.out.printf(KEYWORD_SEARCH_PROMPT);
             String searchInput = sc.nextLine();
-            boolean searchSuccess = Search.keywordSearch(searchInput);
-            if(searchSuccess) searchLoop(sc,uc,dbq);
+            boolean searchSuccess = searchAPI.keywordSearch(searchInput);
+            if(searchSuccess) searchLoop(searchAPI, sc,uc,dbq);
             
             System.out.println(SEARCH_AGAIN);
             String researchInput = sc.nextLine();
@@ -139,7 +140,7 @@ public class App {
         }
     }
 
-    private static void ingredientSearch(Scanner sc, UserController uc, DBQuery dbq) throws SQLException, ParseException, IOException{
+    private static void ingredientSearch(Search searchAPI, Scanner sc, UserController uc, DBQuery dbq) throws SQLException, ParseException, IOException{
         boolean searchAgain = true;
         
         while(searchAgain)
@@ -163,8 +164,8 @@ public class App {
             //search based on ingredients input
             String searchString = ingredients.toString(); //convert list to string
             searchString = searchString.substring(1, searchString.length()-1); //trim brackets off of the ressult
-            boolean searchSuccess = Search.keywordSearch(searchString);
-            if(searchSuccess) searchLoop(sc, uc, dbq);
+            boolean searchSuccess = searchAPI.keywordSearch(searchString);
+            if(searchSuccess) searchLoop(searchAPI, sc, uc, dbq);
             
             System.out.println(SEARCH_AGAIN);
             String researchInput = sc.nextLine();
@@ -175,7 +176,7 @@ public class App {
         }
     }
 
-    private static void pantrySearch(Scanner sc, UserController uc, DBQuery dbq) throws SQLException, ParseException, IOException{
+    private static void pantrySearch(Search searchAPI, Scanner sc, UserController uc, DBQuery dbq) throws SQLException, ParseException, IOException{
         boolean searchAgain = true;
         while(searchAgain)
         {
@@ -202,8 +203,8 @@ public class App {
             //search based on all ingredients inputted
             String searchString = pickedIngredients.toString(); //convert list to string
             searchString = searchString.substring(1, searchString.length()-1); //trim brackets off of the ressult
-            boolean searchSuccess = Search.keywordSearch(searchString);
-            if(searchSuccess) searchLoop(sc, uc, dbq);
+            boolean searchSuccess = searchAPI.keywordSearch(searchString);
+            if(searchSuccess) searchLoop(searchAPI, sc, uc, dbq);
             
             System.out.println(SEARCH_AGAIN);
             String researchInput = sc.nextLine();
@@ -214,7 +215,7 @@ public class App {
         }          
     }
 
-    private static void calorieSearch(Scanner sc, UserController uc, DBQuery dbq) throws SQLException, ParseException, IOException{
+    private static void calorieSearch(Search searchAPI, Scanner sc, UserController uc, DBQuery dbq) throws SQLException, ParseException, IOException{
         boolean searchAgain = true;
         while(searchAgain)
         {
@@ -265,8 +266,8 @@ public class App {
             }
             System.out.println("Your calorie range is " + calorieInputLow + " to " + calorieInputHigh);
             //search based on the calorie range
-            boolean searchSuccess = Search.calorieSearch(calorieInputLow, calorieInputHigh);
-            if(searchSuccess) searchLoop(sc, uc, dbq);
+            boolean searchSuccess = searchAPI.calorieSearch(calorieInputLow, calorieInputHigh);
+            if(searchSuccess) searchLoop(searchAPI, sc, uc, dbq);
 
             System.out.println(SEARCH_AGAIN);
             String researchInput = sc.nextLine();
@@ -277,7 +278,7 @@ public class App {
         }
     }
 
-    private static void randomSearch(Scanner sc, UserController uc, DBQuery dbq) throws SQLException, ParseException, IOException{
+    private static void randomSearch(Search searchAPI, Scanner sc, UserController uc, DBQuery dbq) throws SQLException, ParseException, IOException{
         boolean searchAgain = true;
         while(searchAgain)
         {
@@ -299,10 +300,9 @@ public class App {
             else if(randomInput.equals(TWO))
             {
                 //grab random recipe
-                JSONObject JSONRecipe = Search.randomSearch(); //Changed to get single recipe
+                Recipe ranRec = searchAPI.randomSearch(); //Changed to get single recipe
 
-                if(JSONRecipe != null){
-                    Recipe ranRec = Recipe.JSONToRecipe(JSONRecipe);
+                if(ranRec != null){
                     viewRecipe(ranRec, sc, uc, dbq);
                 } 
             }
@@ -320,7 +320,7 @@ public class App {
         }
     }
     
-    private static void searchLoop(Scanner sc, UserController uc, DBQuery dbq) throws SQLException {
+    private static void searchLoop(Search searchAPI, Scanner sc, UserController uc, DBQuery dbq) throws SQLException {
         boolean searching = true;
         while (searching) {
             System.out.println("Previous page: 1\tNext page: 2\tView a recipe: 3\tQuit searching: 4");
@@ -328,14 +328,14 @@ public class App {
             switch (searchPageInput) {
                 case ONE:
                     System.out.printf(".....");
-                    Search.previousPage();
+                    searchAPI.previousPage();
                     break;
                 case TWO:
                     System.out.printf(".....");
-                    Search.nextPage();
+                    searchAPI.nextPage();
                     break;
                 case THREE:
-                    viewRecipeFromSearch(sc, uc, dbq);
+                    viewRecipeFromSearch(searchAPI, sc, uc, dbq);
                     break;
                 case FOUR:
                     searching = false;
@@ -348,20 +348,19 @@ public class App {
         }
     }
     
-    private static void viewRecipeFromSearch(Scanner sc, UserController uc, DBQuery dbq) throws SQLException {
+    private static void viewRecipeFromSearch(Search searchAPI, Scanner sc, UserController uc, DBQuery dbq) throws SQLException {
         System.out.printf("Enter a recipe index to view the recipe with that index: ");
         String input = sc.nextLine();
         
         try {
             int pageIndex = Integer.parseInt(input);
-            Search.viewRecipe(pageIndex);
-            JSONObject recipeJSON = Search.getCurRecipe();
+            searchAPI.viewRecipe(pageIndex);
             boolean viewingRecipe = true;
             while (viewingRecipe) {
                 System.out.println(VIEW_RECIPE_OPTIONS);
                 input = sc.nextLine();
                 Recipe curRecipe = null;
-                curRecipe = Recipe.JSONToRecipe(recipeJSON);
+                curRecipe = searchAPI.getCurRecipe();
                 curRecipe.setName(curRecipe.getName().replaceAll("'", ""));
                 User curUser = uc.getUser();
                 switch (input) {
