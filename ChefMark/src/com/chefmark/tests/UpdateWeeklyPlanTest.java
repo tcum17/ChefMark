@@ -14,8 +14,7 @@ import chefmark.*;
 public class UpdateWeeklyPlanTest{
 
     @Test
-    public void updateTestReg(){
-        String listName = "TestList";
+    public void updateTestReg() throws SQLException{
         DBConnection dbc = DBConnFactory.getDBConnection(DBConnFactory.DBConnType.MYSQL);
         DBQuery dbq = new MySQLQuery(dbc); // MySQL DBQuery implementation using MySQL Database
         dbq.connect();
@@ -23,6 +22,7 @@ public class UpdateWeeklyPlanTest{
         String input = "testuser\nCreate1@1\n";
         InputStream in = new ByteArrayInputStream(input.getBytes());
 
+        WeeklyPlan testPlan = new WeeklyPlan("test plan");
         // Create a scanner to read from the fake input stream
         Scanner scanner = new Scanner(in);
     }
