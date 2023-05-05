@@ -181,8 +181,10 @@ public class User {
             Recipe curRecipe = recipeHistory.get(i);
             if (curRecipe.getName().equals(recipe.getName())) {
                 
-                i=recipeHistory.size();
                 alreadyExists=true;
+                recipeHistory.remove(i);
+                addToRecipeHistory(recipe);
+                break;
             }
         }
         if (alreadyExists==false) {

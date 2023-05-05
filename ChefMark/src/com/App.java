@@ -1094,6 +1094,7 @@ public class App {
                     input = sc.nextLine();
                     if(input.equalsIgnoreCase("Next"))
                     {
+                        updateAgain = false;
                         continue;
                     }
                     else{
@@ -1104,13 +1105,17 @@ public class App {
                             try
                             {
                                 quantity = Float.parseFloat(input);
+                                hasFloat = true;
+                                temp.setQuantity(quantity);
                             }
                             catch(NumberFormatException e)
                             {
                                 System.out.println(RETRY);
+                                input = sc.nextLine();
                             }
-                            hasFloat = true;
-                            temp.setQuantity(quantity);
+                            
+                            
+                            
                         }
                     }
                     System.out.println("The Ingredient's current units are \"" + temp.getMeasure() + "\"\nEnter a new unit or \"Next\" to keep the old one");
@@ -1118,6 +1123,7 @@ public class App {
                     input = sc.nextLine();
                     if(input.equalsIgnoreCase("Next"))
                     {
+                        updateAgain = false;
                         continue;
                     }
                     else{
@@ -1169,11 +1175,11 @@ public class App {
                 if(recipeHis.size() == 0){
                     System.out.println("\nYou have no recipe history\n");
                 }else{
-                    int counter = 0;
-                    for(Recipe x : recipeHis)
+                    
+                    for(int i = recipeHis.size()-1; i >=0; i-- )
                     {
-                        counter++;
-                        System.out.println(counter + " " + x.getName()); 
+                        
+                        System.out.println(i + 1 + " " + recipeHis.get(i).getName()); 
                     }
                     System.out.println("What do you want to do?\n1 - View Recipe\n2 - back");
                     String historyInput = "";
