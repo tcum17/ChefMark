@@ -1,10 +1,6 @@
 package chefmark.tests;
 
-import org.junit.Before;
 import org.junit.Test;
-
-import static org.junit.Assert.*;
-
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.sql.SQLException;
@@ -18,7 +14,6 @@ class CreateWeeklyPlanTest
     public static void createWeeklyPlan(Scanner sc, UserController uc, RecipeController RC, DBQuery dbq) throws SQLException
     {   String BACK = "back";
         String backWeeklyPlan = "";
-        WeeklyPlan plan = new WeeklyPlan();
         while (!backWeeklyPlan.equals(BACK)) {
             System.out.println("Welcome to create a weekly plan");
             System.out.println("Please name your weekly plan or type back to return to the menu:");
@@ -110,7 +105,7 @@ class CreateWeeklyPlanTest
         dbq.deleteWeeklyPlan(myPlan, uc.getUser());
 
         dbq.disconnect();
-        assert(result==true);
+        assert (result==true);
     } 
 
     @Test

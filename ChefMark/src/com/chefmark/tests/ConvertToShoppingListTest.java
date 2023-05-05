@@ -2,7 +2,6 @@ package chefmark.tests;
 
 import chefmark.*;
 import org.junit.Test;
-import static org.junit.Assert.*;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.sql.SQLException;
@@ -37,7 +36,7 @@ public class ConvertToShoppingListTest {
 
         ArrayList<String> result = ShoppingListConverter.convertToShoppingList(wp, uc.getUser().getPantry());
         dbq.disconnect();
-        assert (result.get(0).substring(0, 14).equals(test.get(0).substring(0, 14)));
+        assert(result.get(0).substring(0, 14).equals(test.get(0).substring(0, 14)));
 
     }
 }

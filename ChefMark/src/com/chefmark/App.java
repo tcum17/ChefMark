@@ -582,7 +582,7 @@ public class App {
     }
 
     //Provides user the ability to add recipe to a weekly plan or a recipe list
-    private static void addRecipe(Scanner sc, UserController uc, Recipe recipe, DBQuery dbq) throws SQLException {
+    public static void addRecipe(Scanner sc, UserController uc, Recipe recipe, DBQuery dbq) throws SQLException {
         System.out.println("\nWhere do you want to add the recipe?\n");
         String location = "";
         

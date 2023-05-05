@@ -1,9 +1,6 @@
 package chefmark.tests;
-
-import org.junit.Before;
 import org.junit.Test;
 
-import static org.junit.Assert.*;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
@@ -116,8 +113,7 @@ public class CreateIngredientTest{
         ResultSet rs = dbq.read(ingredient, uc.getUser());
         if (rs.next())
             result = true;
-        if (rs==null)
-            result =false;
+    
 
         
         dbq.delete(ingredient, uc.getUser());

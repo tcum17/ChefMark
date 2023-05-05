@@ -1,15 +1,12 @@
 package chefmark.tests;
-
-import org.junit.Before;
 import org.junit.Test;
 
-import static org.junit.Assert.*;
+
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.sql.SQLException;
 import java.util.Scanner;
-import java.util.ArrayList;
 import java.sql.ResultSet;
 
 import chefmark.*;

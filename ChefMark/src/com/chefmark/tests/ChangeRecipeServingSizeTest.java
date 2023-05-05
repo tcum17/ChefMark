@@ -2,7 +2,6 @@ package chefmark.tests;
 
 import chefmark.*;
 import org.junit.Test;
-import static org.junit.Assert.*;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.sql.SQLException;
@@ -101,8 +100,9 @@ public class ChangeRecipeServingSizeTest {
 
 
         dbq.delete(testRec, uc.getUser());
+        assert (result == true);
         dbq.disconnect();
-        assert(result = true);
+        
 
     }
 }

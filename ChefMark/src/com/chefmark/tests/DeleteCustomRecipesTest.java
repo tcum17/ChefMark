@@ -5,9 +5,7 @@ import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.NoSuchElementException;
 import java.util.Scanner;
-import static org.junit.Assert.*;
 import java.util.ArrayList;
 
 import chefmark.*;
@@ -49,7 +47,7 @@ public class DeleteCustomRecipesTest{
 
         // Call the login method and verify that it returns true
         UserController uc = new UserController();
-        RecipeController rc = new RecipeController();
+      
 
         //User user = new User("testuser", "Create1@1", "");
         uc.createUser("newuser2", "Create1@1", "");

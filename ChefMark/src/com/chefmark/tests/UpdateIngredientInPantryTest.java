@@ -5,9 +5,7 @@ import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.NoSuchElementException;
 import java.util.Scanner;
-import static org.junit.Assert.*;
 
 import chefmark.*;
 
@@ -111,8 +109,6 @@ public class UpdateIngredientInPantryTest
         DBConnection dbc = DBConnFactory.getDBConnection(DBConnFactory.DBConnType.MYSQL);
         DBQuery dbq = new MySQLQuery(dbc); // MySQL DBQuery implementation using MySQL Database
         dbq.connect();
-
-        String testName = "test";
         // Create a fake input stream with username and password
         String input = "testuser\nCreate1@1\n";
         InputStream in = new ByteArrayInputStream(input.getBytes());
@@ -171,7 +167,6 @@ public class UpdateIngredientInPantryTest
         DBQuery dbq = new MySQLQuery(dbc); // MySQL DBQuery implementation using MySQL Database
         dbq.connect();
 
-        String testName = "test";
         // Create a fake input stream with username and password
         String input = "testuser\nCreate1@1\n";
         InputStream in = new ByteArrayInputStream(input.getBytes());
@@ -198,7 +193,6 @@ public class UpdateIngredientInPantryTest
         boolean result = false;
         input = "Carrots\nCool Carrots\n2\nLBS\n2\n";
         in = new ByteArrayInputStream(input.getBytes());
-        scanner = new Scanner(in);
 
         updateIngredientInPantry(uc, scanner, dbq);
 
@@ -229,7 +223,6 @@ public class UpdateIngredientInPantryTest
         DBQuery dbq = new MySQLQuery(dbc); // MySQL DBQuery implementation using MySQL Database
         dbq.connect();
 
-        String testName = "test";
         // Create a fake input stream with username and password
         String input = "testuser\nCreate1@1\n";
         InputStream in = new ByteArrayInputStream(input.getBytes());
@@ -257,7 +250,6 @@ public class UpdateIngredientInPantryTest
         boolean result = false;
         input = "Car\nCarrots\nCool Carrots\n2\nLBS\n2\n";
         in = new ByteArrayInputStream(input.getBytes());
-        scanner = new Scanner(in);
 
         Ingredient newIngred = uc.getUser().getPantry().search("Cool Carrots");
 
@@ -287,7 +279,6 @@ public class UpdateIngredientInPantryTest
         DBQuery dbq = new MySQLQuery(dbc); // MySQL DBQuery implementation using MySQL Database
         dbq.connect();
 
-        String testName = "test";
         // Create a fake input stream with username and password
         String input = "testuser\nCreate1@1\n";
         InputStream in = new ByteArrayInputStream(input.getBytes());
@@ -316,7 +307,6 @@ public class UpdateIngredientInPantryTest
         boolean result = false;
         input = "Carrots\nCool Carrots\nas\n2\nLBS\n2\n";
         in = new ByteArrayInputStream(input.getBytes());
-        scanner = new Scanner(in);
 
         Ingredient newIngred = uc.getUser().getPantry().search("Cool Carrots");
 

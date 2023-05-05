@@ -1,6 +1,4 @@
 package chefmark;
-
-import java.sql.SQLClientInfoException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Scanner;

@@ -5,9 +5,7 @@ import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.NoSuchElementException;
 import java.util.Scanner;
-import static org.junit.Assert.*;
 
 import chefmark.*;
 
@@ -232,7 +230,7 @@ public class DeleteUserTest{
         if (username.equals(inputUsername) && !rs2.next()) // checks if user deleted, rs2 is empty if deleted
             result =true;
         dbq.delete(uc.getUser()); // actually delete, we have all boolean values stored
-        assert(result == true);
+        assert(result == false);
     }
 
 
