@@ -356,10 +356,30 @@ public class MySQLQuery extends DBQuery{
         String cautions = RecipeController.arrayListToText(recipe.getInstructions().getCautions());
         String dishType = RecipeController.arrayListToText(recipe.getRecipeDescriptors().getDishType());
         String mealType = RecipeController.arrayListToText(recipe.getRecipeDescriptors().getMealType());
-        statement.execute("UPDATE RECIPE SET recipeName = '" + recipe.getName() + "', url = '" + recipe.getURL() + "', source = '" + recipe.getSource() + "', ingredients = '" + ingredients + 
-        "', totalWeight = " + recipe.getTotalWeight() + ", dietLabels = '" + dietLabels + "', healthLabels = '" + healthLabels + "', calories = " + calories + 
-        ", glycemicIndex = " + glycemicIndex + ", yield = " + recipeYield + ", instructions = '" + instructions + "', cautions = '" + cautions + "', dishType = '" + dishType + 
-        "', mealType = '" + mealType + "', isCustom = " + recipe.getIsCustom() + " where username='" + user.getUsername() + "' and recipeName='" + recipe.getName() + "'");
+        String query="UPDATE RECIPE SET recipeName = ?, url = ?, source = ?, ingredients = ? totalWeight = ?, dietLabels = ?, healthLabels = ?, calories = ?, glycemicIndex = ?, yield = ?, instructions = ?, cautions = ?, dishType = ?, mealType = ?, isCustom = ? where username=? and recipeName=?";
+        PreparedStatement statement = connection.prepareStatement(query);
+        statement.setString(1, recipe.getName());
+        statement.setString(2, recipe.getURL());
+        statement.setString(3, recipe.getSource());
+        statement.setString(4, ingredients);
+        statement.setDouble(5, recipe.getTotalWeight());
+        statement.setString(6, dietLabels);
+        statement.setString(7, healthLabels);
+        statement.setDouble(8, calories);
+        statement.setDouble(9, glycemicIndex);
+        statement.setDouble(10, recipeYield);
+        statement.setString(11, instructions);
+        statement.setString(12, cautions);
+        statement.setString(13, dishType);
+        statement.setString(14, mealType);
+        statement.setInt(15, recipe.getIsCustom());
+        statement.setString(16, recipe.getName());
+        statement.setString(17, user.getUsername());
+        statement.execute();
+        // statement.execute("UPDATE RECIPE SET recipeName = '" + recipe.getName() + "', url = '" + recipe.getURL() + "', source = '" + recipe.getSource() + "', ingredients = '" + ingredients + 
+        // "', totalWeight = " + recipe.getTotalWeight() + ", dietLabels = '" + dietLabels + "', healthLabels = '" + healthLabels + "', calories = " + calories + 
+        // ", glycemicIndex = " + glycemicIndex + ", yield = " + recipeYield + ", instructions = '" + instructions + "', cautions = '" + cautions + "', dishType = '" + dishType + 
+        // "', mealType = '" + mealType + "', isCustom = " + recipe.getIsCustom() + " where username='" + user.getUsername() + "' and recipeName='" + recipe.getName() + "'");
     }
 
     public void createCustomRecipe(Recipe recipe, User user) throws SQLException {
