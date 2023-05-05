@@ -9,14 +9,15 @@ import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.sql.SQLException;
 import java.util.Scanner;
+import java.util.ArrayList;
+import java.sql.ResultSet;
 
 import chefmark.*;
 
+
 public class CreateRecipeListTest 
 {
-    
-
-    public static RecipeList createRecipeList(Scanner sc, UserController uc, RecipeController RC, DBQuery dbq) throws SQLException
+    public static void createRecipeList(Scanner sc, UserController uc, RecipeController RC, DBQuery dbq) throws SQLException
     {
         String BACK="back";
         String backRecipeList = "";
@@ -27,7 +28,6 @@ public class CreateRecipeListTest
             String recipeListName = sc.nextLine();
             if(recipeListName.equals(BACK)){
                 backRecipeList = recipeListName;
-                return newRecipeList;
             }
             else{
                 newRecipeList.setName(recipeListName);
@@ -36,45 +36,71 @@ public class CreateRecipeListTest
                 //db write
                 dbq.create(newRecipeList, uc.getUser());
                 backRecipeList = BACK;
-                return newRecipeList;
+                newRecipeList.setName(recipeListName);
             }
         }
-        return newRecipeList;
     }
-}
 
-class tester
-{
-//TODO
     @Test
     public void createRecipeListNormal() throws SQLException {
         DBConnection dbc = DBConnFactory.getDBConnection(DBConnFactory.DBConnType.MYSQL);
         DBQuery dbq = new MySQLQuery(dbc); // MySQL DBQuery implementation using MySQL Database
         dbq.connect();
-        
-        String input = "water\n5\ncups\nchicken\n2\npounds\ndone\nmix the chicken and water\nheat in the microwave\ndone\n2\n";
+        String input = "recipe list 1\n";
         InputStream in = new ByteArrayInputStream(input.getBytes());
-        // Create a scanner to read from the fake input stream
+        
         Scanner scanner = new Scanner(in);
         UserController uc = new UserController();
         uc.createUser("newuser1", "Create1@1", "");
 
         RecipeController rc = new RecipeController();
-        String recipeName = "chicken noodle soup";
-        RecipeList recipeList = CreateRecipeListTest.createRecipeList(scanner, uc, rc, dbq);
+        
+        CreateRecipeListTest.createRecipeList(scanner, uc, rc, dbq);
 
-        boolean result = false;
-        // if(recipe!=null)
-        // {
-        //     result = true;
-        // }
-        // dbq.delete(recipe, uc.getUser());
+        RecipeList myList = uc.getUser().getRecipeListByName("recipe list 1");
+
+        boolean result =false;
+        ResultSet rs = dbq.read(myList, uc.getUser());
+        if (rs.next())
+            result = true;
+        if (myList==null)
+            result =false;
+
+        dbq.delete(myList, uc.getUser());
+
+        dbq.disconnect();
+        assert(result==true);
+    }
+
+    @Test
+    public void createRecipeListNoNameGiven() throws SQLException {
+        DBConnection dbc = DBConnFactory.getDBConnection(DBConnFactory.DBConnType.MYSQL);
+        DBQuery dbq = new MySQLQuery(dbc); // MySQL DBQuery implementation using MySQL Database
+        dbq.connect();
+        String input = "\nrecipe list 1";
+        InputStream in = new ByteArrayInputStream(input.getBytes());
+        
+        Scanner scanner = new Scanner(in);
+        UserController uc = new UserController();
+        uc.createUser("newuser1", "Create1@1", "");
+
+        RecipeController rc = new RecipeController();
+        
+        CreateRecipeListTest.createRecipeList(scanner, uc, rc, dbq);
+
+        RecipeList myList = uc.getUser().getRecipeListByName("recipe list 1");
+
+        boolean result =false;
+        ResultSet rs = dbq.read(myList, uc.getUser());
+        if (rs.next())
+            result = true;
+        if (myList==null)
+            result =false;
+
+        dbq.delete(myList, uc.getUser());
 
         dbq.disconnect();
         assert(result==true);
 
-
-    }
-
-    
+    } 
 }
