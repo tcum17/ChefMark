@@ -219,7 +219,7 @@ private static Pattern emailRegex = Pattern.compile("^[A-Za-z0-9+_.-]+@(.+)$"); 
                 }
                 else {
                     System.out.println("Enter your new email");
-                    email = validatePassword(sc);
+                    email = validateEmail(sc);
                 }
                 user.setEmail(email);
                 user.setPassword(password);
@@ -332,7 +332,7 @@ private static Pattern emailRegex = Pattern.compile("^[A-Za-z0-9+_.-]+@(.+)$"); 
                     "Email is in invalid form. Make sure you are properly formatting your @ and including the .<domain> (ex: chefmark@gmail.com)");
             System.out.println("\nEnter your email: ");
             email = sc.nextLine();
-            emailMatch = passwordRegex.matcher(email);
+            emailMatch = emailRegex.matcher(email);
         }
         return email;
     }

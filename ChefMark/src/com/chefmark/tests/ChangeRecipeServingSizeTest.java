@@ -8,6 +8,7 @@ import java.io.InputStream;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Scanner;
+import java.sql.ResultSet;
 
 public class ChangeRecipeServingSizeTest {
     
@@ -35,7 +36,7 @@ public class ChangeRecipeServingSizeTest {
 
 
     @Test
-    public void ChangeRecipeServingSizeTest() throws SQLException {
+    public void ChangeRecipeServingSizeTestRegular() throws SQLException {
         DBConnection dbc = DBConnFactory.getDBConnection(DBConnFactory.DBConnType.MYSQL);
         DBQuery dbq = new MySQLQuery(dbc);
         dbq.connect();
@@ -78,16 +79,28 @@ public class ChangeRecipeServingSizeTest {
         {
             uc.getUser().getCustomRecipeList().add(0,testRec);
         }
-
-
+        dbq.create(testRec, uc.getUser());
         boolean result = false;
-
-        String input2 = "";
-
+        String input2 = "4\n";
+        in = new ByteArrayInputStream(input2.getBytes());
+        scanner = new Scanner(in);
         changeRecipeServingSize(testRec, scanner, uc, dbq);
-        
+        ResultSet rs = dbq.read(testRec, uc.getUser());
+        String name = rs.getString(2);
+        String dbIngred = rs.getString(5);
+        float quant1 = Float.parseFloat(dbIngred.substring(0, dbIngred.indexOf(" ")));
+        dbIngred = dbIngred.substring(dbIngred.indexOf("|"));
+        float quant2 = Float.parseFloat(dbIngred.substring(0, dbIngred.indexOf(" ")));
+        if(testRec.getName().equals("Chicken Soup") && testRec.getIngredients().get(0).getQuantity() == 16 && testRec.getIngredients().get(1).getQuantity() == 2000)
+        {
+            if(name.equals("Chicken Soup") && quant1 == 16 &&  quant2 == 2000)
+            {
+                result = true;
+            }
+        }
 
-        
+
+        dbq.delete(testRec, uc.getUser());
         dbq.disconnect();
         assert(result = true);
 
