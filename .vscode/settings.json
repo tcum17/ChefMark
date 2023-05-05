@@ -5,6 +5,8 @@
         "ChefMark/lib/javax.mail.jar",
         "ChefMark/lib/activation.jar",
         "ChefMark/lib/javax.mail-api-1.6.2.jar",
-        "ChefMark/lib/json-simple-1.1.1.jar"
+        "ChefMark/lib/json-simple-1.1.1.jar",
+        "ChefMark/lib/hamcrest-core-1.3.jar",
+        "ChefMark/lib/junit-4.13.2.jar"
     ]
 }
