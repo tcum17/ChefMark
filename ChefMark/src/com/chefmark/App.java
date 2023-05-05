@@ -26,7 +26,7 @@ public class App {
     private static final String CREATE_PROMPT = "\n==== What do you want to create? ====\n1 - Recipe\n2 - Ingredient\n3 - WeeklyPlan\n4 - RecipeList\n5 - Back";
     private static final String VIEW_PROMPT = "\n==== Enter your View selection ====\n1 - Recipe List\n2 - Pantry\n3 - Weekly Plan\n4 - History\n5 - Custom Recipes\n6 - Back";
     private static final String VIEW_RECIPE_OPTIONS = "What do you want to do with this recipe:\n1 - Add to weekly plan"+
-    "\n2 - Add to Recipe List\n3 - Add to favorite recipes\n4 - Share\n5 - Change recipe serving sizes\n6 - Back";
+    "\n2 - Add to Recipe List\n3 - Share\n4 - Change recipe serving sizes\n5 - Back";
     private static final String ONE = "1", TWO = "2", THREE = "3", FOUR = "4", FIVE = "5", SIX = "6";
     private static final String INVALID_SELECT = "Please enter a valid choice\n";
     private static final String STOP = "Stop", REMOVE = "Remove", BACK = "back";
@@ -282,15 +282,15 @@ public class App {
         boolean searchAgain = true;
         while(searchAgain)
         {
-            System.out.println("Do you want a random recipe from your favorite recipes or recipes from all the recipes\n1 - Favorite Recipes\n2 - All Recipes");
+            System.out.println("Do you want a random recipe from your custom recipes or recipes from all the recipes\n1 - Custom Recipes\n2 - All Recipes");
             String randomInput = sc.nextLine();
             if(randomInput.equals(ONE))
             {
-                int size = uc.getUser().getFavoriteRecipes().size();
+                int size = uc.getUser().getCustomRecipeList().size();
                 if(size != 0)
                 {
                     int ranRecipe = (int) Math.random() * size;
-                    Recipe ranRec = uc.getUser().getFavoriteRecipes().get(ranRecipe);
+                    Recipe ranRec = uc.getUser().getCustomRecipeList().get(ranRecipe);
                     viewRecipe(ranRec, sc, uc, dbq);
                 }
                 else{
@@ -368,26 +368,28 @@ public class App {
                 switch (input) {
                     case ONE:
                         if(curRecipe != null){
+                            curUser.addToRecipeHistory(curRecipe);
                             addRecipeToWeeklyPlan(sc, uc, curRecipe, dbq);
                         }else System.err.println("Error converting JSON to recipe, recipe=null");
                         break;
                     case TWO:
                         if(curRecipe != null){
+                            curUser.addToRecipeHistory(curRecipe);
                             addRecipeToRecipeList(sc, uc, curRecipe, dbq);
                         }else System.err.println("Error converting JSON to recipe, recipe=null");
                         break;
                     case THREE:
-                        uc.getUser().addToFavoriteRecipes(curRecipe);
-                        break;
-                    case FOUR:
                         if(curRecipe != null){
+                            curUser.addToRecipeHistory(curRecipe);
                             userRecipeShare(sc, curRecipe, curUser);
                         }else System.err.println("Error converting JSON to recipe, recipe=null");
                         break;
-                    case FIVE:
+                    case FOUR:
+                        curUser.addCustomRecipe(curRecipe);
+                        curUser.addToRecipeHistory(curRecipe);
                         changeRecipeServingSize(curRecipe, sc, uc, dbq);
                         break;
-                    case SIX:
+                    case FIVE:
                         viewingRecipe=false;
                         break;
                     default:
@@ -1266,16 +1268,12 @@ public class App {
                 addRecipeToRecipeList(sc, uc, recipe, dbq);
                 break;
             case THREE:
-                uc.getUser().addToFavoriteRecipes(recipe);
-                System.out.println("Added recipe to your favorite recipes");
-                break;
-            case FOUR:
                 userRecipeShare(sc, recipe, uc.getUser());
                 break;
-            case FIVE:
+            case FOUR:
                 changeRecipeServingSize(recipe, sc, uc, dbq);
                 break;
-            case SIX:
+            case FIVE:
                 done = true;
                 break;
             default:
