@@ -64,6 +64,15 @@ public class MySQLQuery extends DBQuery{
         statement.execute();
     }
 
+    public void updateIsCustomRecipe(Recipe recipe, User user) throws SQLException {
+        String query = "UPDATE RECIPE SET isCustom=? WHERE RECIPENAME=? and USERNAME=?";
+        PreparedStatement statement = connection.prepareStatement(query);
+        statement.setInt(1, recipe.getIsCustom());
+        statement.setString(2, recipe.getName());
+        statement.setString(3, user.getUsername());
+        statement.execute();
+    }
+
     public void deleteFromWeeklyPlan(WeeklyPlan weeklyPlan, Recipe recipe, User user, String day) throws SQLException {
         String query = "DELETE WEEKLYPLANITEM FROM WEEKLYPLANITEM JOIN RECIPE ON WEEKLYPLANITEM.RECIPEID = RECIPE.RECIPEID WHERE WEEKLYPLANITEM.DAYOFWEEK = ? AND RECIPE.RECIPENAME = ? AND RECIPE.USERNAME = ?";
         PreparedStatement statement = connection.prepareStatement(query);
@@ -229,10 +238,6 @@ public class MySQLQuery extends DBQuery{
         }
     }
 
-    public void create(Recipe recipe) {
-
-    }
-
     public ResultSet populateWeeklyPlan(WeeklyPlan weeklyPlan, User user) throws SQLException {
         String query = "SELECT * FROM WEEKLYPLAN WHERE username=?";
         PreparedStatement statement = connection.prepareStatement(query);
@@ -246,7 +251,7 @@ public class MySQLQuery extends DBQuery{
     }
 
     public ResultSet populateCustomRecipe(Recipe recipe, User user) throws SQLException {
-        String query = "select distinct recipeName, url, source, ingredients, dietLabels, healthLabels, calories, instructions, cautions, recipe.username from recipe where recipe.username=? and recipe.source is null";
+        String query = "select distinct recipeName, url, source, ingredients, dietLabels, healthLabels, calories, instructions, cautions, recipe.username from recipe where recipe.username=? and recipe.isCustom = 1";
         PreparedStatement statement = connection.prepareStatement(query);
         statement.setString(1, user.getUsername());
         ResultSet rs = statement.executeQuery();
@@ -338,6 +343,23 @@ public class MySQLQuery extends DBQuery{
             //statement.execute("INSERT INTO RECIPE (recipeName, url, source, ingredients, totalWeight, dietLabels, healthLabels, calories, glycemicIndex, yield, instructions, cautions, username)" +
             //"values('" + recipe.getName() + "', '" + recipe.getURL() + "', '" + recipe.getSource() + "', '" + ingredients + "', " + recipe.getTotalWeight() + ", '" + dietLabels + "', '" + healthLabels + "', " + calories + ", " + glycemicIndex + ", " + recipeYield + ", '" + instructions + "', '" + cautions + "', '" + user.getUsername() + "')");
         }
+    }
+
+    public void update(Recipe recipe, User user) throws SQLException {
+        String ingredients = RecipeController.ingredientListToText(recipe.getIngredients());
+        String dietLabels = RecipeController.arrayListToText(recipe.getNutritionalFacts().getDietLables());
+        String healthLabels = RecipeController.arrayListToText(recipe.getNutritionalFacts().getHealthLables());
+        double calories = recipe.getNutritionalFacts().getCalories();
+        double glycemicIndex = recipe.getNutritionalFacts().getGlycemicIndex();
+        double recipeYield = recipe.getNutritionalFacts().getYeild();
+        String instructions = RecipeController.arrayListToText(recipe.getInstructions().getInstructions());
+        String cautions = RecipeController.arrayListToText(recipe.getInstructions().getCautions());
+        String dishType = RecipeController.arrayListToText(recipe.getRecipeDescriptors().getDishType());
+        String mealType = RecipeController.arrayListToText(recipe.getRecipeDescriptors().getMealType());
+        statement.execute("UPDATE RECIPE SET recipeName = '" + recipe.getName() + "', url = '" + recipe.getURL() + "', source = '" + recipe.getSource() + "', ingredients = '" + ingredients + 
+        "', totalWeight = " + recipe.getTotalWeight() + ", dietLabels = '" + dietLabels + "', healthLabels = '" + healthLabels + "', calories = " + calories + 
+        ", glycemicIndex = " + glycemicIndex + ", yield = " + recipeYield + ", instructions = '" + instructions + "', cautions = '" + cautions + "', dishType = '" + dishType + 
+        "', mealType = '" + mealType + "', isCustom = " + recipe.getIsCustom() + " where username='" + user.getUsername() + "' and recipeName='" + recipe.getName() + "'");
     }
 
     public void createCustomRecipe(Recipe recipe, User user) throws SQLException {

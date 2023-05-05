@@ -365,7 +365,7 @@ public class App {
                 input = sc.nextLine();
                 Recipe curRecipe = null;
                 curRecipe = searchAPI.getCurRecipe();
-                curRecipe.setName(curRecipe.getName().replaceAll("'", ""));
+                if(curRecipe != null) curRecipe.setName(curRecipe.getName().replaceAll("'", ""));
                 User curUser = uc.getUser();
                 switch (input) {
                     case ONE:
@@ -389,13 +389,14 @@ public class App {
                         }else System.err.println("Error converting JSON to recipe, recipe=null");
                         break;
                     case FOUR:
-                        dbq.create(curRecipe, curUser);
-                        curUser.addCustomRecipe(curRecipe);
-                        curUser.addToRecipeHistory(curRecipe);
-                        changeRecipeServingSize(curRecipe, sc, uc, dbq);
-                        dbq.update(curUser);
-                        viewRecipe(curRecipe, sc, uc, dbq);
-                        viewingRecipe=false;
+                        if(curRecipe != null){
+                            dbq.create(curRecipe, curUser);
+                            curUser.addCustomRecipe(curRecipe);
+                            curUser.addToRecipeHistory(curRecipe);
+                            changeRecipeServingSize(curRecipe, sc, uc, dbq);
+                            viewRecipe(curRecipe, sc, uc, dbq);
+                            viewingRecipe=false;
+                        }else System.err.println("Error converting JSON to recipe, recipe=null");
                         break;
                     case FIVE:
                         viewingRecipe=false;
@@ -1250,7 +1251,9 @@ public class App {
             try {
                 double factor = Double.parseDouble(input);
                 recipe.changeServingSize(factor);
+                recipe.setCustom(1);
                 dbq.updateServingSize(recipe, uc.getUser());
+                dbq.updateIsCustomRecipe(recipe, uc.getUser());
                 System.out.println("Note that the recipe instructions will not contain updated ingredient amounts");
                 getInput = false;
             } catch (NumberFormatException e) {
@@ -1270,22 +1273,18 @@ public class App {
             String input = sc.nextLine();
             switch (input) {
             case ONE:
-                if(recipe.getSource() != null) dbq.create(recipe, uc.getUser());
+                if(recipe.getIsCustom() != 1) dbq.create(recipe, uc.getUser());
                 addRecipeToWeeklyPlan(sc, uc, recipe, dbq);
                 break;
             case TWO:
-                if(recipe.getSource() != null) dbq.create(recipe, uc.getUser());
+                if(recipe.getIsCustom() != 1) dbq.create(recipe, uc.getUser());
                 addRecipeToRecipeList(sc, uc, recipe, dbq);
                 break;
             case THREE:
                 userRecipeShare(sc, recipe, uc.getUser());
                 break;
             case FOUR:
-                if(recipe.getSource() != null){
-                    dbq.create(recipe, uc.getUser());
-                    uc.getUser().addCustomRecipe(recipe);
-                    dbq.update(uc.getUser());
-                } 
+                if(recipe.getIsCustom() != 1){} dbq.create(recipe, uc.getUser());
                 changeRecipeServingSize(recipe, sc, uc, dbq);
                 break;
             case FIVE:

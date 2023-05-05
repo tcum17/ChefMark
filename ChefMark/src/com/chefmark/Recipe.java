@@ -15,7 +15,7 @@ public class Recipe {
     Instructions instructions = new Instructions();
     NutritionalFacts nutritionalFacts;
     ArrayList<String> ingredientLines = new ArrayList<>();
-    boolean isCustom = false;
+    int isCustom = 0;
 
     public Recipe(){
         
@@ -86,6 +86,10 @@ public class Recipe {
         return nutritionalFacts;
     }
 
+    public int getIsCustom() {
+        return isCustom;
+    }
+
     public void setUri(String uri)
     {
         this.uri = uri; 
@@ -138,7 +142,7 @@ public class Recipe {
         this.nutritionalFacts = nutritionalFacts;
     }
 
-    public void setCustom(boolean b){
+    public void setCustom(int b){
         this.isCustom = b;
     }
 
@@ -262,7 +266,7 @@ public class Recipe {
             }
             result.setIngredientLines(newIngredientLines);
         }
-        
+        result.setCustom(0);
         return result;
     }
 
