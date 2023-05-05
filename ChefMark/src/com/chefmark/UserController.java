@@ -11,6 +11,7 @@ public class UserController {
     .compile("^[a-zA-Z0-9]([._-](?![._-])|[a-zA-Z0-9]){3,18}[a-zA-Z0-9]$"); // username
 private static Pattern passwordRegex = Pattern
     .compile("^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=!])(?=[^\r\n\t\f ]+$).{8,}$"); // password
+private static Pattern emailRegex = Pattern.compile("^[A-Za-z0-9+_.-]+@(.+)$"); // email
 
     private User user;
 
@@ -218,7 +219,7 @@ private static Pattern passwordRegex = Pattern
                 }
                 else {
                     System.out.println("Enter your new email");
-                    email = sc.nextLine();
+                    email = validatePassword(sc);
                 }
                 user.setEmail(email);
                 user.setPassword(password);
@@ -266,15 +267,29 @@ private static Pattern passwordRegex = Pattern
         System.out.println("Enter your desired email: ");
         String email = sc.nextLine();
         ResultSet rs = dbq.read(new User(username, password, email));
-        if (rs.next()) {
-            while (username.equals(rs.getString(1))) {
+
+        boolean next;
+        if (rs.next())
+            next=true;
+        else {
+            next=false;
+        }
+        if (next) {
+            while (next==true) {
                 System.out.println("Username already taken. Please enter a new username: ");
                 username = validateUsername(sc);
                 //uc.getUser().setUser(username);
+                ResultSet rs2=dbq.read(new User(username, password, email));
+                if (rs2.next())
+                    next=true;
+                else {
+                    next=false;
+                }
             }
-            while (email.equals(rs.getString(3))) {
-                System.out.println("Email already taken. Please enter a new email: ");
-                email = sc.nextLine();
+            Matcher emailMatch = emailRegex.matcher(email);
+            while (!(emailMatch.matches())) {
+                System.out.println("Invalid email format. Please enter a new email: ");
+                email = validateEmail(sc);
             }
 
         }
@@ -307,5 +322,18 @@ private static Pattern passwordRegex = Pattern
             passwordMatch = passwordRegex.matcher(password);
         }
         return password;
+    }
+
+    public String validateEmail(Scanner sc) {
+        String email = sc.nextLine();
+        Matcher emailMatch = emailRegex.matcher(email);
+        while (!(emailMatch.matches())) {
+            System.out.println(
+                    "Email is in invalid form. Make sure you are properly formatting your @ and including the .<domain> (ex: chefmark@gmail.com)");
+            System.out.println("\nEnter your email: ");
+            email = sc.nextLine();
+            emailMatch = passwordRegex.matcher(email);
+        }
+        return email;
     }
 }

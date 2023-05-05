@@ -333,7 +333,7 @@ public class MySQLQuery extends DBQuery{
         String cautions = RecipeController.arrayListToText(recipe.getInstructions().getCautions());
         ResultSet rs = statement.executeQuery("SELECT RECIPEID FROM RECIPE WHERE RECIPENAME='" + recipe.getName() + "'");
         if (!rs.next()) {
-            String query = "INSERT INTO RECIPE (recipeName, url, source, ingredients, totalWeight, dietLabels, healthLabels, calories, glycemicIndex, yield, instructions, cautions, username) values(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            String query = "INSERT INTO RECIPE (recipeName, url, source, ingredients, totalWeight, dietLabels, healthLabels, calories, glycemicIndex, yield, instructions, cautions, username, isCustom) values(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
             PreparedStatement statement = connection.prepareStatement(query);
             statement.setString(1, recipe.getName());
             statement.setString(2, recipe.getURL());
@@ -348,6 +348,7 @@ public class MySQLQuery extends DBQuery{
             statement.setString(11, instructions);
             statement.setString(12, cautions);
             statement.setString(13, user.getUsername());
+            statement.setInt(14, 0);
             statement.execute();
             //statement.execute("INSERT INTO RECIPE (recipeName, url, source, ingredients, totalWeight, dietLabels, healthLabels, calories, glycemicIndex, yield, instructions, cautions, username)" +
             //"values('" + recipe.getName() + "', '" + recipe.getURL() + "', '" + recipe.getSource() + "', '" + ingredients + "', " + recipe.getTotalWeight() + ", '" + dietLabels + "', '" + healthLabels + "', " + calories + ", " + glycemicIndex + ", " + recipeYield + ", '" + instructions + "', '" + cautions + "', '" + user.getUsername() + "')");
@@ -398,12 +399,14 @@ public class MySQLQuery extends DBQuery{
         statement1.setString(2, user.getUsername());
         ResultSet rs = statement1.executeQuery();
         if (!rs.next()) { // The recipe does not exist
-            String query = "INSERT INTO RECIPE (recipeName, ingredients, instructions, username) values(?, ?, ?, ?)";
+            String query = "INSERT INTO RECIPE (recipeName, ingredients, instructions, username, rating, isCustom) values(?, ?, ?, ?, ?, ?)";
             PreparedStatement statement = connection.prepareStatement(query);
             statement.setString(1, recipe.getName());
             statement.setString(2, RecipeController.ingredientListToText(recipe.getIngredients()));
             statement.setString(3, RecipeController.arrayListToText(recipe.getInstructions().getInstructions()));
             statement.setString(4, user.getUsername());
+            statement.setInt(5, recipe.getRating().getRating());
+            statement.setInt(6, 1);
             statement.execute();
         } else {
             System.out.println("It looks like this recipe already exists.");
@@ -411,7 +414,14 @@ public class MySQLQuery extends DBQuery{
     }
 
     public ResultSet read(Recipe recipe, User user) throws SQLException {
-        return statement.executeQuery("SELECT recipeId, recipeName, url, source, ingredients, totalWeight, dietLabels, healthLabels, calories, glycemicIndex, yield, instructions, cautions, username from RECIPE where username='" + user.getUsername() + "' and recipeName='" + recipe.getName() + "'");
+        String query = "SELECT recipeId, recipeName, url, source, ingredients, totalWeight, dietLabels, healthLabels, calories, glycemicIndex, yield, instructions, cautions, username from RECIPE where username=? and recipeName=?";
+        //return statement.executeQuery("SELECT recipeId, recipeName, url, source, ingredients, totalWeight, dietLabels, healthLabels, calories, glycemicIndex, yield, instructions, cautions, username from RECIPE where username='" + user.getUsername() + "' and recipeName='" + recipe.getName() + "'");
+        PreparedStatement statement = connection.prepareStatement(query);
+        statement.setString(1, user.getUsername());
+        statement.setString(2, recipe.getName());
+        return statement.executeQuery();
+    
+    
     }
 
     public void delete(Recipe recipe, User user) throws SQLException {

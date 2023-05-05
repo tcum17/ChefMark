@@ -126,9 +126,9 @@ public class RecipeController {
         }
         while(!done3)
         {
-            System.out.println("You can add a rating 1-5 or type -1 to skip");
+            System.out.println("You can add a rating (\"0\" for bad, \"1\" for good) or type -1 to skip");
             String rating = sc.nextLine();
-            if(rating.equals("1") ||rating.equals("2")|| rating.equals("3")|| rating.equals("4")|| rating.equals("5"))
+            if(rating.equals("1") ||rating.equals("2")|| rating.equals("-1"))
             {
                 int ratingAsAnInt = Integer.parseInt(rating);
                 rate.changeRating(ratingAsAnInt);
