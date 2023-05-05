@@ -41,6 +41,8 @@ public class App {
         Search searchAPI = new EdamamSearch();
 
         System.out.println("Type \"Exssit\" to quit the program");
+
+        System.out.println("Type \"Exit\" to quit the program");
         dbq.connect();
         
         boolean signedIn = false;
