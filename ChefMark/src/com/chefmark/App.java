@@ -915,10 +915,13 @@ public class App {
     private static void createWeeklyPlan(Scanner sc, UserController uc, RecipeController RC, DBQuery dbq) throws SQLException
     {
         String backWeeklyPlan = "";
+        
+        System.out.println("Welcome to create a weekly plan");
+        System.out.println();
         while (!backWeeklyPlan.equals(BACK)) {
-            System.out.println("Welcome to create a weekly plan");
             System.out.println("Please name your weekly plan or type back to return to the menu:");
             String weeklyPlanName = sc.nextLine();
+            System.out.println();
             if(weeklyPlanName.equals(BACK)){
                 backWeeklyPlan = weeklyPlanName;
             }
@@ -941,8 +944,9 @@ public class App {
                     uc.getUser().addWeeklyPlan(newWeeklyPlan);
                     System.out.println("Your weekly plan called " + weeklyPlanName + " has been created");
                     dbq.create(newWeeklyPlan, uc.getUser());
+                    backWeeklyPlan = BACK;
                 }
-                backWeeklyPlan = BACK;
+                
             }
         }
     }
