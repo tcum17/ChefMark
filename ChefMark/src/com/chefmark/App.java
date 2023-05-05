@@ -952,6 +952,11 @@ public class App {
             if(recipeListName.equals(BACK)){
                 backRecipeList = recipeListName;
             }
+            else if(recipeListName.equals(""))
+            {
+                System.out.println("You did not enter anything for the recipe list name");
+                System.out.println();
+            }
             else{
                 RecipeList newRecipeList = new RecipeList();
                 newRecipeList.setName(recipeListName);
