@@ -11,9 +11,9 @@ import static org.junit.Assert.*;
 
 import chefmark.*;
 
-public class rateRecipeTest {
+public class RateRecipeTest {
     @Test
-    public void testRateRecipe() throws SQLExceptio n{
+    public void testRateRecipe() throws SQLException{
         DBConnection dbc = DBConnFactory.getDBConnection(DBConnFactory.DBConnType.MYSQL);
         DBQuery dbq = new MySQLQuery(dbc); // MySQL DBQuery implementation using MySQL Database
         dbq.connect();
@@ -26,9 +26,34 @@ public class rateRecipeTest {
 
         // Call the login method and verify that it returns true
         UserController uc = new UserController();
-        boolean result = uc.login(dbq, scanner);
+        uc.login(dbq, scanner);
+
+        //Creating temporary rating and recipe objects
+        Recipe testRecipe = new Recipe();
+        Rating testRating = new Rating();
+        int ratingVal = 5;
+
+        //Changing test rating value
+        testRating.changeRating(ratingVal);
+
+        //Booleans for ensuring rating changes effectively
+        Boolean firstResult = false;
+        Boolean secondResult = false;
+
+        //Checking to ensure recipe rating is not already at 5
+        if(testRecipe.getRating() != testRating){
+            firstResult = true;
+        }
+
+        //Changing recipe rating
+        testRecipe.setRating(testRating);
+        
+        if(testRecipe.getRating() == testRating){
+            secondResult = true;
+        }
+        
         dbq.disconnect();
-        assert(result==false);
+        assert(firstResult == true && secondResult == true);
     }
     
 }

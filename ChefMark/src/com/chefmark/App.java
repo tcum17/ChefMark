@@ -846,7 +846,8 @@ public class App {
         String recipeName = sc.nextLine();
         if(recipeName.equals(BACK)){
           return;
-        } else {
+        }
+        else {
             uc.getUser().addCustomRecipe(RC.createRecipe(recipeName, sc, uc, dbq));
         }
     } 

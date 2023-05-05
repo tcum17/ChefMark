@@ -29,23 +29,29 @@ public class UpdateWeeklyPlanTest{
         Scanner scanner = new Scanner(in);
 
         
-
+        //Logging in to test user
         UserController uc = new UserController();
         uc.login(dbq, scanner);
+
+        //Temp weeklyplan and recipe to be added to user
         WeeklyPlan testPlan = new WeeklyPlan(testName);
         Recipe testRecipe = new Recipe();
 
+        //Add temp plan
         uc.getUser().addWeeklyPlan(testPlan);
 
+        //Method returns true if recipe added successfully
         Boolean result = uc.getUser().getWeeklyPlanByName(testName).addRecipeToWeeklyPlan(testRecipe, "Monday");
 
+        //Removing wekly plan
         uc.getUser().removeWeeklyPlan(testPlan);
-        assert(result == true);
 
+        dbq.disconnect();
+        assert(result == true);
     }
 
     @Test
-    public void updateTestRecipeRemoval() throws SQLException{
+    public void updateTestRenaming() throws SQLException{
         DBConnection dbc = DBConnFactory.getDBConnection(DBConnFactory.DBConnType.MYSQL);
         DBQuery dbq = new MySQLQuery(dbc); // MySQL DBQuery implementation using MySQL Database
         dbq.connect();
@@ -79,12 +85,39 @@ public class UpdateWeeklyPlanTest{
         }
 
          uc.getUser().removeWeeklyPlan(uc.getUser().getWeeklyPlanByName(newTestName));
-        
+        dbq.disconnect();
         assert(result == true);
     }
 
     @Test
-    public void updateTestRecipeRenaming() throws SQLException{
-            
+    public void updateTestRecipeRemoving() throws SQLException{
+        DBConnection dbc = DBConnFactory.getDBConnection(DBConnFactory.DBConnType.MYSQL);
+        DBQuery dbq = new MySQLQuery(dbc); // MySQL DBQuery implementation using MySQL Database
+        dbq.connect();
+
+        String testName = "test";
+        // Create a fake input stream with username and password
+        String input = "testuser\nCreate1@1\n";
+        InputStream in = new ByteArrayInputStream(input.getBytes());
+
+
+        // Create a scanner to read from the fake input stream
+        Scanner scanner = new Scanner(in);
+
+        //Logging in to test account
+        UserController uc = new UserController();
+        uc.login(dbq, scanner);
+
+        //Test plan and recipe
+        WeeklyPlan testPlan = new WeeklyPlan(testName);
+
+        //Add new weekly plan to test user
+        uc.getUser().addWeeklyPlan(testPlan);
+
+        //Weeekly plan returns true if successfully removed
+        Boolean result = uc.getUser().removeWeeklyPlan(testPlan);
+
+        dbq.disconnect();
+        assert(result == true);
     }
 }
