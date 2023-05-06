@@ -5,6 +5,11 @@ import java.util.Scanner;
 
 public class RecipeController {
     
+    /**
+     * Converts an array list into text
+     * @param arrayList
+     * @return returns constructed string
+     */
     public static String arrayListToText(ArrayList<String> arrayList) {
         String returnString = "";
         for (int i = 0; i < arrayList.size(); i++) {
@@ -13,6 +18,11 @@ public class RecipeController {
         return returnString;
     }
 
+    /**
+     * converts ingredient list into string
+     * @param arrayList
+     * @return returns constructed string
+     */
     public static String ingredientListToText(ArrayList<Ingredient> arrayList) {
         String returnString = "";
         for (int i = 0; i < arrayList.size(); i++) {
@@ -22,6 +32,11 @@ public class RecipeController {
         return returnString;
     }
 
+    /**
+     * converts a string to an array that is split by | 
+     * @param text
+     * @return an arraylist that has parsed teh strings apart
+     */
     public static ArrayList<String> textToArrayList(String text) {
         ArrayList<String> returnList = new ArrayList<>();
         if (text!=null)
@@ -36,6 +51,11 @@ public class RecipeController {
         return returnList;
     }
 
+    /**
+     * Converts String version of ingredient list to array list
+     * @param text
+     * @return returns newly constructed array list
+     */
     public static ArrayList<Ingredient> textToIngredientList(String text) {
         ArrayList<Ingredient> returnList = new ArrayList<>();
         String[] splitString = text.split("\\|");
@@ -52,6 +72,15 @@ public class RecipeController {
         return returnList;
     }
 
+    /**
+     * Creates a recipe
+     * @param recipeName
+     * @param sc
+     * @param uc
+     * @param dbq
+     * @return returns the created recipe
+     * @throws SQLException
+     */
     public Recipe createRecipe(String recipeName, Scanner sc, UserController uc, DBQuery dbq) throws SQLException
     {
         Recipe newRecipe = new Recipe();

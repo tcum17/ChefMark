@@ -14,10 +14,17 @@ public class MySQLQuery extends DBQuery{
     private Connection connection;
     private Statement statement;
 
+    /**
+     * Sets up connection
+     * @param dbConnection Database connection
+     */
     public MySQLQuery(DBConnection dbConnection) {
         this.dbConnection = dbConnection;
     }
 
+    /**
+     * Connects to database
+     */
     public void connect() throws SQLException {
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
@@ -35,11 +42,20 @@ public class MySQLQuery extends DBQuery{
         statement = connection.createStatement();
     }
 
+    /**
+     * Creates a user
+     * @param user User
+     */
     public void create(User user) throws SQLException {
         //String query = "INSERT INTO USER VALUES('" + user.getUsername() + "', '" + user.getPassword() + "', '" + user.getEmail() + "'";
         statement.execute("INSERT INTO USER VALUES('" + user.getUsername() + "', '" + user.getPassword() + "', '" + user.getEmail() + "', '', '')");
     }
 
+    /**
+     * Reads user from the database
+     * @param user
+     * @return ResultSet result set containing the user's info
+     */
     public ResultSet read(User user) throws SQLException {
         String query = "SELECT * FROM USER WHERE USERNAME=?";
         PreparedStatement statement = connection.prepareStatement(query);
@@ -49,6 +65,10 @@ public class MySQLQuery extends DBQuery{
         // return executeQuery("SELECT * FROM USER WHERE USERNAME = '" + username + "'");
     }
 
+    /**
+     * Updates user in the databse
+     * @param user
+     */
     public void update(User user) throws SQLException {
         String query = "UPDATE USER SET userPassword=?, EMAIL=? WHERE USERNAME=?";
         PreparedStatement statement = connection.prepareStatement(query);
@@ -58,6 +78,11 @@ public class MySQLQuery extends DBQuery{
         statement.execute();
     }
 
+    /**
+     * Updates a recipe's serving size in database
+     * @param recipe recipe
+     * @param user user
+     */
     public void updateServingSize(Recipe recipe, User user) throws SQLException {
         String query = "UPDATE RECIPE SET INGREDIENTS=?,TOTALWEIGHT=? WHERE RECIPENAME=? and USERNAME=?";
         PreparedStatement statement = connection.prepareStatement(query);
@@ -68,6 +93,11 @@ public class MySQLQuery extends DBQuery{
         statement.execute();
     }
 
+    /**
+     * updates the custom recipe
+     * @param recipe recipe
+     * @param user user
+     */
     public void updateIsCustomRecipe(Recipe recipe, User user) throws SQLException {
         String query = "UPDATE RECIPE SET isCustom=? WHERE RECIPENAME=? and USERNAME=?";
         PreparedStatement statement = connection.prepareStatement(query);
@@ -77,6 +107,13 @@ public class MySQLQuery extends DBQuery{
         statement.execute();
     }
 
+    /**
+     * deletes a recipe from the weekly plan
+     * @param WeeklyPlan weekly plan deleting from
+     * @param Recipe what recipe deleting
+     * @param User what user deleting from
+     * @param day what day deleting from
+     */
     public void deleteFromWeeklyPlan(WeeklyPlan weeklyPlan, Recipe recipe, User user, String day) throws SQLException {
         String query = "DELETE WEEKLYPLANITEM FROM WEEKLYPLANITEM JOIN RECIPE ON WEEKLYPLANITEM.RECIPEID = RECIPE.RECIPEID WHERE WEEKLYPLANITEM.DAYOFWEEK = ? AND RECIPE.RECIPENAME = ? AND RECIPE.USERNAME = ?";
         PreparedStatement statement = connection.prepareStatement(query);
@@ -86,6 +123,12 @@ public class MySQLQuery extends DBQuery{
         statement.execute();
     }
 
+    /**
+     * gets the recipe list
+     * @param recipeList recpie list
+     * @param user user
+     * @return result set of get list ID
+     */
     public ResultSet getRecipeListId(RecipeList recipeList, User user) throws SQLException {
         String query="SELECT RECIPELISTID FROM RECIPELIST,USER WHERE RECIPELIST.USERNAME=USER.USERNAME AND RECIPELIST.USERNAME=? AND RECIPELISTNAME=?";
         PreparedStatement statement = connection.prepareStatement(query);
@@ -94,6 +137,12 @@ public class MySQLQuery extends DBQuery{
         return statement.executeQuery();
     }
 
+    /**
+     * Fetches a weekly plan's id from the database
+     * @param weeklyPlan
+     * @param user
+     * @return ResultSet result set containing the Weekly Plan's ID
+     */
     public ResultSet getWeeklyPlanId(WeeklyPlan weeklyPlan, User user) throws SQLException {
         String query = "SELECT WEEKLYPLANID FROM WEEKLYPLAN WHERE WEEKLYPLAN.USERNAME=? AND NAME=?";
         PreparedStatement statement = connection.prepareStatement(query);
@@ -102,6 +151,12 @@ public class MySQLQuery extends DBQuery{
         return statement.executeQuery();
     }
 
+    /**
+     * updtae the weekly plan
+     * @param WeeklyPlan weeklyplan
+     * @param user user 
+     * @param weeklyPlanId weekly 
+     */
     public void update (WeeklyPlan weeklyPlan, User user, int weeklyPlanId) throws SQLException {
         String query = "UPDATE WEEKLYPLAN,USER SET NAME=? WHERE WEEKLYPLAN.USERNAME=USER.USERNAME AND USER.USERNAME=? AND WEEKLYPLANID=?";
         PreparedStatement statement = connection.prepareStatement(query);
@@ -111,6 +166,12 @@ public class MySQLQuery extends DBQuery{
         statement.execute();
     }
 
+    /**
+     * Updates a user's recipe list
+     * @param recipeList recipe list object
+     * @param user user object
+     * @param recipeListId recipe list id
+     */
     public void update(RecipeList recipeList, User user, int recipeListId) throws SQLException {
         String query = "UPDATE RECIPELIST,USER SET RECIPELISTNAME=? WHERE RECIPELIST.USERNAME=USER.USERNAME AND USER.USERNAME=? AND RECIPELISTID=?";
         PreparedStatement statement = connection.prepareStatement(query);
@@ -120,6 +181,10 @@ public class MySQLQuery extends DBQuery{
         statement.execute();
     }
 
+    /**
+     * Deletes the user in the database
+     * @param user user object
+     */
     public void delete(User user) throws SQLException {
         delete(user.getPantry(), user);
         //for (int i = 0; i < user.getWeeklyPlans().size(); i++) {
@@ -135,6 +200,12 @@ public class MySQLQuery extends DBQuery{
         statement.execute();
     }
 
+    /**
+     * Deletes a recipe list from the user in the database
+     * @param RecipeList
+     * @param User
+     * 
+     */
     public void delete(RecipeList recipeList, User user) throws SQLException {
         String query = "DELETE FROM recipelistitem WHERE recipelistid IN (SELECT recipelistid FROM recipelist WHERE username=?)";
         PreparedStatement statement = connection.prepareStatement(query);
@@ -146,6 +217,11 @@ public class MySQLQuery extends DBQuery{
         statement.execute();
     }
 
+    /**
+     * Deletes recipe list in database
+     * @param recipeList recipe list
+     * @param user user object
+     */
     public void deleteRecipeList(RecipeList recipeList, User user) throws SQLException {
         String query = "DELETE FROM recipelistitem WHERE recipelistid IN (SELECT recipelistid FROM recipelist WHERE username=?)";
         PreparedStatement statement = connection.prepareStatement(query);
@@ -158,6 +234,13 @@ public class MySQLQuery extends DBQuery{
         statement.execute();
     }
 
+    /**
+     * Deletes a recipe list from database
+     * @param RecipList
+     * @param Recipe 
+     * @param user
+     * 
+     */
     public void deleteRecipeListItem(RecipeList recipeList, Recipe recipe, User user) throws SQLException {
         String query = "DELETE FROM recipelistitem WHERE recipeid IN (SELECT recipeid FROM recipe WHERE recipename = ? AND username = ?) AND recipelistid IN (SELECT recipelistid FROM recipelist WHERE recipelistname = ? AND username = ?)";
         PreparedStatement statement = connection.prepareStatement(query);
@@ -168,6 +251,11 @@ public class MySQLQuery extends DBQuery{
         statement.execute();
     }
 
+    /**
+     * Deletes all instances of a recipe from the user's database
+     * @param recipe recipe
+     * @param user user object
+     */
     public void deleteAllRecipe(Recipe recipe, User user) throws SQLException {
         String query = "DELETE FROM RECIPE WHERE USERNAME=?";
         PreparedStatement statement = connection.prepareStatement(query);
@@ -175,6 +263,12 @@ public class MySQLQuery extends DBQuery{
         statement.execute();
     }
 
+    /**
+     * Deletes from the weekly plan from database
+     * @param weeklyPlan weekly plan 
+     * @param user user
+     * @throws SQLException
+     */
     public void delete(WeeklyPlan weeklyPlan, User user) throws SQLException {
         String query = "DELETE FROM weeklyplanitem WHERE weeklyplanid = (SELECT weeklyplanid FROM weeklyplan WHERE username = ? AND name = ?)";
         PreparedStatement statement = connection.prepareStatement(query);
@@ -187,7 +281,11 @@ public class MySQLQuery extends DBQuery{
         statement.execute();
     }
 
-
+    /**
+     * Deletes weekly plan from the database
+     * @param weeklyPlan
+     * @param user
+     */
     public void deleteWeeklyPlan(WeeklyPlan weeklyPlan, User user) throws SQLException {
         String query = "select weeklyplan.weeklyplanid from weeklyplanitem,weeklyplan where weeklyplan.weeklyplanid=weeklyplanitem.weeklyplanid and username=? and name=?";
         PreparedStatement statement = connection.prepareStatement(query);
@@ -207,6 +305,11 @@ public class MySQLQuery extends DBQuery{
         }
     }
 
+    /**
+     * Creates a pantry for user
+     * @param pantry pantry object
+     * @param user user object
+     */
     public void create(Pantry pantry, User user) throws SQLException {
         ResultSet rs = statement.executeQuery("SELECT * FROM PANTRY WHERE PANTRY.USERNAME = '" + user.getUsername() + "'");
         if (!rs.next())
@@ -216,31 +319,56 @@ public class MySQLQuery extends DBQuery{
         }
     }
 
+    /**
+     * Reads the user's pantry from the database
+     * @param pantry
+     * @param user
+     * @return returns a result set containing info about the user's pantry
+     */
     public ResultSet read(Pantry pantry, User user) throws SQLException {
         String username = user.getUsername();
         return executeQuery("select ingredientName, quantity, measure from ingredient,pantry,user where user.username=pantry.username and pantry.pantryID=ingredient.pantryID and user.username = '" + username + "'");
         //return executeQuery("SELECT PANTRYID, USER.USERNAME FROM PANTRY,USER WHERE PANTRY.USERNAME = USER.USERNAME AND USER.USERNAME='" + username + "'"); // not sure if this is ever needed
     }
 
+    /**
+     * reads the ingredient from the database
+     * @param Ingredient ingredient 
+     * @param User user
+     * @return Returns a result set containing info about the ingredient
+     */
     public ResultSet read(Ingredient ingredient, User user) throws SQLException {
         String username = user.getUsername();
         return executeQuery("SELECT INGREDIENTNAME, INGREDIENTID FROM INGREDIENT,USER,PANTRY WHERE USER.USERNAME = PANTRY.USERNAME AND PANTRY.PANTRYID = INGREDIENT.PANTRYID AND USER.USERNAME = '" + username + "' AND INGREDIENTNAME = '" + ingredient.getIngredientName() + "'");
     }
 
+    /**
+     * updates the ingredient in database
+     * @param ingredient ingredient
+     * @param user user 
+     */
     public void update(Ingredient ingredient, User user) throws SQLException {
         String username = user.getUsername();
         statement.execute("UPDATE INGREDIENT,USER,PANTRY SET INGREDIENTNAME = '" + ingredient.getIngredientName() + "', QUANTITY = " + ingredient.getQuantity() + ", MEASURE = '" + ingredient.getMeasure() + "' WHERE USER.USERNAME=PANTRY.USERNAME AND INGREDIENT.PANTRYID=PANTRY.PANTRYID AND USER.USERNAME='" + username + "' AND INGREDIENTID=" + Integer.parseInt(ingredient.getIngredientID()));
     }
 
+    /**
+     * Deletes an ingredient from the user's pantry in the database
+     * @param ingredient
+     * @param user
+     */
     public void delete(Ingredient ingredient, User user) throws SQLException {
         String username = user.getUsername();
         statement.execute("DELETE i FROM INGREDIENT i INNER JOIN PANTRY p ON i.PANTRYID = p.PANTRYID WHERE i.INGREDIENTNAME = '"+ ingredient.getIngredientName() + "' AND p.USERNAME = '" + username + "';");
     }
 
-    // public void update(Pantry pantry, User user) throws SQLException{
-    //     statement.execute("INSERT INTO PANTRY "); // maybe not needed
-    // }
-
+    
+    /**
+     * creates a pantry 
+     * @param pantry
+     * @param ingredient
+     * @param user
+     */
     public void create(Pantry pantry, Ingredient ingredient, User user) throws SQLException {
         ResultSet rs = statement.executeQuery("SELECT PANTRYID FROM PANTRY,USER WHERE PANTRY.USERNAME=USER.USERNAME AND USER.USERNAME = '" + user.getUsername() + "'");
         if (rs.next()) {
@@ -251,6 +379,12 @@ public class MySQLQuery extends DBQuery{
         }
     }
 
+    /**
+     * Populates the user's weekly plan
+     * @param weeklyPlan weeklyPlan
+     * @param user user
+     * @return returns the result set for weekly plan
+     */
     public ResultSet populateWeeklyPlan(WeeklyPlan weeklyPlan, User user) throws SQLException {
         String query = "SELECT * FROM WEEKLYPLAN WHERE username=?";
         PreparedStatement statement = connection.prepareStatement(query);
@@ -263,6 +397,12 @@ public class MySQLQuery extends DBQuery{
         return rs;
     }
 
+    /**
+     * Populates custom recipe in the database
+     * @param recipe recipe
+     * @param user user
+     * @return returns custom recipe
+     */
     public ResultSet populateCustomRecipe(Recipe recipe, User user) throws SQLException {
         String query = "select distinct recipeName, url, source, ingredients, dietLabels, healthLabels, calories, instructions, cautions, recipe.username from recipe where recipe.username=? and recipe.isCustom = 1";
         PreparedStatement statement = connection.prepareStatement(query);
@@ -271,14 +411,32 @@ public class MySQLQuery extends DBQuery{
         return rs;
     }
 
+    /**
+     * Reads a weekly plan from the database
+     * @param Weeklyplan weekly plan
+     * @param User user
+     * @return returns a result set with all the weekly plan info
+     */
     public ResultSet read(WeeklyPlan weeklyPlan, User user) throws SQLException {
         return statement.executeQuery("SELECT * FROM WEEKLYPLAN WHERE USERNAME='" + user.getUsername() + "' AND NAME='" + weeklyPlan.getName() + "'");
     }
 
+    /**
+     * Reads the list of recipes from a particular day in a weekly plan from the database
+     * @param weeklyPlan
+     * @param user
+     * @param day
+     * @return returns result set with all of the recipes and their info from the particular day in the weekly plan
+     */
     public ResultSet read(WeeklyPlan weeklyPlan, User user, String day) throws SQLException {
         return statement.executeQuery("select distinct recipeName, url, source, ingredients, dietLabels, healthLabels, calories, instructions, cautions, recipe.username from recipe,weeklyplan,weeklyplanitem where recipe.username=weeklyplan.username and weeklyplan.weeklyPlanid=weeklyplanitem.weeklyplanid and recipe.username='" + user.getUsername() + "' and dayOfWeek='" + day + "' and recipe.recipeID=weeklyplanitem.recipeid and weeklyPlan.name='" + weeklyPlan.getName() + "'");
     }
 
+    /**
+     * Creates a weekly plan in the database
+     * @param weeklyPlan weekly plan
+     * @param user user
+     */
     public void create(WeeklyPlan weeklyPlan, User user) throws SQLException {
         //check if it exists
         ResultSet rs = statement.executeQuery("SELECT WEEKLYPLANID FROM WEEKLYPLAN WHERE NAME='" + weeklyPlan.getName() + "' AND USERNAME = '" + user.getUsername() + "'");
@@ -293,6 +451,13 @@ public class MySQLQuery extends DBQuery{
         }
     }
 
+    /**
+     * Updates a weeklyplan  
+     * @param weeklyPlan
+     * @param recipe
+     * @param user
+     * @throws SQLException
+     */
     public void update(WeeklyPlan weeklyPlan, Recipe recipe, User user) throws SQLException {
         ResultSet rs = statement.executeQuery("SELECT WEEKLYPLANID FROM WEEKLYPLAN,USER WHERE WEEKLYPLANNAME='" + weeklyPlan.getName() + "' AND USERNAME = '" + user.getUsername() + "'");
         if (!rs.next()) {
@@ -308,6 +473,13 @@ public class MySQLQuery extends DBQuery{
         }
     }
 
+    /**
+     * Creates a recipe in the weekly plan on the specified day
+     * @param weeklyPlan
+     * @param recipe
+     * @param user
+     * @param day
+     */
     public void create(WeeklyPlan weeklyPlan, Recipe recipe, User user, String day) throws SQLException {
         //ResultSet rs = statement.executeQuery("SELECT WEEKLYPLANID FROM WEEKLYPLAN,USER WHERE NAME='" + weeklyPlan.getName() + "' AND USER.USERNAME = '" + user.getUsername() + "'");
         //if (!rs.next()) {
@@ -325,6 +497,12 @@ public class MySQLQuery extends DBQuery{
         //}
     }
 
+    /**
+     * creates recipe in the database
+     * @param recipe recipe
+     * @param user user
+     * 
+     */
     public void create(Recipe recipe, User user) throws SQLException {
         String ingredients = RecipeController.ingredientListToText(recipe.getIngredients());
         String dietLabels = RecipeController.arrayListToText(recipe.getNutritionalFacts().getDietLables());
@@ -354,11 +532,14 @@ public class MySQLQuery extends DBQuery{
             statement.setString(13, user.getUsername());
             statement.setInt(14, 0);
             statement.execute();
-            //statement.execute("INSERT INTO RECIPE (recipeName, url, source, ingredients, totalWeight, dietLabels, healthLabels, calories, glycemicIndex, yield, instructions, cautions, username)" +
-            //"values('" + recipe.getName() + "', '" + recipe.getURL() + "', '" + recipe.getSource() + "', '" + ingredients + "', " + recipe.getTotalWeight() + ", '" + dietLabels + "', '" + healthLabels + "', " + calories + ", " + glycemicIndex + ", " + recipeYield + ", '" + instructions + "', '" + cautions + "', '" + user.getUsername() + "')");
         }
     }
 
+    /**
+     * Updates a user's recipe
+     * @param recipe recipe
+     * @param user user
+     */
     public void update(Recipe recipe, User user) throws SQLException {
         String ingredients = RecipeController.ingredientListToText(recipe.getIngredients());
         String dietLabels = RecipeController.arrayListToText(recipe.getNutritionalFacts().getDietLables());
@@ -396,6 +577,11 @@ public class MySQLQuery extends DBQuery{
         // "', mealType = '" + mealType + "', isCustom = " + recipe.getIsCustom() + " where username='" + user.getUsername() + "' and recipeName='" + recipe.getName() + "'");
     }
 
+    /**
+     * Creates a custom recipe in the database
+     * @param recipe recipe
+     * @param user user
+     */
     public void createCustomRecipe(Recipe recipe, User user) throws SQLException {
         String query1 = "SELECT RECIPEID FROM RECIPE WHERE RECIPENAME=? AND USERNAME=?";
         PreparedStatement statement1 = connection.prepareStatement(query1);
@@ -417,6 +603,12 @@ public class MySQLQuery extends DBQuery{
         }
     }
 
+    /**
+     * retrieves the recipe information
+     * @param Recipe
+     * @param User
+     * @return returns a result set about the recipe information
+     */
     public ResultSet read(Recipe recipe, User user) throws SQLException {
         String query = "SELECT recipeId, recipeName, url, source, ingredients, totalWeight, dietLabels, healthLabels, calories, glycemicIndex, yield, instructions, cautions, username from RECIPE where username=? and recipeName=?";
         //return statement.executeQuery("SELECT recipeId, recipeName, url, source, ingredients, totalWeight, dietLabels, healthLabels, calories, glycemicIndex, yield, instructions, cautions, username from RECIPE where username='" + user.getUsername() + "' and recipeName='" + recipe.getName() + "'");
@@ -428,6 +620,12 @@ public class MySQLQuery extends DBQuery{
     
     }
 
+    /**
+     * Reads a recipe list from the database
+     * @param recipeList recipe list
+     * @param user user
+     * @return returns the result set containing info about the recipe list
+     */
     public ResultSet read(RecipeList recipeList, User user) throws SQLException {
         String query = "SELECT RECIPELISTID FROM RECIPELIST WHERE RECIPELISTNAME=? AND USERNAME=?";
         PreparedStatement statement = connection.prepareStatement(query);
@@ -436,6 +634,11 @@ public class MySQLQuery extends DBQuery{
         return statement.executeQuery();
     }
 
+    /**
+     * Deletes a recipe from the database
+     * @param recipe
+     * @param user
+     */
     public void delete(Recipe recipe, User user) throws SQLException {
         int weeklyPlanItemId = 0;
         String query = "SELECT WEEKLYPLANITEMID FROM WEEKLYPLANITEM,RECIPE WHERE WEEKLYPLANITEM.RECIPEID=RECIPE.RECIPEID AND RECIPE.recipename=? AND USERNAME=?";
@@ -470,6 +673,11 @@ public class MySQLQuery extends DBQuery{
         statement.execute();
     }
 
+    /**
+     * creates a recipe list in the database
+     * @param recipeList recipe list
+     * @param user user
+     */
     public void create(RecipeList recipeList, User user) throws SQLException {
         String query = "INSERT INTO RECIPELIST (RECIPELISTNAME, USERNAME) values(?, ?)";
         PreparedStatement statement = connection.prepareStatement(query);
@@ -478,6 +686,12 @@ public class MySQLQuery extends DBQuery{
         statement.execute();
     }
 
+    /**
+     * Populates the recipe list
+     * @param recipeList
+     * @param user
+     * @return returns a result set containing info about the populated recipelist
+     */
     public ResultSet populateRecipeList(RecipeList recipeList, User user) throws SQLException {
         //String query = "SELECT RECIPELISTNAME, recipeName, url, source, ingredients, totalWeight, dietLabels, healthLabels, calories, glycemicIndex, yield, instructions, cautions, username FROM RECIPELIST WHERE USERNAME=?";
         String query = "SELECT RECIPELISTNAME FROM RECIPELIST WHERE USERNAME=?";
@@ -486,6 +700,12 @@ public class MySQLQuery extends DBQuery{
         return statement.executeQuery();
     }
 
+    /**
+     * retrieves info on a recipe list
+     * @param RecipeList
+     * @param User
+     * @return returns a result set of information about a recipe list
+     */
     public ResultSet getRecipeLists(RecipeList recipeList, User user) throws SQLException {
         //String query = "SELECT recipeName, url, source, ingredients, totalWeight, dietLabels, healthLabels, calories, glycemicIndex, yield, instructions, cautions, username FROM RECIPELIST,recipelistitem,recipe WHERE recipelist.username=? and recipelistitem.recipelistid=recipelist.recipelistid and recipelistitem.recipeid=recipe.recipeid and RECIPELISTNAME=?";
         String query="select distinct recipeName, url, source, ingredients, dietLabels, healthLabels, calories, instructions, cautions, recipe.username FROM RECIPELIST,recipelistitem,recipe WHERE recipelist.username=? and recipelistitem.recipelistid=recipelist.recipelistid and recipelistitem.recipeid=recipe.recipeid and RECIPELISTNAME=?";
@@ -495,6 +715,12 @@ public class MySQLQuery extends DBQuery{
         return statement.executeQuery();
     }
 
+    /**
+     * Creates a recipe in the recipe list
+     * @param recipeList
+     * @param recipe
+     * @param user
+     */
     public void create(RecipeList recipeList, Recipe recipe, User user) throws SQLException {
 
         if (recipe.getSource()==null)
@@ -520,24 +746,12 @@ public class MySQLQuery extends DBQuery{
         }
     }
 
-    // String query = "SELECT * FROM WEEKLYPLAN WHERE weeklyplan.USERNAME=?";
-    // PreparedStatement statement = connection.prepareStatement(query);
-    // statement.setString(1, user.getUsername());
-    // ResultSet rs = statement.executeQuery();
-    // //ResultSet rs = statement.executeQuery("SELECT * FROM WEEKLYPLAN,USER WHERE user.username=weeklyplan.username and user.USERNAME='" + user.getUsername() + "'");
-    // if (rs.next()) {
-
-    // }
-    // return rs;
-
-    
-
-
-
+    /**
+     * Deletes user pantry
+     * @param pantry
+     * @param user
+     */
     public void delete(Pantry pantry, User user) throws SQLException {
-        // String username = user.getUsername();
-        // ResultSet rs = statement.executeQuery("select pantry.pantryID from pantry,user where pantry.username=user.username='" + username + "'");
-        // String pantryID = "";
         String query = "DELETE FROM ingredient WHERE pantryid IN (SELECT pantryid FROM pantry WHERE username=?)";
         PreparedStatement statement = connection.prepareStatement(query);
         statement.setString(1, user.getUsername());
@@ -546,22 +760,21 @@ public class MySQLQuery extends DBQuery{
         statement = connection.prepareStatement(query);
         statement.setString(1, user.getUsername());
         statement.execute();
-        // if (rs.next()) {
-        //     pantryID = rs.getString(1);
-        //     statement.execute("DELETE FROM INGREDIENT WHERE PANTRYID = " + pantryID + "");
-        //     statement.execute("DELETE FROM PANTRY WHERE PANTRYID = " + pantryID + "");
-        // }
-        // else {
-        //     System.out.println("You don't have a pantry");
-        // }
     }
-
-    //need to make an update
-
+    
+    /**
+     * returns a result set
+     * @param query
+     * @return
+     * @throws SQLException
+     */
     private ResultSet executeQuery(String query) throws SQLException {
         return statement.executeQuery(query);
     }
 
+    /**
+     * disconnects from the database
+     */
     public void disconnect() throws SQLException {
         statement.close();
         connection.close();
