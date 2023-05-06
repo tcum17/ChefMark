@@ -17,7 +17,9 @@ public class Email extends CommunicationsProvider{
     static String from = "ChefMarkIT326@outlook.com";
     static String pass = "IT326Chef!";
 
-    // Setup mail server
+    /**
+     *  Setup mail server
+     */
     public Email(){
         properties = System.getProperties();
         properties.put("mail.smtp.host", "smtp-mail.outlook.com");
@@ -26,6 +28,11 @@ public class Email extends CommunicationsProvider{
 	    properties.put("mail.smtp.auth", "true"); 
     }
 
+    /**
+     * Converts the instruction list
+     * @param instructions Used to convert instructions
+     * @return
+     */
     private String convertInstructionList(ArrayList<String> instructions) {
         String returnString ="";
         for (int i = 0; i < instructions.size(); i++) {
@@ -34,7 +41,11 @@ public class Email extends CommunicationsProvider{
         return returnString;
     }
     
-
+    /**
+     * Used to share a recipe with a user
+     * @param recipeIn The recipe to be shared
+     * @param recipient The recipient of the recipe being shared
+     */
     public void shareRecipe(Recipe recipeIn, String recipient) {
         // Get the Session object.// and pass username and password
         Session session = Session.getInstance(properties, new javax.mail.Authenticator() {
@@ -108,9 +119,12 @@ public class Email extends CommunicationsProvider{
             mex.printStackTrace();
         }
 	}
-    /*
-    * Shares user's weekly plan to either theirs, or anothers email. 
-    */
+    
+    /**
+     * Shares user's weekly plan to either theirs, or anothers email. 
+     * @param planIn Plan to be shared
+     * @param recipient The recipient to be added
+     */
     public void shareWeeklyPlan(WeeklyPlan planIn, String recipient) {
         // Get the Session object.// and pass username and password
         Session session = Session.getInstance(properties, new javax.mail.Authenticator() {

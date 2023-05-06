@@ -122,7 +122,16 @@ public class App {
         }
     }
 
-    //Searchs api for recipe based on a key word
+    /**
+     * Searches api for recipe based on a key word
+     * @param searchAPI Search Result object
+     * @param sc Scanner
+     * @param uc User controller
+     * @param dbq database query
+     * @throws SQLException
+     * @throws ParseException
+     * @throws IOException
+     */
     private static void keywordSearch(Search searchAPI, Scanner sc, UserController uc, DBQuery dbq) throws SQLException, ParseException, IOException{
         boolean searchAgain = true;
         final String KEYWORD_SEARCH_PROMPT = "Please enter the keyword(s) you would like to search by: ";
@@ -143,7 +152,16 @@ public class App {
         }
     }
 
-    //Search based on an ingredient youve presented
+    /**
+     * Search based on an ingredient youve presented
+     * @param searchAPI Search result object
+     * @param sc Scanner
+     * @param uc User controller
+     * @param dbq database query
+     * @throws SQLException
+     * @throws ParseException
+     * @throws IOException
+     */
     private static void ingredientSearch(Search searchAPI, Scanner sc, UserController uc, DBQuery dbq) throws SQLException, ParseException, IOException{
         boolean searchAgain = true;
         
@@ -181,7 +199,16 @@ public class App {
         }
     }
 
-    //This allow you to search based on ingredients in the pantry
+    /**
+     * This allow you to search based on ingredients in the pantry
+     * @param searchAPI Search results object
+     * @param sc Scanner
+     * @param uc User controller
+     * @param dbq Database query
+     * @throws SQLException
+     * @throws ParseException
+     * @throws IOException
+     */
     private static void pantrySearch(Search searchAPI, Scanner sc, UserController uc, DBQuery dbq) throws SQLException, ParseException, IOException{
         boolean searchAgain = true;
         while(searchAgain)
@@ -222,7 +249,16 @@ public class App {
         }          
     }
 
-    //Filtering search based on calories
+    /**
+     * Filtering search based on calories
+     * @param searchAPI Search results object
+     * @param sc scanner
+     * @param uc user controller
+     * @param dbq database query
+     * @throws SQLException
+     * @throws ParseException
+     * @throws IOException
+     */
     private static void calorieSearch(Search searchAPI, Scanner sc, UserController uc, DBQuery dbq) throws SQLException, ParseException, IOException{
         boolean searchAgain = true;
         while(searchAgain)
@@ -287,7 +323,16 @@ public class App {
         }
     }
 
-    //this allow the user to get a random recipe already stored
+    /**
+     * This allow the user to get a random recipe already stored
+     * @param searchAPI search API
+     * @param sc Scanner
+     * @param uc User Controller
+     * @param dbq database query
+     * @throws SQLException
+     * @throws ParseException
+     * @throws IOException
+     */
     private static void randomSearch(Search searchAPI, Scanner sc, UserController uc, DBQuery dbq) throws SQLException, ParseException, IOException{
         boolean searchAgain = true;
         while(searchAgain)
@@ -330,7 +375,14 @@ public class App {
         }
     }
     
-    //loop to search recipes in the api until the user is done
+    /**
+     * Loop to search recipes in the api until the user is done
+     * @param searchAPI search API
+     * @param sc Scanner
+     * @param uc User Controller
+     * @param dbq database query
+     * @throws SQLException
+     */
     private static void searchLoop(Search searchAPI, Scanner sc, UserController uc, DBQuery dbq) throws SQLException {
         boolean searching = true;
         while (searching) {
@@ -359,7 +411,14 @@ public class App {
         }
     }
     
-    //Once the user has found a recipe they like from the api this method prints it out
+    /**
+     * Once the user has found a recipe they like from the api this method prints it out
+     * @param searchAPI Search API 
+     * @param sc Scanner
+     * @param uc User Controller
+     * @param dbq Database Query
+     * @throws SQLException
+     */
     private static void viewRecipeFromSearch(Search searchAPI, Scanner sc, UserController uc, DBQuery dbq) throws SQLException {
         System.out.printf("Enter a recipe index to view the recipe with that index: ");
         String input = sc.nextLine();
@@ -427,7 +486,12 @@ public class App {
         }
     }
 
-    //responsible for sharing a recipe
+    /**
+     * Responsible for sharing a recipe
+     * @param sc Scanner
+     * @param recipeIn Recipe being shared
+     * @param curUser User
+     */
     private static void userRecipeShare(Scanner sc, Recipe recipeIn, User curUser ){
         Email emailShare = new Email();
         boolean quitSharing = false; 
@@ -464,7 +528,12 @@ public class App {
     }
 
 
-    //Responsible for sharing a weekly plan 
+    /**
+     * Responsible for sharing a weekly plan 
+     * @param sc Scanner
+     * @param planIn The plan that you want to share
+     * @param curUser the user that is sharing it
+     */
     private static void userWeeklyPlanShare(Scanner sc, WeeklyPlan planIn, User curUser){
         Email emailShare = new Email();
         boolean quitSharing = false;
@@ -500,7 +569,13 @@ public class App {
         } 
     }
     
-    //presents all of the users recipe lists that they can choose from and then prints out the desired recipe list
+    /**
+     * Presents all of the users recipe lists that they can choose from and then prints out the desired recipe list
+    * @param sc Scanner
+     * @param uc User Controller
+     * @param dbq database query
+     * @throws SQLException
+     */
     public static void viewRecipeList(Scanner sc, UserController uc, DBQuery dbq) throws SQLException{
         int count = uc.getUser().showRecipeLists();
         if (count != 0) {
@@ -581,7 +656,14 @@ public class App {
         }
     }
 
-    //Provides user the ability to add recipe to a weekly plan or a recipe list
+    /**
+     * Provides user the ability to add recipe to a weekly plan or a recipe list
+     * @param sc Scanner
+     * @param uc User Controller
+     * @param RC Recipe Controller
+     * @param dbq database query
+     * @throws SQLException
+     */
     public static void addRecipe(Scanner sc, UserController uc, Recipe recipe, DBQuery dbq) throws SQLException {
         System.out.println("\nWhere do you want to add the recipe?\n");
         String location = "";
@@ -601,7 +683,15 @@ public class App {
         }
     }
     
-    //gets all of the weekly plans and allows you to pick from them then you can choose what day you would like to add the recipe to 
+    
+    /**
+     * Adds a recipe to a weekly plan
+     * @param sc Scanner
+     * @param uc User Controller
+     * @param RC Recipe Controller
+     * @param dbq database query
+     * @throws SQLException
+     */
     private static void addRecipeToWeeklyPlan(Scanner sc, UserController uc, Recipe recipe, DBQuery dbq) throws SQLException {
         boolean enteringPlan = true;
         // ResultSet rs = dbq.populateWeeklyPlan(new WeeklyPlan(), uc.getUser());
@@ -647,7 +737,14 @@ public class App {
         }
     }
 
-    //Adds a recipe to the desired recipe list
+    /**
+     * Adds a recipe to the desired recipe list
+     * @param sc Scanner
+     * @param uc User Controller
+     * @param recipe Recipe Object
+     * @param dbq Database query
+     * @throws SQLException
+     */
     private static void addRecipeToRecipeList(Scanner sc, UserController uc, Recipe recipe, DBQuery dbq) throws SQLException{
         boolean enteringList = true;
         while(enteringList){
@@ -673,7 +770,13 @@ public class App {
         }
     }
 
-    //Method to view the arrayList of custom recipes and the recipes inside
+    /**
+     * Method to view the arrayList of custom recipes and the recipes inside
+     * @param sc Scanner
+     * @param uc User controller
+     * @param dbq Database query
+     * @throws SQLException
+     */
     private static void viewCustomRecipes(Scanner sc, UserController uc, DBQuery dbq) throws SQLException
     {
        ArrayList<Recipe> recipes = uc.getUser().getCustomRecipeList();
@@ -743,7 +846,14 @@ public class App {
             }
         }
     }
-    //deletes a custom recipe from the users arrayList of custom recipes
+
+    /**
+     * Deletes a custom recipe from the users arrayList of custom recipes
+     * @param sc Scanner object
+     * @param uc User Controller
+     * @param dbq Database query
+     * @throws SQLException
+     */
     private static void deleteCustomRecipe(Scanner sc, UserController uc, DBQuery dbq) throws SQLException {
         System.out.println("Type the number of the recipe you want to delete");
         String input = sc.nextLine();
@@ -766,7 +876,14 @@ public class App {
             recipes.remove(recipeNum-1);
         }
     }
-    //Method to veiw all the weekly plans and everything in them
+
+    /**
+     * Method to veiw all the weekly plans and everything in them
+     * @param sc Scanner
+     * @param uc User Controller
+     * @param dbq Database query
+     * @throws SQLException
+     */
     public static void viewWeeklyPlans(Scanner sc, UserController uc, DBQuery dbq) throws SQLException
     {
         uc.getUser().showWeeklyPlans();
@@ -871,7 +988,14 @@ public class App {
         }
     }
 
-    // this gets the recipe name and calls the recipe controller to finish getting the recipe details
+    /**
+     * This method gets the recipe name and calls the recipe controller to finish getting the recipe details
+     * @param sc Scanner
+     * @param uc User Controller
+     * @param RC Recipe Controller
+     * @param dbq Database query
+     * @throws SQLException
+     */
     private static void createRecipe(Scanner sc, UserController uc, RecipeController RC, DBQuery dbq) throws SQLException
     {
         System.out.println("\nWelcome to create a recipe:\n");
@@ -897,7 +1021,15 @@ public class App {
         }
     } 
 
-    //Creates an ingredient to add to the users pantry
+    
+    /**
+     * Creates an ingredient to add to the users pantry
+     * @param sc Scanner
+     * @param uc UserController
+     * @param RC RecipeController
+     * @param dbq Database query
+     * @throws SQLException
+     */
     private static void createCustomIngredient(Scanner sc, UserController uc, RecipeController RC, DBQuery dbq) throws SQLException
     {
         String backIngredient = "";
@@ -949,7 +1081,14 @@ public class App {
         }
     }
 
-    //Allows the user to create a weekly plan
+    /**
+     * Allows the user to create a weekly plan
+     * @param sc Scanner
+     * @param uc User Controller
+     * @param RC Recipe Controller
+     * @param dbq database query
+     * @throws SQLException
+     */
     private static void createWeeklyPlan(Scanner sc, UserController uc, RecipeController RC, DBQuery dbq) throws SQLException
     {
         String backWeeklyPlan = "";
@@ -989,7 +1128,14 @@ public class App {
         }
     }
 
-    //This allows the user to create a recipe list
+    /**
+     * This allows the user to create a recipe list
+     * @param sc Scanner
+     * @param uc User Controller
+     * @param RC Recipe Controller
+     * @param dbq database query
+     * @throws SQLException
+     */
     private static void createRecipeList(Scanner sc, UserController uc, RecipeController RC, DBQuery dbq) throws SQLException
     {
         String backRecipeList = "";
@@ -1017,7 +1163,14 @@ public class App {
         }
     }
 
-    //calls all the create methods depending on user input
+    /**
+     * calls all the create methods depending on user input
+     * @param sc Scanner
+     * @param uc User Controller
+     * @param RC Recipe Controller
+     * @param dbq database query
+     * @throws SQLException
+     */
     private static void create(Scanner sc, UserController uc, RecipeController RC, DBQuery dbq) throws SQLException{
         String createInput = "";
         while (!createInput.equals(FIVE)) {
@@ -1050,7 +1203,13 @@ public class App {
         }
     }
 
-    //Prints everything in the pantry
+    /**
+     * Prints everything in the pantry
+     * @param sc Scanner
+     * @param uc User Controller
+     * @param dbq database query
+     * @throws SQLException
+     */
     private static void viewPantry(Scanner sc, UserController uc, DBQuery dbq) throws SQLException{
         String pantryInput ="";
         boolean check= false;
@@ -1106,7 +1265,13 @@ public class App {
         }
     }
 
-    //This will delete a ingredient from the pantry
+    /**
+     * This will delete a ingredient from the pantry
+     * @param sc Scanner
+     * @param uc User Controller
+     * @param dbq database query
+     * @throws SQLException
+     */
     private static void deleteIngredientFromPantry(UserController uc, Scanner sc, DBQuery dbq) throws SQLException
     {
         if(uc.getUser().getPantry().getIngredientList().size() > 0)
@@ -1149,7 +1314,13 @@ public class App {
         }
     }
 
-    //Allow the user to update a preexisting ingredient in the pantry
+    /**
+     * Allow the user to update a preexisting ingredient in the pantry
+     * @param sc Scanner
+     * @param uc User Controller
+     * @param dbq database query
+     * @throws SQLException
+     */
     private static void updateIngredientInPantry(UserController uc, Scanner sc, DBQuery dbq) throws SQLException
     {
         boolean updateAgain = true;
@@ -1239,7 +1410,13 @@ public class App {
         }
     }
 
-    //This handles all the veiw functions based on use input
+    /**
+     * This handles all the view functions based on use input
+     * @param sc Scanner
+     * @param uc User Controller
+     * @param dbq database query
+     * @throws SQLException
+     */
     private static void view(Scanner sc, UserController uc, DBQuery dbq) throws SQLException{
         String viewInput = "";
         while (!viewInput.equals(SIX)) {
@@ -1321,7 +1498,14 @@ public class App {
         }
     }
 
-    //This allows the user to change the serving size of a recipe
+    /**
+     * This allows the user to change the serving size of a recipe
+     * @param recipe The recipe that needs to be changed
+     * @param sc The scanner
+     * @param uc The User controller
+     * @param dbq the Database query
+     * @throws SQLException
+     */
     private static void changeRecipeServingSize(Recipe recipe, Scanner sc, UserController uc, DBQuery dbq) throws SQLException{
         boolean getInput = true;
         while(getInput){
@@ -1341,7 +1525,14 @@ public class App {
         }
     }
     
-    //Function to print all recipes and then prints the selected user
+    /**
+     * Views a recipe and prompts you everything you can do with said recipe
+     * @param recipe recipe that needs to be viewd
+     * @param uc user controller
+     * @param dbq database query
+     * @param sc scanner
+     * @throws SQLException
+     */
     private static void viewRecipe(Recipe recipe, Scanner sc, UserController uc, DBQuery dbq) throws SQLException
     {
         uc.getUser().addToRecipeHistory(recipe);
@@ -1378,7 +1569,13 @@ public class App {
         
     }
 
-    //Adds an ingredient to the pantry
+    /**
+     * Adds an ingredient to the pantry
+     * @param uc user controller
+     * @param dbq database query
+     * @param sc scanner
+     * @throws SQLException
+     */
     private static void addIngredientToPantry(UserController uc, DBQuery dbq, Scanner sc) throws SQLException
     {
         boolean addAgain = true;
@@ -1437,7 +1634,13 @@ public class App {
         }
     }
 
-    //This handles all the options that the user can delete
+    /**
+     * This handles all the options that the user can delete
+     * @param sc Scanner
+     * @param uc User Controller
+     * @param dbq database query
+     * @throws SQLException
+     */
     private static void delete(Scanner sc, UserController uc, DBQuery dbq) throws SQLException{
         String deleteInput = "";
         while (!deleteInput.equals(THREE)) {

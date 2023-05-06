@@ -8,9 +8,20 @@ public class Ingredient {
     private double quantity;
     private String measure;
 
+    /**
+     * Constructor
+     * Constructs an empty ingredient object
+     */
     public Ingredient() {
     }
 
+    /**
+     * 
+     * @param ingredientName name of the ingredient
+     * @param ingredientID ingredient id
+     * @param quantity ingredient quantity
+     * @param measure ingredient measure(cups,grams,..)
+     */
     public Ingredient(String ingredientName, String ingredientID, float quantity, String measure) {
         this.ingredientName = ingredientName;
         this.ingredientID = ingredientID;
@@ -18,40 +29,75 @@ public class Ingredient {
         this.measure = measure;
     }
 
+    /**
+     * Gets the ingredient name
+     * @return the ingredient name
+     */
     public String getIngredientName() {
         return this.ingredientName;
     }
-
+    
+    /**
+     * Gets the Ingredient ID
+     * @return The Ingredient Id
+     */
     public String getIngredientID() {
         return this.ingredientID;
     }
-
+    
+    /**
+     * Get Quantity
+     * @return Quantity
+     */
     public double getQuantity() {
         return this.quantity;
     }
 
+    /**
+     * Get Measure
+     * @return Measure
+     */
     public String getMeasure() {
         return this.measure;
     }
 
-
+    /**
+     * Set Ingredient Name
+     * @param ingredientName the new name
+     */
     public void setIngredientName(String ingredientName) {
         this.ingredientName = ingredientName;
     }
 
+    /**
+     * 
+     * @param ingredientID sets ingredient id
+     */
     public void setIngredientID(String ingredientID) {
         this.ingredientID = ingredientID;
     }
-
+    
+    /**
+     * 
+     * @param quantity sets ingredient quantity
+     */
     public void setQuantity(double quantity) {
         this.quantity = quantity;
     }
-
+    
+    /**
+     * 
+     * @param measure sets ingredient measure
+     */
     public void setMeasure(String measure) {
         this.measure = measure;
     }
 
-   
+   /**
+    * 
+    * @param ingredJSON 
+    * @return
+    */
     public static Ingredient JSONToIngredient(JSONObject ingredJSON){
         Ingredient result = new Ingredient();
         if(ingredJSON.containsKey("text")){
@@ -73,6 +119,9 @@ public class Ingredient {
         return result;
     }
 
+    /**
+     * To string method that formats the ingredient in a string
+     */
     @Override
     public String toString()
     {

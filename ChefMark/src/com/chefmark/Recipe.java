@@ -17,10 +17,27 @@ public class Recipe {
     ArrayList<String> ingredientLines = new ArrayList<>();
     int isCustom = 0;
 
+    /**
+     * 
+     */
     public Recipe(){
         
     }
 
+    /**
+     * Recipe constructor
+     * @param uri
+     * @param name
+     * @param source
+     * @param url
+     * @param ingredients
+     * @param ingredientLines
+     * @param totalWeight
+     * @param recipeDescriptors
+     * @param rating
+     * @param instructions
+     * @param nutritionalFacts
+     */
     public Recipe(String uri, String name, String source, String url, ArrayList<Ingredient> ingredients, ArrayList<String> ingredientLines,
             int totalWeight, RecipeDescriptors recipeDescriptors, Rating rating, Instructions instructions,
             NutritionalFacts nutritionalFacts) {
@@ -36,7 +53,16 @@ public class Recipe {
         this.instructions = instructions;
         this.nutritionalFacts = nutritionalFacts;
     }
-//select distinct recipeName, url, source, ingredients, dietLabels, healthLabels, calories, instructions, cautions, recipe.username from recipe,weeklyplan,weeklyplanitem where recipe.username=weeklyplan.username and weeklyplan.weeklyPlanid=weeklyplanitem.weeklyplanid and recipe.username='" + user.getUsername() + "' and dayOfWeek='" + day + "' and recipe.recipeID=weeklyplanitem.recipeid and weeklyPlan.name='" + weeklyPlan.getName() + "'
+
+    /**
+     * constructor for recipes
+     * @param recipeName
+     * @param url
+     * @param source
+     * @param ingredients
+     * @param nutritionalFacts
+     * @param instructions
+     */
     public Recipe(String recipeName, String url, String source, ArrayList<Ingredient> ingredients, NutritionalFacts nutritionalFacts, Instructions instructions) {
         this.name=recipeName;
         this.url=url;
@@ -46,106 +72,201 @@ public class Recipe {
         this.instructions=instructions;
     }
 
+    /**
+     * 
+     * @return
+     */
     public String getUri() {
         return uri;
     }
 
+    /**
+     * 
+     * @return
+     */
     public String getName() {
         return name;
     }
 
+    /**
+     * 
+     */
     public String getSource() {
         return source;
     }
 
+    /**
+     * 
+     * @return
+     */
     public String getURL() {
         return url;
     }
 
+    /**
+     * 
+     * @return
+     */
     public ArrayList<Ingredient> getIngredients() {
         return ingredients;
     }
 
+    /**
+     * 
+     * @return
+     */
     public double getTotalWeight() {
         return totalWeight;
     }
 
+    /**
+     * 
+     * @return
+     */
     public RecipeDescriptors getRecipeDescriptors() {
         return recipeDescriptors;
     }
 
+    /**
+     * 
+     * @return
+     */
     public Rating getRating() {
         return rating;
     }
 
+    /**
+     * 
+     * @return
+     */
     public Instructions getInstructions() {
         return instructions;
     }
 
+    /**
+     * 
+     * @return
+     */
     public NutritionalFacts getNutritionalFacts() {
         return nutritionalFacts;
     }
 
+    /**
+     * 
+     * @return
+     */
     public int getIsCustom() {
         return isCustom;
     }
 
+    /**
+     * 
+     * @param uri
+     */
     public void setUri(String uri)
     {
         this.uri = uri; 
     }
 
+    /**
+     * 
+     * @param Name
+     */
     public void setName(String Name)
     {
         this.name = Name; 
     }
 
+    /**
+     * 
+     * @param source
+     */
     public void setSource(String source)
     {
         this.source = source; 
     }
 
+    /**
+     * 
+     * @param url
+     */
     public void setUrl(String url)
     {
         this.url = url; 
     }
 
+    /**
+     * 
+     * @param totalWeight
+     */
     public void setTotalWeight(double totalWeight)
     {
         this.totalWeight = totalWeight; 
     }
 
+    /**
+     * 
+     * @param instructions
+     */
     public void setInstructions(Instructions instructions)
     {
         this.instructions = instructions;
     }
 
+    /**
+     * 
+     * @param ingredients
+     */
     public void setIngredientList(ArrayList<Ingredient> ingredients)
     {
         this.ingredients = ingredients;
     }
 
+    /**
+     * Sets the recipe's ingredients
+     * @param ingredientLines Recipe's ingredients
+     */
     public void setIngredientLines(ArrayList<String> ingredientLines)
     {
         this.ingredientLines = ingredientLines;
     }
 
+    /**
+     * Sets the recipe's rating
+     * @param rating Sets a recipe's rating
+     */
     public void setRating(Rating rating) {
         this.rating = rating;
     }
 
+    /**
+     * 
+     * @param recipeDescriptors
+     */
     public void setRecipeDescriptors(RecipeDescriptors recipeDescriptors){
         this.recipeDescriptors = recipeDescriptors;
     }
 
+    /**
+     * Sets the recipe's nutritional facts
+     * @param nutritionalFacts The user's nutritional facts
+     */
     public void setNutritionalFacts(NutritionalFacts nutritionalFacts){
         this.nutritionalFacts = nutritionalFacts;
     }
 
+    /**
+     * Sets the value for if the recipe is custom or not
+     * @param b Int value (0 if negative, 1 if positive)
+     */
     public void setCustom(int b){
         this.isCustom = b;
     }
 
+    /**
+     * Changes the serving size
+     * @param multiplier Multiplier to change serving size by
+     */
     public void changeServingSize(double multiplier){
         this.totalWeight = this.totalWeight*multiplier;
         for(Ingredient ingredient : this.ingredients){
@@ -154,6 +275,11 @@ public class Recipe {
         }
     }
 
+    /**
+     * Converts a JSON object to recipe
+     * @param recipeJSON Recipe JSON object
+     * @return returns newly constructed recipe
+     */
     public static Recipe JSONToRecipe(JSONObject recipeJSON){
         Recipe result = new Recipe();
         JSONObject recipe = recipeJSON;
@@ -270,6 +396,10 @@ public class Recipe {
         return result;
     }
 
+    /**
+     * Prints the recipe
+     * @return returns constructed string containing recipe info
+     */
     public String printRecipe()
     {
         String result = "";

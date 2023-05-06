@@ -5,6 +5,12 @@ import java.util.Map;
 import java.util.HashMap;
 
 public class ShoppingListConverter {
+    /**
+     * converts a weekly plan to a shopping list based on what is in your pantry and what you need
+     * @param plan
+     * @param pantry
+     * @return returns an arraylist of the ingredients and the quantities you need
+     */
     public static ArrayList<String> convertToShoppingList(WeeklyPlan plan, Pantry pantry) {
         ArrayList<String> shoppingList = new ArrayList<>();
         HashMap<String, ArrayList<Recipe>> wp = plan.getWeeklyPlan();

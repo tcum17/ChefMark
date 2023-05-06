@@ -9,6 +9,9 @@ public class WeeklyPlan {
     private String name;
     private HashMap<String, ArrayList<Recipe>> weeklyPlan = new HashMap<>();
 
+    /**
+     * creates a weekly plan
+     */
     public WeeklyPlan() {
         this.weeklyPlan.put("Monday", new ArrayList<>());
         this.weeklyPlan.put("Tuesday", new ArrayList<>());
@@ -19,6 +22,10 @@ public class WeeklyPlan {
         this.weeklyPlan.put("Sunday", new ArrayList<>());
     }
 
+    /**
+     * creates a weekly plan
+     * @param name name
+     */
     public WeeklyPlan(String name) {
         this.name = name;
         this.weeklyPlan.put("Monday", new ArrayList<>());
@@ -30,22 +37,44 @@ public class WeeklyPlan {
         this.weeklyPlan.put("Sunday", new ArrayList<>());
     }
 
+    /**
+     * 
+     * @param name
+     */
     public void setName(String name) {
         this.name = name;
     }
 
+    /**
+     * 
+     * @param weeklyPlan
+     */
     public void setWeeklyPlan(HashMap<String, ArrayList<Recipe>> weeklyPlan) {
         this.weeklyPlan = weeklyPlan;
     }
 
+    /**
+     * 
+     * @return
+     */
     public String getName() {
         return name;
     }
 
+    /**
+     * 
+     * @return 
+     */
     public HashMap<String, ArrayList<Recipe>> getWeeklyPlan() {
         return this.weeklyPlan;
     }
 
+    /**
+     * adds recipe to the weekly plan
+     * @param recipe
+     * @param day
+     * @return boolean
+     */
     public boolean addRecipeToWeeklyPlan(Recipe recipe, String day) {
         if (this.weeklyPlan.containsKey(day)) {
             this.weeklyPlan.get(day).add(recipe);
@@ -56,6 +85,12 @@ public class WeeklyPlan {
 
     }
 
+    /**
+     * removes a recipe from a weekly plan on a certin day
+     * @param recipe
+     * @param day
+     * @return boolean
+     */
     public boolean removeRecipeFromWeeklyPlan(Recipe recipe, String day) {
         if (this.weeklyPlan.containsKey(day)) {
             if (this.weeklyPlan.get(day).contains(recipe)) {
@@ -67,6 +102,10 @@ public class WeeklyPlan {
         return false;
     }
 
+    /**
+     * Prints out the weekly plan
+     * @return toString
+     */
     public String info() {
         String str = "";
         str += "Monday: ";
@@ -102,6 +141,11 @@ public class WeeklyPlan {
         return str;
     }
 
+    /**
+     * returns the name for a a recipe
+     * @param recipeName recipe name
+     * @return Recipe
+     */
     public Recipe getRecipeByName(String recipeName) {
         for (Map.Entry<String, ArrayList<Recipe>> entry : weeklyPlan.entrySet()) {
             for (int i = 0; i < entry.getValue().size(); i++) {

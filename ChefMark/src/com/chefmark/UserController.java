@@ -15,14 +15,27 @@ private static Pattern emailRegex = Pattern.compile("^[A-Za-z0-9+_.-]+@(.+)$"); 
 
     private User user;
 
+    /**
+     * 
+     * @return
+     */
     public static Pattern getUsernameRegex() {
         return usernameRegex;
     }
 
+    /**
+     * 
+     * @return
+     */
     public static Pattern getPasswordRegex() {
         return passwordRegex;
     }
 
+    /**
+     * creates the pantry in the database
+     * @param dbq
+     * @throws SQLException
+     */
     public void initializePantry(DBQuery dbq) throws SQLException {
         ResultSet rs = dbq.read(user.getPantry(), this.user);
         while (rs.next()) {
@@ -30,14 +43,23 @@ private static Pattern emailRegex = Pattern.compile("^[A-Za-z0-9+_.-]+@(.+)$"); 
         }
     }
 
+    /**
+     * creates the users custom recipe list in data base
+     * @param dbq
+     * @throws SQLException
+     */
     public void initializeCustomRecipes(DBQuery dbq) throws SQLException {
         ResultSet rs = dbq.populateCustomRecipe(new Recipe(), this.user);
         while (rs.next()) {
             user.getCustomRecipeList().add(new Recipe(rs.getString(1), rs.getString(2), rs.getString(3), RecipeController.textToIngredientList(rs.getString(4)), new NutritionalFacts(RecipeController.textToArrayList(rs.getString(5)), RecipeController.textToArrayList(rs.getString(6)), rs.getInt(7)), new Instructions(RecipeController.textToArrayList(rs.getString(8)), RecipeController.textToArrayList(rs.getString(9)))));
         }
     }
-    //String query = "SELECT recipeName, url, source, ingredients,                                                                                                                                                                                                        totalWeight, dietLabels, healthLabels, calories, glycemicIndex, yield, instructions, cautions, username FROM RECIPELIST WHERE USERNAME=?";
-        
+   
+    /**
+     * creates  the users recipe lists in database
+     * @param dbq
+     * @throws SQLException
+     */
     public void initializeRecipeLists(DBQuery dbq) throws SQLException {
         ResultSet rs = dbq.populateRecipeList(new RecipeList(), this.user);
         while (rs.next()) {
@@ -53,6 +75,11 @@ private static Pattern emailRegex = Pattern.compile("^[A-Za-z0-9+_.-]+@(.+)$"); 
         }
     }
 
+    /**
+     * creates  the users weekly plan in database
+     * @param dbq
+     * @throws SQLException
+     */
     public void initializeWeeklyPlans(DBQuery dbq) throws SQLException {
         ResultSet rs = dbq.populateWeeklyPlan(new WeeklyPlan(), this.user);
         while (rs.next())
@@ -67,15 +94,6 @@ private static Pattern emailRegex = Pattern.compile("^[A-Za-z0-9+_.-]+@(.+)$"); 
                     weeklyPlanName=null;
                 }
             }
-
-            // public Recipe(String recipeName, String url, String source, ArrayList<Ingredient> ingredients, NutritionalFacts nutritionalFacts, Instructions instructions) {
-            //     this.name=recipeName;
-            //     this.source=source;
-            //     this.ingredients=ingredients;
-            //     this.nutritionalFacts=nutritionalFacts;
-            //     this.instructions=instructions;
-            // }
-            //select distinct recipeName, url, source, ingredients, dietLabels, healthLabels, calories, instructions, cautions, recipe.username from recipe,weeklyplan,weeklyplanitem where recipe.username=weeklyplan.username and weeklyplan.weeklyPlanid=weeklyplanitem.weeklyplanid and recipe.username='" + user.getUsername() + "' and dayOfWeek='" + day + "' and recipe.recipeID=weeklyplanitem.recipeid and weeklyPlan.name='" + weeklyPlan.getName() + "'
 
             for (int i = 0; i < this.user.getWeeklyPlans().size(); i++) {
                 rs = dbq.read(this.user.getWeeklyPlans().get(i), this.user, daysOfWeek[6]);
@@ -117,25 +135,49 @@ private static Pattern emailRegex = Pattern.compile("^[A-Za-z0-9+_.-]+@(.+)$"); 
             }
         }
     }
-
+    
+    /**
+     * Creates a new user
+     * @param username
+     * @param password
+     * @param email
+     * @return boolean
+     */
     public boolean createUser(String username, String password, String email) {
         //if (check if username and email already exist) -- return true if successfully created, false if otherwise
         this.user = new User(username, password, email);
         return true;
     }
 
+    /**
+     * changes the users password
+     * @param password
+     * @return boolean
+     */
     public boolean changePassword(String password) {
         //check if password is valid, false if it can't be changed
         this.user.setPassword(password);
         return true;
     }
     
+    /**
+     * changes the users email
+     * @param email
+     * @return boolean
+     */
     public boolean changeEmail(String email) {
         //check if email is valid, false if it can't be changed
         this.user.setEmail(email);
         return true;
     }
 
+    /**
+     * deletes the user from the database
+     * @param dbq
+     * @param sc
+     * @return
+     * @throws SQLException
+     */
     public boolean deleteUser(DBQuery dbq, Scanner sc) throws SQLException {
         System.out.println("\nThis action will delete your account. Are you sure you want to continue? y/n");
         String testInput = sc.nextLine();
@@ -148,15 +190,6 @@ private static Pattern emailRegex = Pattern.compile("^[A-Za-z0-9+_.-]+@(.+)$"); 
             System.out.println("Enter your password: ");
 
             String password = validatePassword(sc);
-
-            // Matcher passwordMatch = passwordRegex.matcher(testInput);
-            // while (!(passwordMatch.matches())) {
-            //     System.out.println("Password is in incorrect format. Passwords must be at least 8 characters, include 1 uppercase, 1 lowercase, 1 number, and 1 special character");
-            //     System.out.println("\nEnter your password: ");
-            //     testInput = sc.nextLine();
-            //     passwordMatch = passwordRegex.matcher(testInput);
-            // }
-            // password = testInput;
 
             ResultSet rs = dbq.read(new User(username, password, ""));
             if (rs.next()) {
@@ -182,11 +215,19 @@ private static Pattern emailRegex = Pattern.compile("^[A-Za-z0-9+_.-]+@(.+)$"); 
         return false;
     }
     
-
+    /**
+     * 
+     * @return
+     */
     public User getUser() {
         return this.user;
     }
 
+    /**
+     * updates the user
+     * @param dbq
+     * @param sc
+     */
     public boolean updateUser(DBQuery dbq, Scanner sc) throws SQLException {
         System.out.println("Enter your username: ");
 
@@ -231,6 +272,13 @@ private static Pattern emailRegex = Pattern.compile("^[A-Za-z0-9+_.-]+@(.+)$"); 
         return true;
     }
 
+    /**
+     * allow the user to login
+     * @param dbq
+     * @param sc
+     * @return boolean
+     * @throws SQLException
+     */
     public boolean login(DBQuery dbq, Scanner sc) throws SQLException {
         System.out.println("Enter your username: ");
 
@@ -259,6 +307,13 @@ private static Pattern emailRegex = Pattern.compile("^[A-Za-z0-9+_.-]+@(.+)$"); 
         return false;
     }
 
+    /**
+     * allows you to signup for email 
+     * @param dbq
+     * @param sc
+     * @return boolean
+     * @throws SQLException
+     */
     public boolean signUp(DBQuery dbq, Scanner sc) throws SQLException {
         System.out.println("Enter your desired username: ");
         String username = validateUsername(sc);
@@ -299,6 +354,11 @@ private static Pattern emailRegex = Pattern.compile("^[A-Za-z0-9+_.-]+@(.+)$"); 
         return true;
     }
 
+    /**
+     * validate the username and returns the username
+     * @param sc 
+     * @return String
+     */
     public String validateUsername(Scanner sc) {
         String username = sc.nextLine();
         Matcher usernameMatch = usernameRegex.matcher(username);
@@ -311,6 +371,11 @@ private static Pattern emailRegex = Pattern.compile("^[A-Za-z0-9+_.-]+@(.+)$"); 
         return username;
     }
 
+    /**
+     * validates the password and returns the password
+     * @param sc
+     * @return String
+     */
     public String validatePassword(Scanner sc) {
         String password = sc.nextLine();
         Matcher passwordMatch = passwordRegex.matcher(password);
@@ -324,6 +389,11 @@ private static Pattern emailRegex = Pattern.compile("^[A-Za-z0-9+_.-]+@(.+)$"); 
         return password;
     }
 
+    /**
+     * validate the email and returns the email
+     * @param sc
+     * @return string
+     */
     public String validateEmail(Scanner sc) {
         String email = sc.nextLine();
         Matcher emailMatch = emailRegex.matcher(email);

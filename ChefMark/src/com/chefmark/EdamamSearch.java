@@ -21,6 +21,11 @@ public class EdamamSearch extends Search{
     private static ArrayList<String> filters = new ArrayList<>();
     private static JSONObject currentRecipe = null;
 
+    /**
+     * This conducts a basic search
+     * @param displayResults
+     * @return
+     */
     private boolean basicSearch(boolean displayResults)
     {
         boolean status = false;
@@ -61,6 +66,10 @@ public class EdamamSearch extends Search{
         return status;
     }
 
+    /**
+     * This conducts a keyword search
+     * @param keyword Keyword to be searched
+     */
     public boolean keywordSearch(String keyword){
         boolean status = false;
         if(keyword == null) return status;
@@ -72,7 +81,11 @@ public class EdamamSearch extends Search{
         return status;
     }
 
-
+    /**
+     * This conducts a calorie search
+     * @param min Min calories
+     * @param max Max calories
+     */
     public boolean calorieSearch(int min, int max){
         boolean status = false;
         String calorieFilter = "&calories="+min+"-"+max;
@@ -81,6 +94,9 @@ public class EdamamSearch extends Search{
         return status;
     }
 
+    /**
+     * Conducts a random search
+     */
     public Recipe randomSearch(){
         JSONObject recipe = null;
         String randomFilter = "&calories=0%2B&random=true";
@@ -94,6 +110,13 @@ public class EdamamSearch extends Search{
         return Recipe.JSONToRecipe(recipe);
     }
 
+    /**
+     * Gets the response page
+     * @param url Url used
+     * @return The page
+     * @throws ParseException
+     * @throws IOException
+     */
     private static ResultPage getPageResponse(URL url) throws ParseException, IOException
     {
         StringBuilder responseString = new StringBuilder();
@@ -139,6 +162,9 @@ public class EdamamSearch extends Search{
         return result;
     }
 
+    /**
+     * Used for the next page
+     */
     public boolean nextPage(){
         String result = "";
         if(pageList.size() == 0 || pageList.get(currentPage) == null) return false;
@@ -168,6 +194,9 @@ public class EdamamSearch extends Search{
         return true;
     }
 
+    /**
+     * Used for the previous page
+     */
     public boolean previousPage(){
         String result = "";
         if(pageList.size() == 0 || pageList.get(currentPage) == null) return false;
@@ -182,6 +211,13 @@ public class EdamamSearch extends Search{
         return true;
     }
 
+    /**
+     * Used for getting the recipe response
+     * @param url URL being used
+     * @return
+     * @throws IOException
+     * @throws ParseException
+     */
     private static String getRecipeResponse(URL url) throws IOException, ParseException{
         StringBuilder responseString = new StringBuilder();
         Scanner scanner = new Scanner(url.openStream());
@@ -215,6 +251,10 @@ public class EdamamSearch extends Search{
         return fileResult;
     }
 
+    /**
+     * Used for viewing a recipe
+     * @param index The index to be used for viewing
+     */
     public boolean viewRecipe(int index){
         String resultString = "";
         JSONObject resultRecipe = null;
@@ -250,6 +290,9 @@ public class EdamamSearch extends Search{
         return true;
     }
 
+    /**
+     * Displays the current page
+     */
     public boolean displayCurrentPage(){
         String result;
         if(pageList.size() == 0 || pageList.get(currentPage) == null) return false;
@@ -259,10 +302,16 @@ public class EdamamSearch extends Search{
         return true;
     }
 
+    /**
+     * Gets the current recipe
+     */
     public Recipe getCurRecipe(){
         return Recipe.JSONToRecipe(currentRecipe);
     }
 
+    /**
+     * Checks if there is a valid next page
+     */
     public boolean hasNextPage(){
         if(pageList.size() == 0 || pageList.get(currentPage) == null) return false;
         if(pageList.get(currentPage).getNextPage()!=null) return true;
