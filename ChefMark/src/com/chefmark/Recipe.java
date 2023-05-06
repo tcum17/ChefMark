@@ -73,23 +73,24 @@ public class Recipe {
     }
 
     /**
-     * 
-     * @return
+     * Returns the URI
+     * @return Recipe URI
      */
     public String getUri() {
         return uri;
     }
 
     /**
-     * 
-     * @return
+     * Returns the recipe's name
+     * @return Recipe name
      */
     public String getName() {
         return name;
     }
 
     /**
-     * 
+     * Returns the recipe's source
+     * @param source Recipe source
      */
     public String getSource() {
         return source;
