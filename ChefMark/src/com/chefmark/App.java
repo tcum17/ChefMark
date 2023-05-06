@@ -1017,6 +1017,7 @@ public class App {
             }
             else {
                 uc.getUser().addCustomRecipe(RC.createRecipe(recipeName, sc, uc, dbq));
+                out = true;
             }
         }
     } 

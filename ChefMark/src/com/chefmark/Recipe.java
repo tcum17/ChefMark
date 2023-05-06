@@ -97,48 +97,48 @@ public class Recipe {
     }
 
     /**
-     * 
-     * @return
+     * Returns the recipe's URL
+     * @return Recipe URL
      */
     public String getURL() {
         return url;
     }
 
     /**
-     * 
-     * @return
+     * Returns the recipe's ingredients
+     * @return Recipe ingredients
      */
     public ArrayList<Ingredient> getIngredients() {
         return ingredients;
     }
 
     /**
-     * 
-     * @return
+     * Returns the recipe's weight
+     * @return Recipe weight
      */
     public double getTotalWeight() {
         return totalWeight;
     }
 
     /**
-     * 
-     * @return
+     * Returns the recipe's descriptors
+     * @return Recipe descriptors
      */
     public RecipeDescriptors getRecipeDescriptors() {
         return recipeDescriptors;
     }
 
     /**
-     * 
-     * @return
+     * Returns the recipe's rating
+     * @return Recipe rating
      */
     public Rating getRating() {
         return rating;
     }
 
     /**
-     * 
-     * @return
+     * Returns the recipe's instructions
+     * @return Recipe instructions
      */
     public Instructions getInstructions() {
         return instructions;
