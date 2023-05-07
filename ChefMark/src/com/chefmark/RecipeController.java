@@ -197,6 +197,7 @@ public class RecipeController {
                 System.out.println("That is not an option");
             }
         }
+        newRecipe.setCustom(1);
         dbq.createCustomRecipe(newRecipe, uc.getUser());
         return newRecipe;
     }
